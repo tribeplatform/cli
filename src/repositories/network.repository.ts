@@ -17,4 +17,8 @@ export class NetworkRepository {
   static async delete(id: string): Promise<Network> {
     return await client.network.delete({ where: { id } })
   }
+
+  static async findMany(): Promise<Network[]> {
+    return await client.network.findMany()
+  }
 }
