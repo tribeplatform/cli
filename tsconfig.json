@@ -21,16 +21,16 @@
     "importHelpers": true,
     "baseUrl": "src",
     "paths": {
-      "@/*": ["*"],
       "@config": ["config"],
-      "@controllers/*": ["controllers/*"],
-      "@dtos/*": ["dtos/*"],
-      "@exceptions/*": ["exceptions/*"],
-      "@interfaces/*": ["interfaces/*"],
-      "@middlewares/*": ["middlewares/*"],
-      "@models/*": ["models/*"],
-      "@services/*": ["services/*"],
-      "@utils/*": ["utils/*"]
+      "@controllers": ["controllers"],
+      "@dtos": ["dtos"],
+      "@exceptions": ["exceptions"],
+      "@interfaces": ["interfaces"],
+      "@middlewares": ["middlewares"],
+      "@repositories": ["repositories"],
+      "@logics": ["logics"],
+      "@utils": ["utils"],
+      "@/*": ["*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.json", ".env"],

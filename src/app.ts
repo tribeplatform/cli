@@ -1,4 +1,6 @@
-import 'reflect-metadata'
+import { CREDENTIALS, LOG_FORMAT, NODE_ENV, ORIGIN, PORT } from '@config'
+import { errorMiddleware } from '@middlewares'
+import { logger, stream } from '@utils'
 import { defaultMetadataStorage } from 'class-transformer'
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema'
 import compression from 'compression'
@@ -7,12 +9,10 @@ import express from 'express'
 import helmet from 'helmet'
 import hpp from 'hpp'
 import morgan from 'morgan'
-import { useExpressServer, getMetadataArgsStorage } from 'routing-controllers'
+import 'reflect-metadata'
+import { getMetadataArgsStorage, useExpressServer } from 'routing-controllers'
 import { routingControllersToSpec } from 'routing-controllers-openapi'
 import swaggerUi from 'swagger-ui-express'
-import { NODE_ENV, PORT, LOG_FORMAT, ORIGIN, CREDENTIALS } from '@config'
-import errorMiddleware from '@middlewares/error.middleware'
-import { logger, stream } from '@utils/logger'
 
 class App {
   public app: express.Application

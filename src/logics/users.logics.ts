@@ -1,11 +1,10 @@
+import { CreateUserDto } from '@dtos'
+import { HttpException } from '@exceptions'
+import { User } from '@interfaces'
+import { isEmpty } from '@utils'
 import { hash } from 'bcrypt'
-import { CreateUserDto } from '@dtos/users.dto'
-import { HttpException } from '@exceptions/HttpException'
-import { User } from '@interfaces/users.interface'
-import userModel from '@models/users.model'
-import { isEmpty } from '@utils/util'
 
-class UserService {
+export class UserService {
   public users = userModel
 
   public async findAllUser(): Promise<User[]> {
@@ -62,5 +61,3 @@ class UserService {
     return deleteUserData
   }
 }
-
-export default UserService

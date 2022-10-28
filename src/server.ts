@@ -1,10 +1,8 @@
 import App from '@/app'
-import { AuthController } from '@controllers/auth.controller'
-import { IndexController } from '@controllers/index.controller'
-import { UsersController } from '@controllers/users.controller'
-import validateEnv from '@utils/validateEnv'
+import Controllers from '@controllers'
+import { validateEnv } from '@utils'
 
 validateEnv()
 
-const app = new App([AuthController, IndexController, UsersController])
+const app = new App(Controllers)
 app.listen()

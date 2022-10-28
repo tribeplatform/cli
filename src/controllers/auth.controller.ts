@@ -1,19 +1,17 @@
+import { AuthService } from '@/logics'
+import { CreateUserDto } from '@dtos'
+import { RequestWithUser, User } from '@interfaces'
+import { authMiddleware, validationMiddleware } from '@middlewares'
 import { Response } from 'express'
 import {
-  Controller,
-  Req,
   Body,
-  Post,
-  UseBefore,
+  Controller,
   HttpCode,
+  Post,
+  Req,
   Res,
+  UseBefore,
 } from 'routing-controllers'
-import { CreateUserDto } from '@dtos/users.dto'
-import { RequestWithUser } from '@interfaces/auth.interface'
-import { User } from '@interfaces/users.interface'
-import authMiddleware from '@middlewares/auth.middleware'
-import { validationMiddleware } from '@middlewares/validation.middleware'
-import AuthService from '@services/auth.service'
 
 @Controller()
 export class AuthController {

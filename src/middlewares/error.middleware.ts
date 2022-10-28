@@ -1,8 +1,8 @@
+import { HttpException } from '@exceptions'
+import { logger } from '@utils'
 import { NextFunction, Request, Response } from 'express'
-import { HttpException } from '@exceptions/HttpException'
-import { logger } from '@utils/logger'
 
-const errorMiddleware = (
+export const errorMiddleware = (
   error: HttpException,
   req: Request,
   res: Response,
@@ -23,5 +23,3 @@ const errorMiddleware = (
     next(error)
   }
 }
-
-export default errorMiddleware

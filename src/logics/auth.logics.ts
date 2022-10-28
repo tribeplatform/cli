@@ -1,14 +1,12 @@
+import { SECRET_KEY } from '@config'
+import { CreateUserDto } from '@dtos'
+import { HttpException } from '@exceptions'
+import { DataStoredInToken, TokenData, User } from '@interfaces'
+import { isEmpty } from '@utils'
 import { compare, hash } from 'bcrypt'
 import { sign } from 'jsonwebtoken'
-import { SECRET_KEY } from '@config'
-import { CreateUserDto } from '@dtos/users.dto'
-import { HttpException } from '@exceptions/HttpException'
-import { DataStoredInToken, TokenData } from '@interfaces/auth.interface'
-import { User } from '@interfaces/users.interface'
-import userModel from '@models/users.model'
-import { isEmpty } from '@utils/util'
 
-class AuthService {
+export class AuthService {
   public users = userModel
 
   public async signup(userData: CreateUserDto): Promise<User> {
@@ -72,5 +70,3 @@ class AuthService {
     return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn};`
   }
 }
-
-export default AuthService

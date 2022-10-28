@@ -12,12 +12,14 @@
     "test": "jest --forceExit --detectOpenHandles",
     "lint": "eslint --ignore-path .gitignore --ext .ts src/",
     "lint:fix": "yarn lint -- --fix",
+    "db:generate": "prisma generate",
     "deploy:prod": "pm2 start ecosystem.config.js --only prod",
     "deploy:dev": "pm2 start ecosystem.config.js --only dev",
     "docker:up": "docker-compose -p app-template up -d",
     "docker:stop": "docker-compose -p app-template stop"
   },
   "dependencies": {
+    "@prisma/client": "4.5.0",
     "bcrypt": "^5.0.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
@@ -68,6 +70,7 @@
     "nodemon": "^2.0.19",
     "pm2": "^5.2.0",
     "prettier": "^2.7.1",
+    "prisma": "^4.5.0",
     "supertest": "^6.2.4",
     "ts-jest": "^28.0.7",
     "ts-node": "^10.9.1",
