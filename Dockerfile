@@ -1,0 +1,30 @@
+# Development build stage
+FROM node:17.4.0-alpine as development-build-stage
+
+ENV NODE_ENV development
+
+COPY . ./app
+
+WORKDIR /app
+
+RUN yarn install --frozen-lockfile
+RUN yarn build
+
+EXPOSE 3000
+
+CMD ["yarn", "dev"]
+
+# Production build stage
+FROM node:17.4.0-alpine as production-build-stage
+
+ENV NODE_ENV production
+
+COPY --from=common-build-stage /app/node_modules /app/node_modules
+COPY --from=common-build-stage /app/dist /app/dist
+COPY --from=common-build-stage /app/package.json /app
+
+WORKDIR /app
+
+EXPOSE 3000
+
+CMD ["yarn", "start"]
