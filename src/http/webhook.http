@@ -1,0 +1,38 @@
+# baseURL
+@baseURL = http://localhost:3000
+
+###
+# Webhook
+POST {{ baseURL }}/webhook
+Content-Type: application/json
+
+{
+    "type": "SUBSCRIPTION",
+    "networkId": "network_id",
+	"context": "SPACE",
+    "entityId": "space_id",
+    "currentSettings": [
+        {
+            "id": "setting_id",
+            "appId": "app_id",
+            "networkId": "network_id",
+            "context": "SPACE",
+            "entityId": "space_id",
+            "settings": {
+                "enabled": true,
+            }
+        },
+        {
+            "id": "setting_id",
+            "appId": "app_id",
+            "networkId": "network_id",
+            "context": "NETWORK",
+            "settings": {
+                "enabled": false,
+            }
+        }
+    ],
+    "data": {
+        "name": "post.created"
+    }
+}

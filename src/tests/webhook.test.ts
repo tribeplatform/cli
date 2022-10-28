@@ -1,6 +1,6 @@
 import App from '@/app'
 import { AuthController } from '@controllers'
-import { CreateUserDto } from '@dtos'
+import { WebhookInputDto } from '@dtos'
 import request from 'supertest'
 
 afterAll(async () => {
@@ -10,7 +10,7 @@ afterAll(async () => {
 describe('Testing Auth', () => {
   describe('[POST] /signup', () => {
     it('response should have the Create userData', () => {
-      const userData: CreateUserDto = {
+      const userData: WebhookInputDto = {
         email: 'test@email.com',
         password: 'q1w2e3r4',
       }
@@ -22,7 +22,7 @@ describe('Testing Auth', () => {
 
   describe('[POST] /login', () => {
     it('response should have the Set-Cookie header with the Authorization token', async () => {
-      const userData: CreateUserDto = {
+      const userData: WebhookInputDto = {
         email: 'lim@gmail.com',
         password: 'q1w2e3r4',
       }

@@ -23,6 +23,7 @@
       "@config": ["config"],
       "@controllers": ["controllers"],
       "@dtos": ["dtos"],
+      "@enums": ["enums"],
       "@exceptions": ["exceptions"],
       "@interfaces": ["interfaces"],
       "@middlewares": ["middlewares"],
