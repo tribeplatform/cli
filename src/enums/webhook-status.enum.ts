@@ -1,4 +1,4 @@
 export enum WebhookStatus {
-  SUCCEEDED = 'SUCCEEDED',
-  FAILED = 'FAILED',
+  Succeeded = 'SUCCEEDED',
+  Failed = 'FAILED',
 }

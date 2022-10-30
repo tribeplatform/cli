@@ -1,6 +1,6 @@
 export enum WebhookContext {
-  NETWORK = 'NETWORK',
-  MEMBER = 'MEMBER',
-  SPACE = 'SPACE',
-  POST = 'POST',
+  Network = 'NETWORK',
+  Member = 'MEMBER',
+  Space = 'SPACE',
+  Post = 'POST',
 }
