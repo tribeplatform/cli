@@ -1,3 +1,6 @@
+export * from './app.interface'
 export * from './event.interface'
+export * from './federated-search.interface'
+export * from './interaction.interface'
 export * from './template-mapping.interface'
 export * from './webhook.interface'

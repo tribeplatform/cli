@@ -1,9 +1,10 @@
 import { WebhookContext, WebhookType } from '@enums'
+import { BaseWebhook } from '@interfaces'
 import { Type } from 'class-transformer'
 import { IsArray, IsEnum, IsOptional, IsString, ValidateNested } from 'class-validator'
 import { WebhookSettingDto } from './webhook-setting.dto'
 
-export class WebhookInputDto<P = unknown> {
+export class WebhookDto<P = unknown> implements BaseWebhook {
   @IsEnum(WebhookType)
   type: WebhookType
 
