@@ -3,7 +3,7 @@ import { Type } from 'class-transformer'
 import { IsArray, IsEnum, IsOptional, IsString, ValidateNested } from 'class-validator'
 import { WebhookSettingDto } from './webhook-setting.dto'
 
-export class WebhookInputDto {
+export class WebhookInputDto<P = unknown> {
   @IsEnum(WebhookType)
   type: WebhookType
 
@@ -23,5 +23,5 @@ export class WebhookInputDto {
   currentSettings: WebhookSettingDto[]
 
   @IsOptional()
-  data?: any
+  data?: P
 }
