@@ -3,6 +3,8 @@ import { WebhookStatus, WebhookType } from '@enums'
 import {
   FederatedSearchWebhook,
   FederatedSearchWebhookResponse,
+  InteractionWebhook,
+  InteractionWebhookResponse,
   Webhook,
   WebhookResponse,
 } from '@interfaces'
@@ -50,5 +52,16 @@ export class WebhookController {
     @Body() webhook: FederatedSearchWebhook,
   ): Promise<FederatedSearchWebhookResponse> {
     return this.webhookService.handleFederatedSearchWebhook(webhook)
+  }
+
+  @Post('/interaction')
+  @UseBefore(validationMiddleware(WebhookDto, 'body'))
+  @OpenAPI({ summary: 'Receives federated search requests and returns the result.' })
+  @ResponseSchema(WebhookResponseDto)
+  @HttpCode(200)
+  async receiveInteraction(
+    @Body() webhook: InteractionWebhook,
+  ): Promise<InteractionWebhookResponse> {
+    return this.webhookService.handleInteractionWebhook(webhook)
   }
 }

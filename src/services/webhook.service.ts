@@ -5,6 +5,8 @@ import {
   FederatedSearchWebhook,
   FederatedSearchWebhookResponse,
   GeneralWebhookResponse,
+  InteractionWebhook,
+  InteractionWebhookResponse,
   SubscriptionWebhook,
   TestWebhook,
   TestWebhookResponse,
@@ -97,6 +99,22 @@ export class WebhookService {
       type: webhook.type,
       status: WebhookStatus.Succeeded,
       data: [],
+    }
+  }
+
+  async handleInteractionWebhook(
+    webhook: InteractionWebhook,
+  ): Promise<InteractionWebhookResponse> {
+    logger.verbose('Received subscription webhook', webhook)
+
+    // TODO: Handle interaction webhook here
+
+    return {
+      type: webhook.type,
+      status: WebhookStatus.Succeeded,
+      data: {
+        interactions: [],
+      },
     }
   }
 }

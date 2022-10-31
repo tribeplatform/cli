@@ -1,5 +1,6 @@
 import { ErrorCodes, WebhookStatus, WebhookType } from '@enums'
 import { FederatedSearchResult } from './federated-search.interface'
+import { InteractionData } from './interaction.interface'
 import { Challenge } from './webhook.interface'
 
 export interface SuccessWebhookResponse {
@@ -33,7 +34,13 @@ export type FederatedSearchWebhookResponse = BaseWebhookResponse & {
   data: FederatedSearchResult
 }
 
+export type InteractionWebhookResponse = BaseWebhookResponse & {
+  type: WebhookType.Interaction
+  data: InteractionData
+}
+
 export type WebhookResponse =
   | GeneralWebhookResponse
   | TestWebhookResponse
   | FederatedSearchWebhookResponse
+  | InteractionWebhookResponse
