@@ -30,7 +30,6 @@ USAGE
 # Commands
 <!-- commands -->
 * [`bettermode autocomplete [SHELL]`](#bettermode-autocomplete-shell)
-* [`bettermode base`](#bettermode-base)
 * [`bettermode commands`](#bettermode-commands)
 * [`bettermode help [COMMAND]`](#bettermode-help-command)
 * [`bettermode login`](#bettermode-login)
@@ -66,15 +65,6 @@ EXAMPLES
 ```
 
 _See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v1.3.5/src/commands/autocomplete/index.ts)_
-
-## `bettermode base`
-
-```
-USAGE
-  $ bettermode base
-```
-
-_See code: [dist/commands/base.ts](https://github.com/tribeplatform/cli/blob/v0.0.0/dist/commands/base.ts)_
 
 ## `bettermode commands`
 
@@ -130,17 +120,20 @@ _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.1
 
 ## `bettermode login`
 
-Login to Bettermode portal
+login to Bettermode portal
 
 ```
 USAGE
-  $ bettermode login [-e <value>]
+  $ bettermode login [--json] [-e <value>]
 
 FLAGS
   -e, --email=<value>  your email address
 
+GLOBAL FLAGS
+  --json  Format output as json.
+
 DESCRIPTION
-  Login to Bettermode portal
+  login to Bettermode portal
 
 EXAMPLES
   $ bettermode login
@@ -155,12 +148,12 @@ _See code: [dist/commands/login.ts](https://github.com/tribeplatform/cli/blob/v0
 
 ## `bettermode networks`
 
-Shows your networks
+list your networks
 
 ```
 USAGE
-  $ bettermode networks [--columns <value> | -x] [--sort <value>] [--filter <value>] [--output csv|json|yaml |
-    | [--csv | --no-truncate]] [--no-header | ]
+  $ bettermode networks [--json] [--columns <value> | -x] [--sort <value>] [--filter <value>] [--output
+    csv|json|yaml |  | [--csv | --no-truncate]] [--no-header | ]
 
 FLAGS
   -x, --extended     show extra columns
@@ -173,8 +166,11 @@ FLAGS
                      <options: csv|json|yaml>
   --sort=<value>     property to sort by (prepend '-' for descending)
 
+GLOBAL FLAGS
+  --json  Format output as json.
+
 DESCRIPTION
-  Shows your networks
+  list your networks
 
 EXAMPLES
   $ bettermode networks
@@ -221,14 +217,17 @@ _See code: [@oclif/plugin-update](https://github.com/oclif/plugin-update/blob/v3
 
 ## `bettermode whoami`
 
-Shows your authorized email address
+check your authorized email address
 
 ```
 USAGE
-  $ bettermode whoami
+  $ bettermode whoami [--json]
+
+GLOBAL FLAGS
+  --json  Format output as json.
 
 DESCRIPTION
-  Shows your authorized email address
+  check your authorized email address
 
 EXAMPLES
   $ bettermode whoami

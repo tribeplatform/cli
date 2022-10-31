@@ -1,13 +1,14 @@
-import color from '@oclif/color'
 import { CliUx, Flags } from '@oclif/core'
+import { SfCommand } from '@salesforce/sf-plugins-core'
 import { GlobalClient } from '@tribeplatform/gql-client'
 import { ActionStatus } from '@tribeplatform/gql-client/global-types'
 import { INVALID_EMAIL, SERVER_ERROR } from '../errors'
 import { makeClientRequest, setConfigs, validateEmail } from '../utils'
-import { BaseCommand } from './base'
 
-export default class Login extends BaseCommand {
-  static description = 'Login to Bettermode portal'
+type LoginResponse = { email: string; token: string }
+
+export default class Login extends SfCommand<LoginResponse> {
+  static description = 'login to Bettermode portal'
 
   static examples = [`$ bettermode login`]
 
@@ -65,7 +66,10 @@ export default class Login extends BaseCommand {
     }
   }
 
-  login = async (options: { email: string; verificationCode: string }): Promise<void> => {
+  login = async (options: {
+    email: string
+    verificationCode: string
+  }): Promise<LoginResponse> => {
     const { email, verificationCode } = options
 
     const client = new GlobalClient({})
@@ -78,13 +82,16 @@ export default class Login extends BaseCommand {
     )
 
     await setConfigs({ API_TOKEN: result.accessToken, EMAIL: email })
+
+    return { email, token: result.accessToken }
   }
 
-  async run(): Promise<void> {
+  async run(): Promise<LoginResponse> {
     const email = await this.getEmail()
     await this.sendVerificationCode(email)
     const verificationCode = await this.getVerificationCode()
-    await this.login({ email, verificationCode })
-    this.log(color.green('You have successfully logged in!'))
+    const result = await this.login({ email, verificationCode })
+    this.logSuccess('You have successfully logged in!')
+    return result
   }
 }
