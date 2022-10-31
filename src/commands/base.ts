@@ -1,4 +1,6 @@
+import color from '@oclif/color'
 import { Command } from '@oclif/core'
+import { PrettyPrintableError } from '@oclif/core/lib/interfaces'
 import { GlobalClient } from '@tribeplatform/gql-client'
 import { Network } from '@tribeplatform/gql-client/global-types'
 import { CUSTOM_API_TOKEN } from '../constants'
@@ -42,5 +44,23 @@ export abstract class BaseCommand extends Command {
       client.query({ name: 'networks', args: 'basic' }),
       this,
     )
+  }
+
+  error(
+    input: string | Error,
+    options: { code?: string | undefined; exit: false } & PrettyPrintableError,
+  ): void
+  error(
+    input: string | Error,
+    options?:
+      | ({ code?: string | undefined; exit?: number | undefined } & PrettyPrintableError)
+      | undefined,
+  ): never
+  error(input: any, options?: any): void {
+    if (input instanceof Error) {
+      super.error(input, options)
+    }
+
+    super.error(`${color.red(input)}`, options)
   }
 }
