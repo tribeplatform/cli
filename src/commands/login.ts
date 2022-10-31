@@ -1,8 +1,7 @@
 import { CliUx, Flags } from '@oclif/core'
 import { SfCommand } from '@salesforce/sf-plugins-core'
-import { GlobalClient } from '@tribeplatform/gql-client'
 import { ActionStatus } from '@tribeplatform/gql-client/global-types'
-import { makeClientRequest, ServerError, setConfigs, validateEmail } from '../utils'
+import { CliClient, ServerError, setConfigs, validateEmail } from '../utils'
 
 type LoginResponse = { email: string; token: string }
 
@@ -49,13 +48,11 @@ export default class Login extends SfCommand<LoginResponse> {
   }
 
   sendVerificationCode = async (email: string): Promise<void> => {
-    const client = new GlobalClient({})
-    const result = await makeClientRequest(
-      client.mutation({
-        name: 'requestGlobalTokenCode',
-        args: { variables: { input: { email } }, fields: 'basic' },
-      }),
-    )
+    const client = new CliClient({})
+    const result = await client.mutation({
+      name: 'requestGlobalTokenCode',
+      args: { variables: { input: { email } }, fields: 'basic' },
+    })
     if (result?.status !== ActionStatus.succeeded) {
       throw new ServerError()
     }
@@ -67,13 +64,11 @@ export default class Login extends SfCommand<LoginResponse> {
   }): Promise<LoginResponse> => {
     const { email, verificationCode } = options
 
-    const client = new GlobalClient({})
-    const result = await makeClientRequest(
-      client.query({
-        name: 'globalToken',
-        args: { variables: { input: { email, verificationCode } }, fields: 'basic' },
-      }),
-    )
+    const client = new CliClient({})
+    const result = await client.query({
+      name: 'globalToken',
+      args: { variables: { input: { email, verificationCode } }, fields: 'basic' },
+    })
 
     await setConfigs({ API_TOKEN: result.accessToken, EMAIL: email })
 

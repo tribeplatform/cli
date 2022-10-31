@@ -1,7 +1,7 @@
 import { CliUx } from '@oclif/core'
 import { SfCommand } from '@salesforce/sf-plugins-core'
 import { Network } from '@tribeplatform/gql-client/global-types'
-import { getClient, makeClientRequest } from '../utils'
+import { getClient } from '../utils'
 
 type NetworksResponse = { networks: Network[] }
 
@@ -16,7 +16,7 @@ export default class Networks extends SfCommand<NetworksResponse> {
 
   getNetworks = async (): Promise<Network[]> => {
     const client = await getClient()
-    return await makeClientRequest(client.query({ name: 'networks', args: 'basic' }))
+    return await client.query({ name: 'networks', args: 'basic' })
   }
 
   async run(): Promise<NetworksResponse> {

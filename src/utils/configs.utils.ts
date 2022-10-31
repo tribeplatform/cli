@@ -11,7 +11,6 @@ export const isConfigExists = async (): Promise<boolean> => {
 
   try {
     const result = await stat(RC_LOCATION)
-    console.log('shit', result)
     return result.isFile()
   } catch {
     return false
@@ -29,12 +28,14 @@ export const hasAccessToConfig = async (): Promise<boolean> => {
   }
 }
 
-export const validateConfigs = async (): Promise<void> => {
+export const validateConfigs = async (ignoreExistence = false): Promise<void> => {
   if (VALIDATED) return
 
   const hasConfig = await isConfigExists()
-  if (!hasConfig) {
+  if (!hasConfig && !ignoreExistence) {
     throw new UnAuthorizedError()
+  } else if (!hasConfig && ignoreExistence) {
+    return
   }
 
   const hasAccess = await hasAccessToConfig()
@@ -65,7 +66,7 @@ export const getConfigs = async (): Promise<Configs> => {
 }
 
 export const setConfigs = async (configs: Configs): Promise<void> => {
-  await validateConfigs()
+  await validateConfigs(true)
 
   const data = Object.entries(configs)
     .map(([key, value]) => `${key}=${value}`)
