@@ -1,5 +1,5 @@
 import { WebhookContext, WebhookType } from '@enums'
-import { AppInstallation, AppSetting } from './app.interface'
+import { AppInstallation, AppSettings } from './app.interface'
 import { Event } from './event.interface'
 import { FederatedSearch } from './federated-search.interface'
 import { Interaction } from './interaction.interface'
@@ -13,7 +13,7 @@ export interface BaseWebhook {
   networkId: string
   context: WebhookContext
   entityId?: string
-  currentSettings: AppSetting[]
+  currentSettings: AppSettings[]
   data?: unknown
 }
 

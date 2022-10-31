@@ -1,10 +1,6 @@
 import { WebhookContext } from '@enums'
-import { Type } from 'class-transformer'
+import { CustomSettings } from '@interfaces'
 import { IsEnum, IsString, MaxLength } from 'class-validator'
-
-class AppContextSettingDto {
-  [key: string]: string
-}
 
 export class AppSettingDto {
   @IsString()
@@ -26,6 +22,5 @@ export class AppSettingDto {
   @MaxLength(100)
   entityId: string
 
-  @Type(() => AppContextSettingDto)
-  settings: AppContextSettingDto
+  settings: CustomSettings
 }

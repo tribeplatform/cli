@@ -4,15 +4,16 @@ import {
   PrimaryScopes,
   WebhookContext,
 } from '@enums'
+import { CustomSettings } from './settings.interface'
 import { TemplateMapping } from './template-mapping.interface'
 
-export class AppSetting {
+export class AppSettings {
   id: string
   appId: string
   networkId: string
   context: WebhookContext
   entityId: string
-  settings: Record<string, string>
+  settings: CustomSettings
 }
 
 export interface AppInstallationTemplatesMappings {
