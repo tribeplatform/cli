@@ -2,7 +2,7 @@ import { WebhookContext, WebhookType } from '@enums'
 import { BaseWebhook } from '@interfaces'
 import { Type } from 'class-transformer'
 import { IsArray, IsEnum, IsOptional, IsString, ValidateNested } from 'class-validator'
-import { WebhookSettingDto } from './webhook-setting.dto'
+import { AppSettingDto } from './app-setting.dto'
 
 export class WebhookDto<P = unknown> implements BaseWebhook {
   @IsEnum(WebhookType)
@@ -19,9 +19,9 @@ export class WebhookDto<P = unknown> implements BaseWebhook {
   entityId?: string
 
   @IsArray()
-  @Type(() => WebhookSettingDto)
+  @Type(() => AppSettingDto)
   @ValidateNested({ each: true })
-  currentSettings: WebhookSettingDto[]
+  currentSettings: AppSettingDto[]
 
   @IsOptional()
   data?: P

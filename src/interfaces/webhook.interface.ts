@@ -1,4 +1,4 @@
-import { ErrorCodes, WebhookContext, WebhookStatus, WebhookType } from '@enums'
+import { WebhookContext, WebhookType } from '@enums'
 import { AppInstallation, AppSetting } from './app.interface'
 import { Event } from './event.interface'
 import { FederatedSearch } from './federated-search.interface'
@@ -17,33 +17,7 @@ export interface BaseWebhook {
   data?: unknown
 }
 
-export interface SuccessWebhookResponse {
-  type: WebhookType
-  status: WebhookStatus.Succeeded
-  data?: unknown
-}
-
-export interface GeneralSuccessWebhookResponse extends SuccessWebhookResponse {
-  data?: Record<string, never>
-}
-
-export interface FailedWebhookResponse {
-  type: WebhookType
-  status: WebhookStatus.Failed
-  errorCode: ErrorCodes
-  errorMessage: string
-}
-
-export type GeneralWebhookResponse = GeneralSuccessWebhookResponse | FailedWebhookResponse
-
-export type BaseWebhookResponse = SuccessWebhookResponse | FailedWebhookResponse
-
 export interface TestWebhook extends BaseWebhook {
-  type: WebhookType.Test
-  data: Challenge
-}
-
-export type TestWebhookResponse = BaseWebhookResponse & {
   type: WebhookType.Test
   data: Challenge
 }
@@ -80,5 +54,3 @@ export type Webhook =
   | FederatedSearchWebhook
   | InteractionWebhook
   | SubscriptionWebhook
-
-export type WebhookResponse = GeneralWebhookResponse | TestWebhookResponse

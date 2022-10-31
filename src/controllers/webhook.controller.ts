@@ -1,6 +1,11 @@
 import { WebhookDto, WebhookResponseDto } from '@dtos'
 import { WebhookStatus, WebhookType } from '@enums'
-import { Webhook, WebhookResponse } from '@interfaces'
+import {
+  FederatedSearchWebhook,
+  FederatedSearchWebhookResponse,
+  Webhook,
+  WebhookResponse,
+} from '@interfaces'
 import { signatureMiddleware, validationMiddleware } from '@middlewares'
 import { WebhookService } from '@services'
 import { logger } from '@utils'
@@ -32,5 +37,16 @@ export class WebhookController {
           status: WebhookStatus.Succeeded,
         }
     }
+  }
+
+  @Post('/federated-search')
+  @UseBefore(validationMiddleware(WebhookDto, 'body'))
+  @OpenAPI({ summary: 'Receives federated search requests and returns the result.' })
+  @ResponseSchema(WebhookResponseDto)
+  @HttpCode(200)
+  async receiveFederatedSearch(
+    @Body() webhook: FederatedSearchWebhook,
+  ): Promise<FederatedSearchWebhookResponse> {
+    return this.webhookService.handleFederatedSearchWebhook(webhook)
   }
 }

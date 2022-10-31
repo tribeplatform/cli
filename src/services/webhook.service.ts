@@ -2,6 +2,8 @@ import { WebhookStatus } from '@enums'
 import {
   AppInstalledWebhook,
   AppUninstalledWebhook,
+  FederatedSearchWebhook,
+  FederatedSearchWebhookResponse,
   GeneralWebhookResponse,
   SubscriptionWebhook,
   TestWebhook,
@@ -81,6 +83,20 @@ export class WebhookService {
     return {
       type: webhook.type,
       status: WebhookStatus.Succeeded,
+    }
+  }
+
+  async handleFederatedSearchWebhook(
+    webhook: FederatedSearchWebhook,
+  ): Promise<FederatedSearchWebhookResponse> {
+    logger.verbose('Received subscription webhook', webhook)
+
+    // TODO: Handle federated search webhook here
+
+    return {
+      type: webhook.type,
+      status: WebhookStatus.Succeeded,
+      data: [],
     }
   }
 }
