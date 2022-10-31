@@ -79,11 +79,7 @@
       "@salesforce/sf-plugins-core"
     ],
     "topicSeparator": " ",
-    "topics": {
-      "hello": {
-        "description": "Say hello to the world and others"
-      }
-    }
+    "topics": {}
   },
   "engines": {
     "node": ">=12.0.0"

@@ -27,7 +27,7 @@ export default class Login extends SfCommand<LoginResponse> {
     }),
   }
 
-  sendVerificationCode = async (email: string): Promise<void> => {
+  async sendVerificationCode(email: string): Promise<void> {
     const client = new CliClient({})
     const result = await client.mutation({
       name: 'requestGlobalTokenCode',
@@ -38,10 +38,10 @@ export default class Login extends SfCommand<LoginResponse> {
     }
   }
 
-  login = async (options: {
+  async login(options: {
     email: string
     verificationCode: string
-  }): Promise<LoginResponse> => {
+  }): Promise<LoginResponse> {
     const { email, verificationCode } = options
 
     const client = new CliClient({})
