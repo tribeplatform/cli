@@ -1,9 +1,10 @@
 import { Flags } from '@oclif/core'
 import { SfCommand } from '@salesforce/sf-plugins-core'
 import { App } from '@tribeplatform/gql-client/global-types'
+import { command } from 'execa'
 import * as Listr from 'listr'
-import { APP_LANGUAGE_CHOICES } from '../constants'
-import { AppLanguage } from '../types'
+import { APP_TEMPLATE_CHOICES, REPO_URL } from '../constants'
+import { AppTemplate } from '../types'
 import { CommandAbortedError, getClient, UnAuthorizedError } from '../utils'
 
 type CreateAppResponse = { app: App }
@@ -38,11 +39,11 @@ export default class CreateApp extends SfCommand<CreateAppResponse> {
       throw new UnAuthorizedError(`You don't have any networks, please create one first.`)
     }
 
-    const { name, repo, networkId, language, confirmed } = await this.prompt<{
+    const { name, repo, networkId, template, confirmed } = await this.prompt<{
       networkId: string
       name: string
       repo: string
-      language: AppLanguage
+      template: AppTemplate
       confirmed: boolean
     }>([
       {
@@ -69,13 +70,13 @@ export default class CreateApp extends SfCommand<CreateAppResponse> {
         message: `Please select a repo name for your app:`,
       },
       {
-        name: 'language',
+        name: 'template',
         type: 'list',
-        default: APP_LANGUAGE_CHOICES.ts,
-        message: `Please select your preferred coding language:`,
-        choices: Object.keys(APP_LANGUAGE_CHOICES).map(language => ({
-          name: APP_LANGUAGE_CHOICES[language as AppLanguage],
-          value: language,
+        default: APP_TEMPLATE_CHOICES.ts,
+        message: `Please select your preferred app template:`,
+        choices: Object.keys(APP_TEMPLATE_CHOICES).map(template => ({
+          name: APP_TEMPLATE_CHOICES[template as AppTemplate],
+          value: template,
         })),
       },
       {
@@ -90,11 +91,24 @@ export default class CreateApp extends SfCommand<CreateAppResponse> {
       throw new CommandAbortedError()
     }
 
-    let app: App
+    let app: App | null = null
+    let removeFolderOnError = false
     const tasks = new Listr([
       {
+        title: `Download ${APP_TEMPLATE_CHOICES[template]} template`,
+        task: async () => {
+          await command('which git')
+          await command(`mkdir ${repo}`)
+          await command(`git clone ${REPO_URL} ${repo}/.tmp`)
+
+          removeFolderOnError = true
+          await command(`cp -a ${repo}/.tmp/templates/${template}/. ${repo}/`)
+          await command(`rm -rf ${repo}/.tmp`)
+        },
+      },
+      {
         title: 'Create the app in the portal',
-        task: async (ctx, task) => {
+        task: async () => {
           app = await client.mutation({
             name: 'createApp',
             args: {
@@ -108,21 +122,21 @@ export default class CreateApp extends SfCommand<CreateAppResponse> {
               fields: 'basic',
             },
           })
-
-          ctx.app = Boolean(app)
-        },
-      },
-      {
-        title: 'Install package dependencies with Yarn',
-        enabled: ctx => ctx.app === true,
-        task: (ctx, task) => {
-          task.output = `Installing dependencies for ${app.name} ...`
         },
       },
     ])
 
-    await tasks.run()
+    try {
+      await tasks.run()
+      if (!app) {
+        throw new Error('App creation failed')
+      }
+    } catch (error) {
+      if (removeFolderOnError) await command(`rm -rf ${repo}`, { reject: false })
+      throw error
+    }
+
     this.logSuccess('You have successfully created an app!')
-    return { app: null as any }
+    return { app }
   }
 }

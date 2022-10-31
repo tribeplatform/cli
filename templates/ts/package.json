@@ -1,7 +1,7 @@
 {
   "name": "app-template",
   "version": "0.0.0",
-  "description": "Tribe App Template",
+  "description": "A typescript app for Bettermode",
   "author": "",
   "license": "ISC",
   "scripts": {
