@@ -7,7 +7,6 @@ import {
   QueryName,
   QueryOption,
 } from '@tribeplatform/gql-client/global-types'
-import { CUSTOM_API_TOKEN } from '../constants'
 import { getConfigs } from './configs.utils'
 import { CliError, InvalidTokenError, UnAuthorizedError } from './error.utils'
 
@@ -40,8 +39,8 @@ export class CliClient extends GlobalClient {
   }
 }
 
-export const getClient = async (): Promise<CliClient> => {
-  let accessToken = CUSTOM_API_TOKEN
+export const getClient = async (customApiToken?: string): Promise<CliClient> => {
+  let accessToken = customApiToken
   if (!accessToken) {
     const configs = await getConfigs()
     accessToken = configs.API_TOKEN

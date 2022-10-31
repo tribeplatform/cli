@@ -18,14 +18,16 @@ export default class Login extends SfCommand<LoginResponse> {
       env: 'BETTERMODE_EMAIL',
       required: false,
     }),
+    'api-token': Flags.string({
+      char: 't',
+      summary: 'your API token',
+      description: 'the API token that you want to use to login in the portal',
+      env: 'BETTERMODE_API_TOKEN',
+      required: false,
+    }),
   }
 
-  getEmail = async (): Promise<string> => {
-    const {
-      flags: { email: givenEmail },
-    } = await this.parse(Login)
-
-    let email = givenEmail || ''
+  getEmail = async (email = ''): Promise<string> => {
     if (!email) {
       email = await CliUx.ux.prompt('- Please enter your email address', {
         required: true,
@@ -74,10 +76,20 @@ export default class Login extends SfCommand<LoginResponse> {
   }
 
   async run(): Promise<LoginResponse> {
-    const email = await this.getEmail()
-    await this.sendVerificationCode(email)
-    const verificationCode = await this.getVerificationCode()
-    const result = await this.login({ email, verificationCode })
+    const {
+      flags: { email: givenEmail, 'api-token': apiToken },
+    } = await this.parse(Login)
+
+    let result: LoginResponse
+    if (apiToken) {
+      result = { email: givenEmail || 'unknown-email', token: apiToken }
+    } else {
+      const email = await this.getEmail(givenEmail)
+      await this.sendVerificationCode(email)
+      const verificationCode = await this.getVerificationCode()
+      result = await this.login({ email, verificationCode })
+    }
+
     this.logSuccess('You have successfully logged in!')
     return result
   }
