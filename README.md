@@ -29,58 +29,84 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`bettermode hello PERSON`](#bettermode-hello-person)
-* [`bettermode hello world`](#bettermode-hello-world)
+* [`bettermode autocomplete [SHELL]`](#bettermode-autocomplete-shell)
+* [`bettermode base`](#bettermode-base)
+* [`bettermode commands`](#bettermode-commands)
 * [`bettermode help [COMMAND]`](#bettermode-help-command)
-* [`bettermode plugins`](#bettermode-plugins)
-* [`bettermode plugins:install PLUGIN...`](#bettermode-pluginsinstall-plugin)
-* [`bettermode plugins:inspect PLUGIN...`](#bettermode-pluginsinspect-plugin)
-* [`bettermode plugins:install PLUGIN...`](#bettermode-pluginsinstall-plugin-1)
-* [`bettermode plugins:link PLUGIN`](#bettermode-pluginslink-plugin)
-* [`bettermode plugins:uninstall PLUGIN...`](#bettermode-pluginsuninstall-plugin)
-* [`bettermode plugins:uninstall PLUGIN...`](#bettermode-pluginsuninstall-plugin-1)
-* [`bettermode plugins:uninstall PLUGIN...`](#bettermode-pluginsuninstall-plugin-2)
-* [`bettermode plugins update`](#bettermode-plugins-update)
+* [`bettermode login`](#bettermode-login)
+* [`bettermode networks`](#bettermode-networks)
+* [`bettermode update [CHANNEL]`](#bettermode-update-channel)
+* [`bettermode whoami`](#bettermode-whoami)
 
-## `bettermode hello PERSON`
+## `bettermode autocomplete [SHELL]`
 
-Say hello
+display autocomplete installation instructions
 
 ```
 USAGE
-  $ bettermode hello [PERSON] -f <value>
+  $ bettermode autocomplete [SHELL] [-r]
 
 ARGUMENTS
-  PERSON  Person to say hello to
+  SHELL  shell type
 
 FLAGS
-  -f, --from=<value>  (required) Who is saying hello
+  -r, --refresh-cache  Refresh cache (ignores displaying instructions)
 
 DESCRIPTION
-  Say hello
+  display autocomplete installation instructions
 
 EXAMPLES
-  $ oex hello friend --from oclif
-  hello friend from oclif! (./src/commands/hello/index.ts)
+  $ bettermode autocomplete
+
+  $ bettermode autocomplete bash
+
+  $ bettermode autocomplete zsh
+
+  $ bettermode autocomplete --refresh-cache
 ```
 
-_See code: [dist/commands/hello/index.ts](https://github.com/tribeplatform/cli/blob/v0.0.0/dist/commands/hello/index.ts)_
+_See code: [@oclif/plugin-autocomplete](https://github.com/oclif/plugin-autocomplete/blob/v1.3.5/src/commands/autocomplete/index.ts)_
 
-## `bettermode hello world`
-
-Say hello world
+## `bettermode base`
 
 ```
 USAGE
-  $ bettermode hello world
+  $ bettermode base
+```
+
+_See code: [dist/commands/base.ts](https://github.com/tribeplatform/cli/blob/v0.0.0/dist/commands/base.ts)_
+
+## `bettermode commands`
+
+list all the commands
+
+```
+USAGE
+  $ bettermode commands [--json] [-h] [--hidden] [--tree] [--columns <value> | -x] [--sort <value>] [--filter
+    <value>] [--output csv|json|yaml |  | [--csv | --no-truncate]] [--no-header | ]
+
+FLAGS
+  -h, --help         Show CLI help.
+  -x, --extended     show extra columns
+  --columns=<value>  only show provided columns (comma-separated)
+  --csv              output is csv format [alias: --output=csv]
+  --filter=<value>   filter property by partial string matching, ex: name=foo
+  --hidden           show hidden commands
+  --no-header        hide table header from output
+  --no-truncate      do not truncate output to fit screen
+  --output=<option>  output in a more machine friendly format
+                     <options: csv|json|yaml>
+  --sort=<value>     property to sort by (prepend '-' for descending)
+  --tree             show tree of commands
+
+GLOBAL FLAGS
+  --json  Format output as json.
 
 DESCRIPTION
-  Say hello world
-
-EXAMPLES
-  $ bettermode hello world
-  hello world! (./src/commands/hello/world.ts)
+  list all the commands
 ```
+
+_See code: [@oclif/plugin-commands](https://github.com/oclif/plugin-commands/blob/v2.2.1/src/commands/commands.ts)_
 
 ## `bettermode help [COMMAND]`
 
@@ -100,235 +126,113 @@ DESCRIPTION
   Display help for bettermode.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.16/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.17/src/commands/help.ts)_
 
-## `bettermode plugins`
+## `bettermode login`
 
-List installed plugins.
+Login to Bettermode portal
 
 ```
 USAGE
-  $ bettermode plugins [--core]
+  $ bettermode login [-e <value>]
 
 FLAGS
-  --core  Show core plugins.
+  -e, --email=<value>  your email address
 
 DESCRIPTION
-  List installed plugins.
+  Login to Bettermode portal
 
 EXAMPLES
-  $ bettermode plugins
+  $ bettermode login
+
+FLAG DESCRIPTIONS
+  -e, --email=<value>  your email address
+
+    the email address that you want to use to login in the portal
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v2.1.5/src/commands/plugins/index.ts)_
+_See code: [dist/commands/login.ts](https://github.com/tribeplatform/cli/blob/v0.0.0/dist/commands/login.ts)_
 
-## `bettermode plugins:install PLUGIN...`
+## `bettermode networks`
 
-Installs a plugin into the CLI.
+Shows your networks
 
 ```
 USAGE
-  $ bettermode plugins:install PLUGIN...
-
-ARGUMENTS
-  PLUGIN  Plugin to install.
+  $ bettermode networks [--columns <value> | -x] [--sort <value>] [--filter <value>] [--output csv|json|yaml |
+    | [--csv | --no-truncate]] [--no-header | ]
 
 FLAGS
-  -f, --force    Run yarn install with force flag.
-  -h, --help     Show CLI help.
-  -v, --verbose
+  -x, --extended     show extra columns
+  --columns=<value>  only show provided columns (comma-separated)
+  --csv              output is csv format [alias: --output=csv]
+  --filter=<value>   filter property by partial string matching, ex: name=foo
+  --no-header        hide table header from output
+  --no-truncate      do not truncate output to fit screen
+  --output=<option>  output in a more machine friendly format
+                     <options: csv|json|yaml>
+  --sort=<value>     property to sort by (prepend '-' for descending)
 
 DESCRIPTION
-  Installs a plugin into the CLI.
-  Can be installed from npm or a git url.
-
-  Installation of a user-installed plugin will override a core plugin.
-
-  e.g. If you have a core plugin that has a 'hello' command, installing a user-installed plugin with a 'hello' command
-  will override the core plugin implementation. This is useful if a user needs to update core plugin functionality in
-  the CLI without the need to patch and update the whole CLI.
-
-
-ALIASES
-  $ bettermode plugins add
+  Shows your networks
 
 EXAMPLES
-  $ bettermode plugins:install myplugin 
-
-  $ bettermode plugins:install https://github.com/someuser/someplugin
-
-  $ bettermode plugins:install someuser/someplugin
+  $ bettermode networks
 ```
 
-## `bettermode plugins:inspect PLUGIN...`
+_See code: [dist/commands/networks.ts](https://github.com/tribeplatform/cli/blob/v0.0.0/dist/commands/networks.ts)_
 
-Displays installation properties of a plugin.
+## `bettermode update [CHANNEL]`
+
+update the bettermode CLI
 
 ```
 USAGE
-  $ bettermode plugins:inspect PLUGIN...
-
-ARGUMENTS
-  PLUGIN  [default: .] Plugin to inspect.
+  $ bettermode update [CHANNEL] [-a] [-v <value> | -i] [--force]
 
 FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
+  -a, --available        Install a specific version.
+  -i, --interactive      Interactively select version to install. This is ignored if a channel is provided.
+  -v, --version=<value>  Install a specific version.
+  --force                Force a re-download of the requested version.
 
 DESCRIPTION
-  Displays installation properties of a plugin.
+  update the bettermode CLI
 
 EXAMPLES
-  $ bettermode plugins:inspect myplugin
+  Update to the stable channel:
+
+    $ bettermode update stable
+
+  Update to a specific version:
+
+    $ bettermode update --version 1.0.0
+
+  Interactively select version:
+
+    $ bettermode update --interactive
+
+  See available versions:
+
+    $ bettermode update --available
 ```
 
-## `bettermode plugins:install PLUGIN...`
+_See code: [@oclif/plugin-update](https://github.com/oclif/plugin-update/blob/v3.0.6/src/commands/update.ts)_
 
-Installs a plugin into the CLI.
+## `bettermode whoami`
+
+Shows your authorized email address
 
 ```
 USAGE
-  $ bettermode plugins:install PLUGIN...
-
-ARGUMENTS
-  PLUGIN  Plugin to install.
-
-FLAGS
-  -f, --force    Run yarn install with force flag.
-  -h, --help     Show CLI help.
-  -v, --verbose
+  $ bettermode whoami
 
 DESCRIPTION
-  Installs a plugin into the CLI.
-  Can be installed from npm or a git url.
-
-  Installation of a user-installed plugin will override a core plugin.
-
-  e.g. If you have a core plugin that has a 'hello' command, installing a user-installed plugin with a 'hello' command
-  will override the core plugin implementation. This is useful if a user needs to update core plugin functionality in
-  the CLI without the need to patch and update the whole CLI.
-
-
-ALIASES
-  $ bettermode plugins add
+  Shows your authorized email address
 
 EXAMPLES
-  $ bettermode plugins:install myplugin 
-
-  $ bettermode plugins:install https://github.com/someuser/someplugin
-
-  $ bettermode plugins:install someuser/someplugin
+  $ bettermode whoami
 ```
 
-## `bettermode plugins:link PLUGIN`
-
-Links a plugin into the CLI for development.
-
-```
-USAGE
-  $ bettermode plugins:link PLUGIN
-
-ARGUMENTS
-  PATH  [default: .] path to plugin
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Links a plugin into the CLI for development.
-  Installation of a linked plugin will override a user-installed or core plugin.
-
-  e.g. If you have a user-installed or core plugin that has a 'hello' command, installing a linked plugin with a 'hello'
-  command will override the user-installed or core plugin implementation. This is useful for development work.
-
-
-EXAMPLES
-  $ bettermode plugins:link myplugin
-```
-
-## `bettermode plugins:uninstall PLUGIN...`
-
-Removes a plugin from the CLI.
-
-```
-USAGE
-  $ bettermode plugins:uninstall PLUGIN...
-
-ARGUMENTS
-  PLUGIN  plugin to uninstall
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Removes a plugin from the CLI.
-
-ALIASES
-  $ bettermode plugins unlink
-  $ bettermode plugins remove
-```
-
-## `bettermode plugins:uninstall PLUGIN...`
-
-Removes a plugin from the CLI.
-
-```
-USAGE
-  $ bettermode plugins:uninstall PLUGIN...
-
-ARGUMENTS
-  PLUGIN  plugin to uninstall
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Removes a plugin from the CLI.
-
-ALIASES
-  $ bettermode plugins unlink
-  $ bettermode plugins remove
-```
-
-## `bettermode plugins:uninstall PLUGIN...`
-
-Removes a plugin from the CLI.
-
-```
-USAGE
-  $ bettermode plugins:uninstall PLUGIN...
-
-ARGUMENTS
-  PLUGIN  plugin to uninstall
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Removes a plugin from the CLI.
-
-ALIASES
-  $ bettermode plugins unlink
-  $ bettermode plugins remove
-```
-
-## `bettermode plugins update`
-
-Update installed plugins.
-
-```
-USAGE
-  $ bettermode plugins update [-h] [-v]
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Update installed plugins.
-```
+_See code: [dist/commands/whoami.ts](https://github.com/tribeplatform/cli/blob/v0.0.0/dist/commands/whoami.ts)_
 <!-- commandsstop -->

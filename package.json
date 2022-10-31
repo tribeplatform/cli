@@ -16,6 +16,16 @@
     "/npm-shrinkwrap.json",
     "/oclif.manifest.json"
   ],
+  "scripts": {
+    "build": "shx rm -rf dist && tsc -b",
+    "lint": "eslint --ignore-path .gitignore --ext .ts src/",
+    "lint:fix": "yarn lint -- --fix",
+    "postpack": "shx rm -f oclif.manifest.json",
+    "posttest": "yarn lint",
+    "prepack": "yarn build && oclif manifest && oclif readme",
+    "test": "mocha --forbid-only \"test/**/*.test.ts\"",
+    "version": "oclif readme && git add README.md"
+  },
   "dependencies": {
     "@oclif/color": "^1.0.1",
     "@oclif/core": "^1.19.1",
@@ -23,7 +33,6 @@
     "@oclif/plugin-commands": "^2.2.1",
     "@oclif/plugin-help": "^5",
     "@oclif/plugin-not-found": "^2.3.7",
-    "@oclif/plugin-plugins": "^2.1.5",
     "@oclif/plugin-update": "^3.0.6",
     "@oclif/plugin-warn-if-update-available": "^2.0.12",
     "@tribeplatform/gql-client": "^2.0.1",
@@ -36,6 +45,7 @@
     "@types/fs-extra": "^9.0.13",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.18.2",
+    "@types/supports-color": "^8.1.1",
     "@typescript-eslint/eslint-plugin": "^5.41.0",
     "@typescript-eslint/parser": "^5.41.0",
     "chai": "^4",
@@ -60,7 +70,6 @@
     "commands": "./dist/commands",
     "plugins": [
       "@oclif/plugin-help",
-      "@oclif/plugin-plugins",
       "@oclif/plugin-not-found",
       "@oclif/plugin-update",
       "@oclif/plugin-warn-if-update-available",
@@ -73,16 +82,6 @@
         "description": "Say hello to the world and others"
       }
     }
-  },
-  "scripts": {
-    "build": "shx rm -rf dist && tsc -b",
-    "lint": "eslint --ignore-path .gitignore --ext .ts src/",
-    "lint:fix": "yarn lint -- --fix",
-    "postpack": "shx rm -f oclif.manifest.json",
-    "posttest": "yarn lint",
-    "prepack": "yarn build && oclif manifest && oclif readme",
-    "test": "mocha --forbid-only \"test/**/*.test.ts\"",
-    "version": "oclif readme && git add README.md"
   },
   "engines": {
     "node": ">=12.0.0"
