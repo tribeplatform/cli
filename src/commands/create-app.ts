@@ -1,11 +1,17 @@
 import { Flags } from '@oclif/core'
 import { SfCommand } from '@salesforce/sf-plugins-core'
 import { App } from '@tribeplatform/gql-client/global-types'
-import { command } from 'execa'
-import * as Listr from 'listr'
-import { APP_TEMPLATE_CHOICES, REPO_URL } from '../constants'
+import { join } from 'node:path'
+import { APP_TEMPLATE_CHOICES } from '../constants'
+import { getCreateAppTasks } from '../logics'
 import { AppTemplate } from '../types'
-import { CommandAbortedError, getClient, UnAuthorizedError } from '../utils'
+import {
+  CommandAbortedError,
+  getClient,
+  getConfigs,
+  Shell,
+  UnAuthorizedError,
+} from '../utils'
 
 type CreateAppResponse = { app: App }
 
@@ -30,6 +36,8 @@ export default class CreateApp extends SfCommand<CreateAppResponse> {
     const {
       flags: { 'api-token': apiToken },
     } = await this.parse(CreateApp)
+
+    const { OFFICIAL: official } = await getConfigs()
     const client = await getClient(apiToken)
     const networks = await client.query({ name: 'networks', args: 'basic' })
 
@@ -66,7 +74,7 @@ export default class CreateApp extends SfCommand<CreateAppResponse> {
         name: 'repo',
         type: 'input',
         default: ({ name }: { name: string }) =>
-          `${name.toLowerCase().replace(/[^A-Za-z]/g, '-')}`,
+          `${name.toLowerCase().replace(/[^\dA-Za-z]/g, '-')}`,
         message: `Please select a repo name for your app:`,
       },
       {
@@ -91,48 +99,24 @@ export default class CreateApp extends SfCommand<CreateAppResponse> {
       throw new CommandAbortedError()
     }
 
-    let app: App | null = null
-    let removeFolderOnError = false
-    const tasks = new Listr([
-      {
-        title: `Download ${APP_TEMPLATE_CHOICES[template]} template`,
-        task: async () => {
-          await command('which git')
-          await command(`mkdir ${repo}`)
-          await command(`git clone ${REPO_URL} ${repo}/.tmp`)
+    const tasks = getCreateAppTasks({
+      client,
+      template,
+      networkId,
+      appName: name,
+      repoName: repo,
+      official,
+    })
 
-          removeFolderOnError = true
-          await command(`cp -a ${repo}/.tmp/templates/${template}/. ${repo}/`)
-          await command(`rm -rf ${repo}/.tmp`)
-        },
-      },
-      {
-        title: 'Create the app in the portal',
-        task: async () => {
-          app = await client.mutation({
-            name: 'createApp',
-            args: {
-              variables: {
-                input: {
-                  name,
-                  slug: repo,
-                  networkId,
-                },
-              },
-              fields: 'basic',
-            },
-          })
-        },
-      },
-    ])
-
+    let app: App
     try {
-      await tasks.run()
+      const ctx = await tasks.run()
+      app = ctx?.app as App
       if (!app) {
         throw new Error('App creation failed')
       }
     } catch (error) {
-      if (removeFolderOnError) await command(`rm -rf ${repo}`, { reject: false })
+      Shell.rm(join(process.cwd(), repo), { silent: true })
       throw error
     }
 

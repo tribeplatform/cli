@@ -1,5 +1,5 @@
 import { access, constants, readFile, stat, writeFile } from 'fs-extra'
-import { RC_LOCATION } from '../constants'
+import { OFFICIAL_EMAILS, RC_LOCATION } from '../constants'
 import { Configs } from '../types'
 import { NoAccessToConfigError, UnAuthorizedError } from './error.utils'
 
@@ -63,7 +63,10 @@ export const getConfigs = async (): Promise<Configs> => {
     }
   }
 
-  return rc as Configs
+  return {
+    ...rc,
+    OFFICIAL: OFFICIAL_EMAILS.find(email => rc.email?.endsWith(email)),
+  } as Configs
 }
 
 export const setConfigs = async (configs: Configs): Promise<void> => {
