@@ -19,8 +19,22 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "importHelpers": true,
-    "baseUrl": "src"
+    "baseUrl": "src",
+    "paths": {
+      "@config": ["config"],
+      "@controllers": ["controllers"],
+      "@dtos": ["dtos"],
+      "@enums": ["enums"],
+      "@exceptions": ["exceptions"],
+      "@interfaces": ["interfaces"],
+      "@middlewares": ["middlewares"],
+      "@repositories": ["repositories"],
+      "@services": ["services"],
+      "@logics": ["logics"],
+      "@utils": ["utils"],
+      "@/*": ["*"]
+    }
   },
   "include": ["src/**/*.ts", "src/**/*.json", ".env"],
-  "exclude": ["node_modules", "src/tests"]
+  "exclude": ["node_modules", "src/http", "src/logs", "src/tests"]
 }
