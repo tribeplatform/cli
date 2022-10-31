@@ -73,7 +73,6 @@ export default class Login extends SfCommand<LoginResponse> {
           name: 'email',
           type: 'input',
           default: givenEmail,
-          askAnswered: Boolean(givenEmail),
           message: 'Please enter your email address',
         },
         {
