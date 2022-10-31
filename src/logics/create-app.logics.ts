@@ -105,6 +105,7 @@ export const getCreateAppTasks = (options: {
                   { cwd },
                 )
 
+                Shell.rm('.git', { cwd })
                 if (!official) {
                   Shell.rm('.circleci', { cwd })
                 }
