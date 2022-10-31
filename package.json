@@ -19,7 +19,9 @@
   "dependencies": {
     "@oclif/core": "^1.19.1",
     "@oclif/plugin-help": "^5",
-    "@oclif/plugin-plugins": "^2.1.5"
+    "@oclif/plugin-plugins": "^2.1.5",
+    "@tribeplatform/gql-client": "^2.0.1",
+    "gql-client": "^1.0.0"
   },
   "devDependencies": {
     "@oclif/test": "^2.2.6",
@@ -50,7 +52,12 @@
     "commands": "./dist/commands",
     "plugins": [
       "@oclif/plugin-help",
-      "@oclif/plugin-plugins"
+      "@oclif/plugin-plugins",
+      "@oclif/plugin-not-found",
+      "@oclif/plugin-update",
+      "@oclif/plugin-warn-if-update-available",
+      "@oclif/plugin-commands",
+      "@oclif/plugin-autocomplete"
     ],
     "topicSeparator": " ",
     "topics": {
