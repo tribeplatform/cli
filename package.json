@@ -1,36 +1,85 @@
 {
-  "name": "bettermode-cli",
+  "name": "@tribeplatform/cli",
   "version": "0.0.0",
-  "description": "Bettermode CLI",
-  "author": "Bettermode",
-  "license": "ISC",
-  "scripts": {
-    "build": "swc src -d dist --source-maps --copy-files",
-    "build:tsc": "tsc && tsc-alias",
-    "test": "jest --forceExit --detectOpenHandles",
-    "lint": "eslint --ignore-path .gitignore --ext .ts src/",
-    "lint:fix": "yarn lint -- --fix"
+  "description": "The CLI to manage apps in Bettermode platform",
+  "author": "Bettermode Engineering",
+  "bin": {
+    "bettermode": "./bin/run"
   },
-  "dependencies": {},
+  "homepage": "https://github.com/tribeplatform/cli",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "repository": "tribeplatform/cli",
+  "files": [
+    "/bin",
+    "/dist",
+    "/npm-shrinkwrap.json",
+    "/oclif.manifest.json"
+  ],
+  "dependencies": {
+    "@oclif/core": "^1.19.1",
+    "@oclif/plugin-help": "^5",
+    "@oclif/plugin-plugins": "^2.1.5"
+  },
   "devDependencies": {
-    "@swc/cli": "^0.1.57",
-    "@swc/core": "^1.2.220",
-    "@types/node": "^17.0.45",
-    "@types/supertest": "^2.0.12",
-    "@typescript-eslint/eslint-plugin": "^5.29.0",
-    "@typescript-eslint/parser": "^5.29.0",
-    "eslint": "^8.20.0",
+    "@oclif/test": "^2.2.6",
+    "@types/chai": "^4",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^16.18.2",
+    "@typescript-eslint/eslint-plugin": "^5.41.0",
+    "@typescript-eslint/parser": "^5.41.0",
+    "chai": "^4",
+    "eslint": "^7.32.0",
+    "eslint-config-oclif": "^4",
+    "eslint-config-oclif-typescript": "^1.0.3",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "husky": "^8.0.1",
-    "jest": "^28.1.1",
     "lint-staged": "^13.0.3",
+    "mocha": "^9",
+    "oclif": "^3",
     "prettier": "^2.7.1",
-    "supertest": "^6.2.4",
-    "ts-jest": "^28.0.7",
+    "shx": "^0.3.3",
     "ts-node": "^10.9.1",
-    "tsc-alias": "^1.7.0",
-    "tsconfig-paths": "^4.0.0",
-    "typescript": "^4.7.4"
-  }
+    "tslib": "^2.3.1",
+    "typescript": "^4.8.4"
+  },
+  "oclif": {
+    "bin": "bettermode",
+    "dirname": "bettermode",
+    "commands": "./dist/commands",
+    "plugins": [
+      "@oclif/plugin-help",
+      "@oclif/plugin-plugins"
+    ],
+    "topicSeparator": " ",
+    "topics": {
+      "hello": {
+        "description": "Say hello to the world and others"
+      }
+    }
+  },
+  "scripts": {
+    "build": "shx rm -rf dist && tsc -b",
+    "lint": "eslint --ignore-path .gitignore --ext .ts src/",
+    "lint:fix": "yarn lint -- --fix",
+    "postpack": "shx rm -f oclif.manifest.json",
+    "posttest": "yarn lint",
+    "prepack": "yarn build && oclif manifest && oclif readme",
+    "test": "mocha --forbid-only \"test/**/*.test.ts\"",
+    "version": "oclif readme && git add README.md"
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "bugs": "https://github.com/tribeplatform/cli/issues",
+  "keywords": [
+    "tribeplatform",
+    "tribe",
+    "bettermodeplatform",
+    "bettermode",
+    "cli",
+    "oclif"
+  ],
+  "types": "dist/index.d.ts"
 }
