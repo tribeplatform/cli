@@ -1,9 +1,9 @@
 import { CliUx, Flags } from '@oclif/core'
 import { GlobalClient } from '@tribeplatform/gql-client'
 import { ActionStatus } from '@tribeplatform/gql-client/global-types'
-import { INVALID_EMAIL, SERVER_ERROR } from '../../errors'
-import { makeClientRequest, setConfigs, validateEmail } from '../../utils'
-import { BaseCommand } from '../base'
+import { INVALID_EMAIL, SERVER_ERROR } from '../errors'
+import { makeClientRequest, setConfigs, validateEmail } from '../utils'
+import { BaseCommand } from './base'
 
 export default class Login extends BaseCommand {
   static description = 'Login to Bettermode portal'
@@ -16,7 +16,7 @@ export default class Login extends BaseCommand {
       summary: 'your email address',
       description: 'the email address that you want to use to login in the portal',
       env: 'BETTERMODE_EMAIL',
-      required: false, // make flag required
+      required: false,
     }),
   }
 
@@ -43,6 +43,7 @@ export default class Login extends BaseCommand {
     return await CliUx.ux.prompt('Please enter the verification code that you received', {
       required: true,
       type: 'mask',
+      timeout: 60000,
     })
   }
 
@@ -81,6 +82,5 @@ export default class Login extends BaseCommand {
     const verificationCode = await this.getVerificationCode()
     await this.login({ email, verificationCode })
     this.log('You have successfully logged in!')
-    this.exit(0)
   }
 }
