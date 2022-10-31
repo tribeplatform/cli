@@ -1,5 +1,5 @@
 # Development build stage
-FROM node:17.4.0 as development-build-stage
+FROM node:16.13.0 as development-build-stage
 
 ENV NODE_ENV development
 
@@ -16,7 +16,7 @@ RUN yarn db:generate
 CMD ["yarn", "dev"]
 
 # Production build stage
-FROM node:17.4.0 as production-build-stage
+FROM node:16.13.0 as production-build-stage
 
 ENV NODE_ENV production
 
