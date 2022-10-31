@@ -23,7 +23,7 @@ export const hasAccessToConfig = async (): Promise<boolean> => {
   try {
     await access(RC_LOCATION, constants.W_OK | constants.R_OK)
     return true
-  } catch (error) {
+  } catch {
     return false
   }
 }
@@ -54,14 +54,15 @@ export const getConfigs = async (): Promise<Configs> => {
   const data = await readFile(RC_LOCATION, 'utf8')
   const rows = data.split('\n')
   const rc: Record<string, string> = {}
-  rows.forEach(row => {
+  for (const row of rows) {
     const separatorIndex = row.indexOf('=')
     if (separatorIndex > 0) {
       const key = row.slice(0, separatorIndex).trim()
       const value = row.slice(separatorIndex + 1).trim()
       rc[key] = value
     }
-  })
+  }
+
   return rc as Configs
 }
 

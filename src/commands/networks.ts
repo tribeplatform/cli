@@ -16,7 +16,7 @@ export default class Networks extends SfCommand<NetworksResponse> {
 
   getNetworks = async (): Promise<Network[]> => {
     const client = await getClient()
-    return await client.query({ name: 'networks', args: 'basic' })
+    return client.query({ name: 'networks', args: 'basic' })
   }
 
   async run(): Promise<NetworksResponse> {

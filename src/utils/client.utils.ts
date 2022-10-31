@@ -17,6 +17,7 @@ export class CliClient extends GlobalClient {
     if (errorMessage === 'Unauthorized') {
       return new InvalidTokenError(error)
     }
+
     return new CliError(errorMessage, error)
   }
 

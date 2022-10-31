@@ -31,20 +31,18 @@ export default class Login extends SfCommand<LoginResponse> {
         required: true,
       })
     }
+
     validateEmail(email)
 
     return email
   }
 
   getVerificationCode = async (): Promise<string> => {
-    return await CliUx.ux.prompt(
-      '- Please enter the verification code that you received',
-      {
-        required: true,
-        type: 'mask',
-        timeout: 60,
-      },
-    )
+    return CliUx.ux.prompt('- Please enter the verification code that you received', {
+      required: true,
+      type: 'mask',
+      timeout: 60,
+    })
   }
 
   sendVerificationCode = async (email: string): Promise<void> => {
