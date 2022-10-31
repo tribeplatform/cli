@@ -30,6 +30,8 @@ export class WebhookController {
         return this.webhookService.handleInstalledWebhook(webhook)
       case WebhookType.AppUninstalled:
         return this.webhookService.handleUninstalledWebhook(webhook)
+      case WebhookType.Subscription:
+        return this.webhookService.handleSubscriptionWebhook(webhook)
       default:
         logger.verbose('Received unknown webhook', webhook)
         return {
