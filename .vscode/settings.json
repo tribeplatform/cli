@@ -17,5 +17,5 @@
   "editor.formatOnSave": true,
   "editor.formatOnSaveMode": "file",
   "eslint.format.enable": true,
-  "cSpell.words": ["bettermode", "oclif", "tribeplatform"]
+  "cSpell.words": ["bettermode", "Listr", "oclif", "tribeplatform"]
 }
