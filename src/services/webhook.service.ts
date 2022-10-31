@@ -2,7 +2,8 @@ import { WebhookStatus } from '@enums'
 import {
   AppInstalledWebhook,
   AppUninstalledWebhook,
-  BaseWebhookResponse,
+  GeneralWebhookResponse,
+  SubscriptionWebhook,
   TestWebhook,
   TestWebhookResponse,
 } from '@interfaces'
@@ -20,7 +21,7 @@ export class WebhookService {
 
   async handleInstalledWebhook(
     webhook: AppInstalledWebhook,
-  ): Promise<BaseWebhookResponse> {
+  ): Promise<GeneralWebhookResponse> {
     logger.verbose('Received app installed webhook', webhook)
 
     let network: Network
@@ -54,7 +55,7 @@ export class WebhookService {
 
   async handleUninstalledWebhook(
     webhook: AppUninstalledWebhook,
-  ): Promise<BaseWebhookResponse> {
+  ): Promise<GeneralWebhookResponse> {
     logger.verbose('Received app uninstalled webhook', webhook)
 
     try {
@@ -63,6 +64,19 @@ export class WebhookService {
       logger.error('Database Error', e)
       return getServiceUnavailableError(webhook)
     }
+
+    return {
+      type: webhook.type,
+      status: WebhookStatus.Succeeded,
+    }
+  }
+
+  async handleSubscriptionWebhook(
+    webhook: SubscriptionWebhook,
+  ): Promise<GeneralWebhookResponse> {
+    logger.verbose('Received subscription webhook', webhook)
+
+    // TODO: Handle subscription webhooks here
 
     return {
       type: webhook.type,

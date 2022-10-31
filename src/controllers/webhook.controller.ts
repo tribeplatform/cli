@@ -1,6 +1,6 @@
 import { WebhookDto, WebhookResponseDto } from '@dtos'
 import { WebhookStatus, WebhookType } from '@enums'
-import { Webhook } from '@interfaces'
+import { Webhook, WebhookResponse } from '@interfaces'
 import { signatureMiddleware, validationMiddleware } from '@middlewares'
 import { WebhookService } from '@services'
 import { logger } from '@utils'
@@ -17,7 +17,7 @@ export class WebhookController {
   @OpenAPI({ summary: 'Receives webhooks and acts upon them.' })
   @ResponseSchema(WebhookResponseDto)
   @HttpCode(200)
-  async receiveWebhook(@Body() webhook: Webhook): Promise<WebhookResponseDto> {
+  async receiveWebhook(@Body() webhook: Webhook): Promise<WebhookResponse> {
     switch (webhook.type) {
       case WebhookType.Test:
         return this.webhookService.handleTestWebhook(webhook)

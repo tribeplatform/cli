@@ -23,8 +23,8 @@ export interface SuccessWebhookResponse {
   data?: unknown
 }
 
-export interface GeneralWebhookResponse extends SuccessWebhookResponse {
-  data: Record<string, never>
+export interface GeneralSuccessWebhookResponse extends SuccessWebhookResponse {
+  data?: Record<string, never>
 }
 
 export interface FailedWebhookResponse {
@@ -33,6 +33,8 @@ export interface FailedWebhookResponse {
   errorCode: ErrorCodes
   errorMessage: string
 }
+
+export type GeneralWebhookResponse = GeneralSuccessWebhookResponse | FailedWebhookResponse
 
 export type BaseWebhookResponse = SuccessWebhookResponse | FailedWebhookResponse
 
