@@ -2,8 +2,7 @@ import { CliUx, Flags } from '@oclif/core'
 import { SfCommand } from '@salesforce/sf-plugins-core'
 import { GlobalClient } from '@tribeplatform/gql-client'
 import { ActionStatus } from '@tribeplatform/gql-client/global-types'
-import { INVALID_EMAIL, SERVER_ERROR } from '../errors'
-import { makeClientRequest, setConfigs, validateEmail } from '../utils'
+import { makeClientRequest, ServerError, setConfigs, validateEmail } from '../utils'
 
 type LoginResponse = { email: string; token: string }
 
@@ -33,10 +32,7 @@ export default class Login extends SfCommand<LoginResponse> {
         required: true,
       })
     }
-
-    if (!validateEmail(email)) {
-      this.error(INVALID_EMAIL)
-    }
+    validateEmail(email)
 
     return email
   }
@@ -59,10 +55,9 @@ export default class Login extends SfCommand<LoginResponse> {
         name: 'requestGlobalTokenCode',
         args: { variables: { input: { email } }, fields: 'basic' },
       }),
-      this,
     )
     if (result?.status !== ActionStatus.succeeded) {
-      this.error(SERVER_ERROR)
+      throw new ServerError()
     }
   }
 
@@ -78,7 +73,6 @@ export default class Login extends SfCommand<LoginResponse> {
         name: 'globalToken',
         args: { variables: { input: { email, verificationCode } }, fields: 'basic' },
       }),
-      this,
     )
 
     await setConfigs({ API_TOKEN: result.accessToken, EMAIL: email })

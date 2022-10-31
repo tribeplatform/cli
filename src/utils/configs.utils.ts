@@ -1,7 +1,9 @@
 import { access, constants, readFile, stat, writeFile } from 'fs-extra'
 import { RC_LOCATION } from '../constants'
 import { Configs } from '../types'
+import { NoAccessToConfigError, UnAuthorizedError } from './error.utils'
 
+let VALIDATED = false
 let CACHED_CONFIG: Configs
 
 export const isConfigExists = async (): Promise<boolean> => {
@@ -9,6 +11,7 @@ export const isConfigExists = async (): Promise<boolean> => {
 
   try {
     const result = await stat(RC_LOCATION)
+    console.log('shit', result)
     return result.isFile()
   } catch {
     return false
@@ -26,8 +29,26 @@ export const hasAccessToConfig = async (): Promise<boolean> => {
   }
 }
 
+export const validateConfigs = async (): Promise<void> => {
+  if (VALIDATED) return
+
+  const hasConfig = await isConfigExists()
+  if (!hasConfig) {
+    throw new UnAuthorizedError()
+  }
+
+  const hasAccess = await hasAccessToConfig()
+  if (!hasAccess) {
+    throw new NoAccessToConfigError()
+  }
+
+  VALIDATED = true
+}
+
 export const getConfigs = async (): Promise<Configs> => {
   if (CACHED_CONFIG) return CACHED_CONFIG
+
+  await validateConfigs()
 
   const data = await readFile(RC_LOCATION, 'utf8')
   const rows = data.split('\n')
@@ -44,6 +65,8 @@ export const getConfigs = async (): Promise<Configs> => {
 }
 
 export const setConfigs = async (configs: Configs): Promise<void> => {
+  await validateConfigs()
+
   const data = Object.entries(configs)
     .map(([key, value]) => `${key}=${value}`)
     .join('\n')
