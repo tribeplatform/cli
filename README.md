@@ -20,7 +20,7 @@ $ npm install -g @tribeplatform/cli
 $ bettermode COMMAND
 running command...
 $ bettermode (--version)
-@tribeplatform/cli/0.0.0 darwin-arm64 node-v16.13.0
+@tribeplatform/cli/0.0.1 darwin-arm64 node-v16.13.0
 $ bettermode --help [COMMAND]
 USAGE
   $ bettermode COMMAND
@@ -31,8 +31,10 @@ USAGE
 <!-- commands -->
 * [`bettermode autocomplete [SHELL]`](#bettermode-autocomplete-shell)
 * [`bettermode commands`](#bettermode-commands)
+* [`bettermode create-app`](#bettermode-create-app)
 * [`bettermode help [COMMAND]`](#bettermode-help-command)
 * [`bettermode login`](#bettermode-login)
+* [`bettermode logout`](#bettermode-logout)
 * [`bettermode networks`](#bettermode-networks)
 * [`bettermode update [CHANNEL]`](#bettermode-update-channel)
 * [`bettermode whoami`](#bettermode-whoami)
@@ -98,6 +100,34 @@ DESCRIPTION
 
 _See code: [@oclif/plugin-commands](https://github.com/oclif/plugin-commands/blob/v2.2.1/src/commands/commands.ts)_
 
+## `bettermode create-app`
+
+create a new app
+
+```
+USAGE
+  $ bettermode create-app [--json] [-t <value>]
+
+FLAGS
+  -t, --api-token=<value>  your API token
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  create a new app
+
+EXAMPLES
+  $ bettermode create app
+
+FLAG DESCRIPTIONS
+  -t, --api-token=<value>  your API token
+
+    the API token that you want to use to login in the portal
+```
+
+_See code: [dist/commands/create-app.ts](https://github.com/tribeplatform/cli/blob/v0.0.1/dist/commands/create-app.ts)_
+
 ## `bettermode help [COMMAND]`
 
 Display help for bettermode.
@@ -124,10 +154,11 @@ login to Bettermode portal
 
 ```
 USAGE
-  $ bettermode login [--json] [-e <value>]
+  $ bettermode login [--json] [-e <value>] [-t <value>]
 
 FLAGS
-  -e, --email=<value>  your email address
+  -e, --email=<value>      your email address
+  -t, --api-token=<value>  your API token
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -142,9 +173,33 @@ FLAG DESCRIPTIONS
   -e, --email=<value>  your email address
 
     the email address that you want to use to login in the portal
+
+  -t, --api-token=<value>  your API token
+
+    the API token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/login.ts](https://github.com/tribeplatform/cli/blob/v0.0.0/dist/commands/login.ts)_
+_See code: [dist/commands/login.ts](https://github.com/tribeplatform/cli/blob/v0.0.1/dist/commands/login.ts)_
+
+## `bettermode logout`
+
+logout from Bettermode portal
+
+```
+USAGE
+  $ bettermode logout [--json]
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  logout from Bettermode portal
+
+EXAMPLES
+  $ bettermode logout
+```
+
+_See code: [dist/commands/logout.ts](https://github.com/tribeplatform/cli/blob/v0.0.1/dist/commands/logout.ts)_
 
 ## `bettermode networks`
 
@@ -176,7 +231,7 @@ EXAMPLES
   $ bettermode networks
 ```
 
-_See code: [dist/commands/networks.ts](https://github.com/tribeplatform/cli/blob/v0.0.0/dist/commands/networks.ts)_
+_See code: [dist/commands/networks.ts](https://github.com/tribeplatform/cli/blob/v0.0.1/dist/commands/networks.ts)_
 
 ## `bettermode update [CHANNEL]`
 
@@ -233,5 +288,5 @@ EXAMPLES
   $ bettermode whoami
 ```
 
-_See code: [dist/commands/whoami.ts](https://github.com/tribeplatform/cli/blob/v0.0.0/dist/commands/whoami.ts)_
+_See code: [dist/commands/whoami.ts](https://github.com/tribeplatform/cli/blob/v0.0.1/dist/commands/whoami.ts)_
 <!-- commandsstop -->
