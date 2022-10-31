@@ -67,4 +67,6 @@ export class InvalidEmailError extends CliError {
   message = 'The email address you entered is invalid.'
 }
 
-export class CustomError extends CliError {}
+export class CommandAbortedError extends CliError {
+  message = 'Command aborted by the user.'
+}

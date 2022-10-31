@@ -1,9 +1,10 @@
 import { Flags } from '@oclif/core'
 import { SfCommand } from '@salesforce/sf-plugins-core'
 import { App } from '@tribeplatform/gql-client/global-types'
-import { APP_LANGUAGE_CHOICES } from '../../constants'
-import { AppLanguage } from '../../types'
-import { getClient, UnAuthorizedError } from '../../utils'
+import * as Listr from 'listr'
+import { APP_LANGUAGE_CHOICES } from '../constants'
+import { AppLanguage } from '../types'
+import { CommandAbortedError, getClient, UnAuthorizedError } from '../utils'
 
 type CreateAppResponse = { app: App }
 
@@ -37,10 +38,12 @@ export default class CreateApp extends SfCommand<CreateAppResponse> {
       throw new UnAuthorizedError(`You don't have any networks, please create one first.`)
     }
 
-    const { name, networkId, language } = await this.prompt<{
+    const { name, repo, networkId, language, confirmed } = await this.prompt<{
       networkId: string
       name: string
+      repo: string
       language: AppLanguage
+      confirmed: boolean
     }>([
       {
         name: 'networkId',
@@ -56,7 +59,14 @@ export default class CreateApp extends SfCommand<CreateAppResponse> {
         name: 'name',
         type: 'input',
         default: 'New App',
-        message: `Please enter your app's name:`,
+        message: `Please select a name for your app:`,
+      },
+      {
+        name: 'repo',
+        type: 'input',
+        default: ({ name }: { name: string }) =>
+          `${name.toLowerCase().replace(/[^A-Za-z]/g, '-')}`,
+        message: `Please select a repo name for your app:`,
       },
       {
         name: 'language',
@@ -69,13 +79,49 @@ export default class CreateApp extends SfCommand<CreateAppResponse> {
         })),
       },
       {
-        name: 'confirm',
+        name: 'confirmed',
         type: 'confirm',
         default: true,
         message: `Are you sure you want to create this app?`,
       },
     ])
 
+    if (!confirmed) {
+      throw new CommandAbortedError()
+    }
+
+    let app: App
+    const tasks = new Listr([
+      {
+        title: 'Create the app in the portal',
+        task: async (ctx, task) => {
+          app = await client.mutation({
+            name: 'createApp',
+            args: {
+              variables: {
+                input: {
+                  name,
+                  slug: repo,
+                  networkId,
+                },
+              },
+              fields: 'basic',
+            },
+          })
+
+          ctx.app = Boolean(app)
+        },
+      },
+      {
+        title: 'Install package dependencies with Yarn',
+        enabled: ctx => ctx.app === true,
+        task: (ctx, task) => {
+          task.output = `Installing dependencies for ${app.name} ...`
+        },
+      },
+    ])
+
+    await tasks.run()
     this.logSuccess('You have successfully created an app!')
     return { app: null as any }
   }
