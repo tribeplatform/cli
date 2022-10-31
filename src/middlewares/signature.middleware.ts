@@ -2,7 +2,8 @@ import { NextFunction, Request, Response } from 'express'
 
 import { IGNORE_SIGNATURE, SIGNING_SECRET } from '@config'
 import { HttpException } from '@exceptions'
-import { logger, verifySignature } from '@utils'
+import { verifySignature } from '@logics'
+import { logger } from '@utils'
 
 export const signatureMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const timestamp = parseInt(req.header('x-tribe-request-timestamp'), 10)
