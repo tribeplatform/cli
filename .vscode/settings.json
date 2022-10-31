@@ -17,7 +17,5 @@
   "editor.formatOnSave": true,
   "editor.formatOnSaveMode": "file",
   "eslint.format.enable": true,
-  "cSpell.words": [
-    "oclif"
-  ]
+  "cSpell.words": ["bettermode", "oclif"]
 }
