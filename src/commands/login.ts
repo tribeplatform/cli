@@ -1,7 +1,7 @@
-import { CliUx, Flags } from '@oclif/core'
+import { Flags } from '@oclif/core'
 import { SfCommand } from '@salesforce/sf-plugins-core'
 import { ActionStatus } from '@tribeplatform/gql-client/global-types'
-import { CliClient, ServerError, setConfigs, validateEmail } from '../utils'
+import { CliClient, LoginError, ServerError, setConfigs } from '../utils'
 
 type LoginResponse = { email: string; token: string }
 
@@ -25,26 +25,6 @@ export default class Login extends SfCommand<LoginResponse> {
       env: 'BETTERMODE_API_TOKEN',
       required: false,
     }),
-  }
-
-  getEmail = async (email = ''): Promise<string> => {
-    if (!email) {
-      email = await CliUx.ux.prompt('- Please enter your email address', {
-        required: true,
-      })
-    }
-
-    validateEmail(email)
-
-    return email
-  }
-
-  getVerificationCode = async (): Promise<string> => {
-    return CliUx.ux.prompt('- Please enter the verification code that you received', {
-      required: true,
-      type: 'mask',
-      timeout: 60,
-    })
   }
 
   sendVerificationCode = async (email: string): Promise<void> => {
@@ -80,14 +60,48 @@ export default class Login extends SfCommand<LoginResponse> {
       flags: { email: givenEmail, 'api-token': apiToken },
     } = await this.parse(Login)
 
-    let result: LoginResponse
+    let result: LoginResponse | null = null
+
     if (apiToken) {
       result = { email: givenEmail || 'unknown-email', token: apiToken }
     } else {
-      const email = await this.getEmail(givenEmail)
-      await this.sendVerificationCode(email)
-      const verificationCode = await this.getVerificationCode()
-      result = await this.login({ email, verificationCode })
+      await this.prompt<{
+        email: string
+        verificationCode: string
+      }>([
+        {
+          name: 'email',
+          type: 'input',
+          default: givenEmail,
+          askAnswered: Boolean(givenEmail),
+          message: 'Please enter your email address',
+        },
+        {
+          name: 'verificationCode',
+          type: 'input',
+          message: 'Please enter the verification code that you received',
+          when: async ({ email }) => {
+            if (email) {
+              await this.sendVerificationCode(email)
+              return true
+            }
+
+            return false
+          },
+          validate: async (code, answers) => {
+            if (code && answers) {
+              result = await this.login({ email: answers.email, verificationCode: code })
+              return Boolean(result)
+            }
+
+            return false
+          },
+        },
+      ])
+    }
+
+    if (!result) {
+      throw new LoginError()
     }
 
     this.logSuccess('You have successfully logged in!')

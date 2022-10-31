@@ -55,6 +55,10 @@ export class InvalidTokenError extends CliError {
   message = 'Your token is invalid or has been expired. Please login again.'
 }
 
+export class LoginError extends CliError {
+  message = 'Your login attempt has been failed. Please try again later.'
+}
+
 export class NoAccessToConfigError extends CliError {
   message = `You do not have access to the config file in \`${RC_LOCATION}\`.`
 }
