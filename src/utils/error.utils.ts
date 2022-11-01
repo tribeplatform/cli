@@ -48,7 +48,7 @@ export class ServerError extends CliError {
 }
 
 export class UnAuthorizedError extends CliError {
-  message = 'You need to login first by running `bettermode login`.'
+  message = 'You are not logged in, please login first.'
 }
 
 export class InvalidTokenError extends CliError {

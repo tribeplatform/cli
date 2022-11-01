@@ -1,57 +1,75 @@
 import { access, constants, readFile, stat, writeFile } from 'fs-extra'
-import { OFFICIAL_EMAILS, RC_LOCATION } from '../constants'
+import {
+  CONFIG_MAPPER,
+  OFFICIAL_EMAILS,
+  RC_LOCATION,
+  REVERSE_CONFIG_MAPPER,
+} from '../constants'
 import { Configs } from '../types'
 import { NoAccessToConfigError, UnAuthorizedError } from './error.utils'
 
 let VALIDATED = false
 let CACHED_CONFIG: Configs
 
-export const isConfigExists = async (): Promise<boolean> => {
-  if (CACHED_CONFIG) return true
+let DEV_VALIDATED = false
+let DEV_CACHED_CONFIG: Configs
 
+const getRcLocation = (dev = false): string => {
+  if (dev) {
+    return RC_LOCATION + '.dev'
+  }
+
+  return RC_LOCATION
+}
+
+const isConfigExists = async (dev = false): Promise<boolean> => {
   try {
-    const result = await stat(RC_LOCATION)
+    const result = await stat(getRcLocation(dev))
     return result.isFile()
   } catch {
     return false
   }
 }
 
-export const hasAccessToConfig = async (): Promise<boolean> => {
-  if (CACHED_CONFIG) return true
-
+const hasAccessToConfig = async (dev = false): Promise<boolean> => {
   try {
-    await access(RC_LOCATION, constants.W_OK | constants.R_OK)
+    await access(getRcLocation(dev), constants.W_OK | constants.R_OK)
     return true
   } catch {
     return false
   }
 }
 
-export const validateConfigs = async (ignoreExistence = false): Promise<void> => {
-  if (VALIDATED) return
+const validateConfigs = async (dev = false, ignoreExistence = false): Promise<void> => {
+  const validated = dev ? DEV_VALIDATED : VALIDATED
+  if (validated) return
 
-  const hasConfig = await isConfigExists()
+  const hasConfig = await isConfigExists(dev)
   if (!hasConfig && !ignoreExistence) {
     throw new UnAuthorizedError()
   } else if (!hasConfig && ignoreExistence) {
     return
   }
 
-  const hasAccess = await hasAccessToConfig()
+  const hasAccess = await hasAccessToConfig(dev)
   if (!hasAccess) {
     throw new NoAccessToConfigError()
   }
 
-  VALIDATED = true
+  if (dev) {
+    DEV_VALIDATED = true
+  } else {
+    VALIDATED = true
+  }
 }
 
-export const getConfigs = async (): Promise<Configs> => {
-  if (CACHED_CONFIG) return CACHED_CONFIG
+export const getConfigs = async (dev = false): Promise<Configs> => {
+  const cachedConfig = dev ? DEV_CACHED_CONFIG : CACHED_CONFIG
+  if (cachedConfig) return cachedConfig
 
-  await validateConfigs()
+  await validateConfigs(dev)
 
-  const data = await readFile(RC_LOCATION, 'utf8')
+  const data = await readFile(getRcLocation(dev), 'utf8')
   const rows = data.split('\n')
   const rc: Record<string, string> = {}
   for (const row of rows) {
@@ -59,22 +77,38 @@ export const getConfigs = async (): Promise<Configs> => {
     if (separatorIndex > 0) {
       const key = row.slice(0, separatorIndex).trim()
       const value = row.slice(separatorIndex + 1).trim()
-      rc[key] = value
+      if (REVERSE_CONFIG_MAPPER[key] && value) {
+        rc[REVERSE_CONFIG_MAPPER[key]] = value
+      }
     }
   }
 
-  return {
+  const configs = {
     ...rc,
-    OFFICIAL: OFFICIAL_EMAILS.find(email => rc.email?.endsWith(email)),
+    official: OFFICIAL_EMAILS.find(email => rc.email?.endsWith(email)),
   } as Configs
+
+  if (dev) {
+    DEV_CACHED_CONFIG = configs
+  } else {
+    CACHED_CONFIG = configs
+  }
+
+  return configs
 }
 
-export const setConfigs = async (configs: Configs): Promise<void> => {
-  await validateConfigs(true)
+export const setConfigs = async (configs: Configs, dev = false): Promise<void> => {
+  await validateConfigs(dev, true)
 
   const data = Object.entries(configs)
-    .map(([key, value]) => `${key}=${value}`)
+    .filter(([key]) => CONFIG_MAPPER[key])
+    .map(([key, value]) => `${CONFIG_MAPPER[key]}=${value}`)
     .join('\n')
-  await writeFile(RC_LOCATION, data, { encoding: 'utf8', flag: 'w+' })
-  CACHED_CONFIG = configs
+  await writeFile(getRcLocation(dev), data, { encoding: 'utf8', flag: 'w+' })
+
+  if (dev) {
+    DEV_CACHED_CONFIG = configs
+  } else {
+    CACHED_CONFIG = configs
+  }
 }

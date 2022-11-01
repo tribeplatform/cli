@@ -4,13 +4,7 @@ import { BetterCommand } from '../better-command'
 import { APP_TEMPLATE_CHOICES } from '../constants'
 import { getCreateAppTasks } from '../logics'
 import { AppTemplate } from '../types'
-import {
-  CommandAbortedError,
-  getClient,
-  getConfigs,
-  Shell,
-  UnAuthorizedError,
-} from '../utils'
+import { CommandAbortedError, Shell, UnAuthorizedError } from '../utils'
 
 type CreateAppResponse = { app: App }
 
@@ -22,12 +16,8 @@ export default class CreateApp extends BetterCommand<CreateAppResponse> {
   async run(): Promise<CreateAppResponse> {
     this.spinner.start('Getting your info ...')
 
-    const {
-      flags: { 'api-token': apiToken },
-    } = await this.parse(CreateApp)
-
-    const { OFFICIAL: official } = await getConfigs()
-    const client = await getClient(apiToken)
+    const { official } = await this.getConfigs()
+    const client = await this.getClient()
     const networks = await client.query({ name: 'networks', args: 'basic' })
 
     this.spinner.stop('done\n')

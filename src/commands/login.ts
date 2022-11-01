@@ -1,9 +1,9 @@
 import { Flags } from '@oclif/core'
 import { ActionStatus } from '@tribeplatform/gql-client/global-types'
 import { BetterCommand } from '../better-command'
-import { CliClient, LoginError, ServerError, setConfigs } from '../utils'
+import { LoginError, ServerError } from '../utils'
 
-type LoginResponse = { email: string; token: string }
+type LoginResponse = { email: string; accessToken: string }
 
 export default class Login extends BetterCommand<LoginResponse> {
   static description = 'login to Bettermode portal'
@@ -29,7 +29,7 @@ export default class Login extends BetterCommand<LoginResponse> {
   }
 
   async sendVerificationCode(email: string): Promise<void> {
-    const client = new CliClient({})
+    const client = await this.getClient(true)
     const result = await client.mutation({
       name: 'requestGlobalTokenCode',
       args: { variables: { input: { email } }, fields: 'basic' },
@@ -45,26 +45,26 @@ export default class Login extends BetterCommand<LoginResponse> {
   }): Promise<LoginResponse> {
     const { email, verificationCode } = options
 
-    const client = new CliClient({})
-    const result = await client.query({
+    const client = await this.getClient(true)
+    const { accessToken } = await client.query({
       name: 'globalToken',
       args: { variables: { input: { email, verificationCode } }, fields: 'basic' },
     })
 
-    await setConfigs({ API_TOKEN: result.accessToken, EMAIL: email })
+    await this.setConfigs({ accessToken, email })
 
-    return { email, token: result.accessToken }
+    return { email, accessToken }
   }
 
   async run(): Promise<LoginResponse> {
     const {
-      flags: { email: givenEmail, 'api-token': apiToken },
+      flags: { email: givenEmail, 'access-token': accessToken },
     } = await this.parse(Login)
 
     let result: LoginResponse | null = null
 
-    if (apiToken) {
-      result = { email: givenEmail || 'unknown-email', token: apiToken }
+    if (accessToken) {
+      result = { email: givenEmail || 'unknown-email', accessToken }
     } else {
       await this.prompt<{
         email: string
@@ -74,12 +74,12 @@ export default class Login extends BetterCommand<LoginResponse> {
           name: 'email',
           type: 'input',
           default: givenEmail,
-          message: 'Please enter your email address',
+          message: 'Please enter your email address:',
         },
         {
           name: 'verificationCode',
           type: 'input',
-          message: 'Please enter the verification code that you received',
+          message: 'Please enter the verification code that you received:',
           when: async ({ email }) => {
             if (email) {
               await this.sendVerificationCode(email)

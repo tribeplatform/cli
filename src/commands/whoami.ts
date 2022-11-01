@@ -1,6 +1,5 @@
 import { StandardColors } from '@salesforce/sf-plugins-core'
 import { BetterCommand } from '../better-command'
-import { getConfigs } from '../utils'
 
 type WhoAmIResponse = { email: string }
 
@@ -10,7 +9,7 @@ export default class WhoAmI extends BetterCommand<WhoAmIResponse> {
   static examples = [`$ bettermode whoami`]
 
   async run(): Promise<WhoAmIResponse> {
-    const { EMAIL: email } = await getConfigs()
+    const { email } = await this.getConfigs()
     this.log(`You are logged in as ${StandardColors.success(email)}`)
     return { email }
   }

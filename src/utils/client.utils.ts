@@ -7,6 +7,7 @@ import {
   QueryName,
   QueryOption,
 } from '@tribeplatform/gql-client/global-types'
+import { DEV_GQL_URL, GQL_URL } from '../constants'
 import { getConfigs } from './configs.utils'
 import { CliError, InvalidTokenError, UnAuthorizedError } from './error.utils'
 
@@ -39,16 +40,25 @@ export class CliClient extends GlobalClient {
   }
 }
 
-export const getClient = async (customApiToken?: string): Promise<CliClient> => {
-  let accessToken = customApiToken
-  if (!accessToken) {
-    const configs = await getConfigs()
-    accessToken = configs.API_TOKEN
+export const getClient = async (options: {
+  customAccessToken?: string
+  dev?: boolean
+  withoutToken?: boolean
+}): Promise<CliClient> => {
+  const { customAccessToken, dev = false, withoutToken = false } = options
+
+  let accessToken = customAccessToken
+  if (!withoutToken && !accessToken) {
+    const configs = await getConfigs(dev)
+    accessToken = configs.accessToken
   }
 
-  if (!accessToken) {
+  if (!withoutToken && !accessToken) {
     throw new UnAuthorizedError()
   }
 
-  return new CliClient({ accessToken })
+  return new CliClient({
+    accessToken: withoutToken ? undefined : accessToken,
+    graphqlUrl: dev ? DEV_GQL_URL : GQL_URL,
+  })
 }
