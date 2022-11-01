@@ -1,5 +1,5 @@
-import { homedir } from 'node:os'
-import { resolve } from 'node:path'
+import { homedir } from 'os'
+import { resolve } from 'path'
 import { AppTemplate } from './types'
 
 export const GQL_URL = 'https://app.tribe.so/api/global/gateway'

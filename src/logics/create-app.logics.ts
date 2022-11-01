@@ -1,6 +1,6 @@
 import { App } from '@tribeplatform/gql-client/global-types'
 import * as Listr from 'listr'
-import { join } from 'node:path'
+import { join } from 'path'
 import { APP_TEMPLATE_CHOICES, REPO_URL } from '../constants'
 import { AppTemplate } from '../types'
 import { CliClient, CliError, Shell } from '../utils'

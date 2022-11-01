@@ -1,4 +1,4 @@
-import { join } from 'node:path'
+import { join } from 'path'
 import { cp, exec, find, mkdir, rm, sed, which } from 'shelljs'
 import { CliError } from './error.utils'
 

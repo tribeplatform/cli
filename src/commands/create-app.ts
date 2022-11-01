@@ -1,5 +1,5 @@
 import { App } from '@tribeplatform/gql-client/global-types'
-import { join } from 'node:path'
+import { join } from 'path'
 import { BetterCommand } from '../better-command'
 import { APP_TEMPLATE_CHOICES } from '../constants'
 import { getCreateAppTasks } from '../logics'
@@ -55,7 +55,7 @@ export default class CreateApp extends BetterCommand<CreateAppResponse> {
       {
         name: 'template',
         type: 'list',
-        default: APP_TEMPLATE_CHOICES.ts,
+        default: APP_TEMPLATE_CHOICES.typescript,
         message: `Please select your preferred app template:`,
         choices: Object.keys(APP_TEMPLATE_CHOICES).map(template => ({
           name: APP_TEMPLATE_CHOICES[template as AppTemplate],
