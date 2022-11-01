@@ -25,8 +25,10 @@ export class WebhookService {
     webhook: AppInstalledWebhook,
   ): Promise<GeneralWebhookResponse> {
     let network: Network
+    let graphqlUrl: string
     try {
       const client = await getNetworkClient(webhook.networkId)
+      graphqlUrl = client.graphqlUrl
       network = await client.query({
         name: 'network',
         args: 'basic',
@@ -41,6 +43,7 @@ export class WebhookService {
         networkId: network.id,
         name: network.name,
         domain: network.domain,
+        graphqlUrl,
       })
     } catch (e) {
       logger.error('Database Error', e)

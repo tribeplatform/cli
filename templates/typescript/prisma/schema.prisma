@@ -16,6 +16,7 @@ model Network {
   networkId String @unique
   domain String @unique
   name String
+  graphqlUrl String
 }
 
 model Member {
