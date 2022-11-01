@@ -1,4 +1,4 @@
-export type AppTemplate = 'ts'
+export type AppTemplate = 'typescript'
 
 export type Configs = {
   accessToken: string

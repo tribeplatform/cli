@@ -11,7 +11,7 @@ export const RC_LOCATION =
   process.env.BETTERMODE_RC_LOCATION || resolve(homedir(), '.bettermoderc')
 
 export const APP_TEMPLATE_CHOICES: Record<AppTemplate, string> = {
-  ts: 'TypeScript',
+  typescript: 'TypeScript',
 }
 
 export const CONFIG_MAPPER: Record<string, string> = {
