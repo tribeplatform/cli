@@ -1,33 +1,38 @@
-oclif-hello-world
-=================
+# Bettermode CLI
 
-oclif example Hello World CLI
+Bettermode CLI is a command line tool for managing your bettermode partner account. It is
+written in TypeScript and uses the [Betterment API](https://partners.tribe.so/docs/guide/index).
 
-[![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
-[![Version](https://img.shields.io/npm/v/oclif-hello-world.svg)](https://npmjs.org/package/oclif-hello-world)
+[![bettermode](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://tribe.so)
+[![Version](https://img.shields.io/npm/v/oclif-hello-world.svg)](https://www.npmjs.com/package/@tribeplatform/cli)
 [![CircleCI](https://circleci.com/gh/oclif/hello-world/tree/main.svg?style=shield)](https://circleci.com/gh/oclif/hello-world/tree/main)
-[![Downloads/week](https://img.shields.io/npm/dw/oclif-hello-world.svg)](https://npmjs.org/package/oclif-hello-world)
-[![License](https://img.shields.io/npm/l/oclif-hello-world.svg)](https://github.com/oclif/hello-world/blob/main/package.json)
+[![Downloads/week](https://img.shields.io/npm/dw/oclif-hello-world.svg)](https://www.npmjs.com/package/@tribeplatform/cli)
+[![License](https://img.shields.io/npm/l/oclif-hello-world.svg)](https://github.com/tribeplatform/cli/blob/main/LICENSE)
 
 <!-- toc -->
+* [Bettermode CLI](#bettermode-cli)
 * [Usage](#usage)
 * [Commands](#commands)
 <!-- tocstop -->
+
 # Usage
+
 <!-- usage -->
 ```sh-session
 $ npm install -g @tribeplatform/cli
 $ bettermode COMMAND
 running command...
 $ bettermode (--version)
-@tribeplatform/cli/0.0.2 darwin-arm64 node-v16.13.0
+@tribeplatform/cli/0.0.3 darwin-arm64 node-v16.13.0
 $ bettermode --help [COMMAND]
 USAGE
   $ bettermode COMMAND
 ...
 ```
 <!-- usagestop -->
+
 # Commands
+
 <!-- commands -->
 * [`bettermode apps`](#bettermode-apps)
 * [`bettermode autocomplete [SHELL]`](#bettermode-autocomplete-shell)
@@ -81,7 +86,7 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/apps.ts](https://github.com/tribeplatform/cli/blob/v0.0.2/dist/commands/apps.ts)_
+_See code: [dist/commands/apps.ts](https://github.com/tribeplatform/cli/blob/v0.0.3/dist/commands/apps.ts)_
 
 ## `bettermode autocomplete [SHELL]`
 
@@ -175,7 +180,7 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/create-app.ts](https://github.com/tribeplatform/cli/blob/v0.0.2/dist/commands/create-app.ts)_
+_See code: [dist/commands/create-app.ts](https://github.com/tribeplatform/cli/blob/v0.0.3/dist/commands/create-app.ts)_
 
 ## `bettermode help [COMMAND]`
 
@@ -233,7 +238,7 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/login.ts](https://github.com/tribeplatform/cli/blob/v0.0.2/dist/commands/login.ts)_
+_See code: [dist/commands/login.ts](https://github.com/tribeplatform/cli/blob/v0.0.3/dist/commands/login.ts)_
 
 ## `bettermode logout`
 
@@ -266,7 +271,7 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/logout.ts](https://github.com/tribeplatform/cli/blob/v0.0.2/dist/commands/logout.ts)_
+_See code: [dist/commands/logout.ts](https://github.com/tribeplatform/cli/blob/v0.0.3/dist/commands/logout.ts)_
 
 ## `bettermode networks`
 
@@ -309,7 +314,7 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/networks.ts](https://github.com/tribeplatform/cli/blob/v0.0.2/dist/commands/networks.ts)_
+_See code: [dist/commands/networks.ts](https://github.com/tribeplatform/cli/blob/v0.0.3/dist/commands/networks.ts)_
 
 ## `bettermode update [CHANNEL]`
 
@@ -379,5 +384,5 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/whoami.ts](https://github.com/tribeplatform/cli/blob/v0.0.2/dist/commands/whoami.ts)_
+_See code: [dist/commands/whoami.ts](https://github.com/tribeplatform/cli/blob/v0.0.3/dist/commands/whoami.ts)_
 <!-- commandsstop -->
