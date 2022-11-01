@@ -9,7 +9,7 @@ export default class Networks extends BetterCommand<NetworksResponse> {
 
   static examples = [`$ bettermode networks`]
 
-  static flags = { ...BetterCommand.flags, ...CliUx.ux.table.flags() }
+  static flags = { ...CliUx.ux.table.flags() }
 
   async run(): Promise<NetworksResponse> {
     const networks = await this.getNetworks()

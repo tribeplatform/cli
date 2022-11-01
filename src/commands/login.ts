@@ -11,19 +11,11 @@ export default class Login extends BetterCommand<LoginResponse> {
   static examples = [`$ bettermode login`]
 
   static flags = {
-    ...BetterCommand.flags,
     email: Flags.string({
       char: 'e',
       summary: 'your email address',
       description: 'the email address that you want to use to login in the portal',
       env: 'BETTERMODE_EMAIL',
-      required: false,
-    }),
-    'api-token': Flags.string({
-      char: 't',
-      summary: 'your API token',
-      description: 'the API token that you want to use to login in the portal',
-      env: 'BETTERMODE_API_TOKEN',
       required: false,
     }),
   }

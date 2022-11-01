@@ -5,7 +5,8 @@ import { Configs } from './types'
 import { CliClient, getClient, getConfigs, setConfigs } from './utils'
 
 export abstract class BetterCommand<T> extends SfCommand<T> {
-  static flags = {
+  static globalFlags = {
+    ...SfCommand.globalFlags,
     'access-token': Flags.string({
       char: 't',
       summary: 'your access token',
