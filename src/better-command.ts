@@ -40,13 +40,13 @@ export abstract class BetterCommand<T> extends SfCommand<T> {
   }
 
   getClient = async (withoutToken = false): Promise<CliClient> => {
-    if (withoutToken) {
-      return getClient({ withoutToken })
-    }
-
     const {
       flags: { dev, 'access-token': customAccessToken },
     } = await this.parse(BetterCommand)
+
+    if (withoutToken) {
+      return getClient({ withoutToken, dev })
+    }
 
     const { accessToken } = await this.getConfigs()
     return getClient({ customAccessToken: customAccessToken || accessToken, dev })
