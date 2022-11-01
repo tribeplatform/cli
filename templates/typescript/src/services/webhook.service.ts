@@ -18,16 +18,12 @@ import { getNetworkClient, logger } from '@utils'
 
 export class WebhookService {
   async handleTestWebhook(webhook: TestWebhook): Promise<TestWebhookResponse> {
-    logger.verbose('Received test webhook', webhook)
-
     return getChallengeResponse(webhook)
   }
 
   async handleInstalledWebhook(
     webhook: AppInstalledWebhook,
   ): Promise<GeneralWebhookResponse> {
-    logger.verbose('Received app installed webhook', webhook)
-
     let network: Network
     try {
       const client = await getNetworkClient(webhook.networkId)
@@ -60,8 +56,6 @@ export class WebhookService {
   async handleUninstalledWebhook(
     webhook: AppUninstalledWebhook,
   ): Promise<GeneralWebhookResponse> {
-    logger.verbose('Received app uninstalled webhook', webhook)
-
     try {
       await NetworkRepository.delete(webhook.networkId)
     } catch (e) {
@@ -78,8 +72,6 @@ export class WebhookService {
   async handleSubscriptionWebhook(
     webhook: SubscriptionWebhook,
   ): Promise<GeneralWebhookResponse> {
-    logger.verbose('Received subscription webhook', webhook)
-
     // TODO: Handle subscription webhooks here
 
     return {
@@ -91,8 +83,6 @@ export class WebhookService {
   async handleFederatedSearchWebhook(
     webhook: FederatedSearchWebhook,
   ): Promise<FederatedSearchWebhookResponse> {
-    logger.verbose('Received subscription webhook', webhook)
-
     // TODO: Handle federated search webhook here
 
     return {
@@ -105,8 +95,6 @@ export class WebhookService {
   async handleInteractionWebhook(
     webhook: InteractionWebhook,
   ): Promise<InteractionWebhookResponse> {
-    logger.verbose('Received subscription webhook', webhook)
-
     // TODO: Handle interaction webhook here
 
     return {

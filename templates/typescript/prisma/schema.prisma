@@ -17,3 +17,13 @@ model Network {
   domain String @unique
   name String
 }
+
+model Member {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  
+  networkId String
+  memberId String @unique
+  email String
+  name String
+  refreshToken String
+}

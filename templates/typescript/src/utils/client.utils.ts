@@ -1,5 +1,5 @@
 import { CLIENT_ID, CLIENT_SECRET } from '@config'
-import { GlobalClient } from '@tribeplatform/gql-client'
+import { GlobalClient, TribeClient } from '@tribeplatform/gql-client'
 import { logger } from './logger.utils'
 
 export const gqlClient = new GlobalClient({
@@ -10,10 +10,21 @@ export const gqlClient = new GlobalClient({
   },
 })
 
-export const getNetworkClient = async (networkId: string) => {
+export const getClient = (options: {
+  accessToken: string
+  graphqlUrl?: string
+}): TribeClient => {
+  const { accessToken, graphqlUrl } = options
+  return new TribeClient({ accessToken, graphqlUrl })
+}
+
+export const getNetworkClient = async (networkId: string): Promise<TribeClient> => {
   return await gqlClient.getTribeClient({ networkId })
 }
 
-export const getMemberClient = async (networkId: string, memberId: string) => {
+export const getMemberClient = async (
+  networkId: string,
+  memberId: string,
+): Promise<TribeClient> => {
   return await gqlClient.getTribeClient({ networkId, memberId })
 }

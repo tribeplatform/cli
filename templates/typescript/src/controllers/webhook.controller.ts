@@ -25,6 +25,8 @@ export class WebhookController {
   @ResponseSchema(WebhookResponseDto)
   @HttpCode(200)
   async receiveWebhook(@Body() webhook: Webhook): Promise<WebhookResponse> {
+    logger.verbose('Received webhook', webhook)
+
     switch (webhook.type) {
       case WebhookType.Test:
         return this.webhookService.handleTestWebhook(webhook)
@@ -43,7 +45,7 @@ export class WebhookController {
     }
   }
 
-  @Post('/federated-search')
+  @Post('/search')
   @UseBefore(validationMiddleware(WebhookDto, 'body'))
   @OpenAPI({ summary: 'Receives federated search requests and returns the result.' })
   @ResponseSchema(WebhookResponseDto)
@@ -51,6 +53,8 @@ export class WebhookController {
   async receiveFederatedSearch(
     @Body() webhook: FederatedSearchWebhook,
   ): Promise<FederatedSearchWebhookResponse> {
+    logger.verbose('Received federated search request', webhook)
+
     return this.webhookService.handleFederatedSearchWebhook(webhook)
   }
 
@@ -62,6 +66,8 @@ export class WebhookController {
   async receiveInteraction(
     @Body() webhook: InteractionWebhook,
   ): Promise<InteractionWebhookResponse> {
+    logger.verbose('Received interaction request', webhook)
+
     return this.webhookService.handleInteractionWebhook(webhook)
   }
 }
