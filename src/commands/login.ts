@@ -1,16 +1,17 @@
 import { Flags } from '@oclif/core'
-import { SfCommand } from '@salesforce/sf-plugins-core'
 import { ActionStatus } from '@tribeplatform/gql-client/global-types'
+import { BetterCommand } from '../better-command'
 import { CliClient, LoginError, ServerError, setConfigs } from '../utils'
 
 type LoginResponse = { email: string; token: string }
 
-export default class Login extends SfCommand<LoginResponse> {
+export default class Login extends BetterCommand<LoginResponse> {
   static description = 'login to Bettermode portal'
 
   static examples = [`$ bettermode login`]
 
   static flags = {
+    ...BetterCommand.flags,
     email: Flags.string({
       char: 'e',
       summary: 'your email address',

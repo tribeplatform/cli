@@ -1,7 +1,6 @@
-import { Flags } from '@oclif/core'
-import { SfCommand } from '@salesforce/sf-plugins-core'
 import { App } from '@tribeplatform/gql-client/global-types'
 import { join } from 'node:path'
+import { BetterCommand } from '../better-command'
 import { APP_TEMPLATE_CHOICES } from '../constants'
 import { getCreateAppTasks } from '../logics'
 import { AppTemplate } from '../types'
@@ -15,20 +14,10 @@ import {
 
 type CreateAppResponse = { app: App }
 
-export default class CreateApp extends SfCommand<CreateAppResponse> {
+export default class CreateApp extends BetterCommand<CreateAppResponse> {
   static description = 'create a new app'
 
   static examples = [`$ bettermode create app`]
-
-  static flags = {
-    'api-token': Flags.string({
-      char: 't',
-      summary: 'your API token',
-      description: 'the API token that you want to use to login in the portal',
-      env: 'BETTERMODE_API_TOKEN',
-      required: false,
-    }),
-  }
 
   async run(): Promise<CreateAppResponse> {
     this.spinner.start('Getting your info ...')

@@ -106,9 +106,10 @@ create a new app
 
 ```
 USAGE
-  $ bettermode create-app [--json] [-t <value>]
+  $ bettermode create-app [--json] [-t <value>] [-d]
 
 FLAGS
+  -d, --dev                development mode
   -t, --api-token=<value>  your API token
 
 GLOBAL FLAGS
@@ -121,6 +122,10 @@ EXAMPLES
   $ bettermode create app
 
 FLAG DESCRIPTIONS
+  -d, --dev  development mode
+
+    actions will happen in development mode
+
   -t, --api-token=<value>  your API token
 
     the API token that you want to use to login in the portal
@@ -154,9 +159,10 @@ login to Bettermode portal
 
 ```
 USAGE
-  $ bettermode login [--json] [-e <value>] [-t <value>]
+  $ bettermode login [--json] [-t <value>] [-d] [-e <value>]
 
 FLAGS
+  -d, --dev                development mode
   -e, --email=<value>      your email address
   -t, --api-token=<value>  your API token
 
@@ -170,6 +176,10 @@ EXAMPLES
   $ bettermode login
 
 FLAG DESCRIPTIONS
+  -d, --dev  development mode
+
+    actions will happen in development mode
+
   -e, --email=<value>  your email address
 
     the email address that you want to use to login in the portal
@@ -187,7 +197,11 @@ logout from Bettermode portal
 
 ```
 USAGE
-  $ bettermode logout [--json]
+  $ bettermode logout [--json] [-t <value>] [-d]
+
+FLAGS
+  -d, --dev                development mode
+  -t, --api-token=<value>  your API token
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -197,6 +211,15 @@ DESCRIPTION
 
 EXAMPLES
   $ bettermode logout
+
+FLAG DESCRIPTIONS
+  -d, --dev  development mode
+
+    actions will happen in development mode
+
+  -t, --api-token=<value>  your API token
+
+    the API token that you want to use to login in the portal
 ```
 
 _See code: [dist/commands/logout.ts](https://github.com/tribeplatform/cli/blob/v0.0.1/dist/commands/logout.ts)_
@@ -207,19 +230,21 @@ list your networks
 
 ```
 USAGE
-  $ bettermode networks [--json] [--columns <value> | -x] [--sort <value>] [--filter <value>] [--output
-    csv|json|yaml |  | [--csv | --no-truncate]] [--no-header | ]
+  $ bettermode networks [--json] [-t <value>] [-d] [--columns <value> | -x] [--sort <value>] [--filter
+    <value>] [--output csv|json|yaml |  | [--csv | --no-truncate]] [--no-header | ]
 
 FLAGS
-  -x, --extended     show extra columns
-  --columns=<value>  only show provided columns (comma-separated)
-  --csv              output is csv format [alias: --output=csv]
-  --filter=<value>   filter property by partial string matching, ex: name=foo
-  --no-header        hide table header from output
-  --no-truncate      do not truncate output to fit screen
-  --output=<option>  output in a more machine friendly format
-                     <options: csv|json|yaml>
-  --sort=<value>     property to sort by (prepend '-' for descending)
+  -d, --dev                development mode
+  -t, --api-token=<value>  your API token
+  -x, --extended           show extra columns
+  --columns=<value>        only show provided columns (comma-separated)
+  --csv                    output is csv format [alias: --output=csv]
+  --filter=<value>         filter property by partial string matching, ex: name=foo
+  --no-header              hide table header from output
+  --no-truncate            do not truncate output to fit screen
+  --output=<option>        output in a more machine friendly format
+                           <options: csv|json|yaml>
+  --sort=<value>           property to sort by (prepend '-' for descending)
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -229,6 +254,15 @@ DESCRIPTION
 
 EXAMPLES
   $ bettermode networks
+
+FLAG DESCRIPTIONS
+  -d, --dev  development mode
+
+    actions will happen in development mode
+
+  -t, --api-token=<value>  your API token
+
+    the API token that you want to use to login in the portal
 ```
 
 _See code: [dist/commands/networks.ts](https://github.com/tribeplatform/cli/blob/v0.0.1/dist/commands/networks.ts)_
@@ -276,7 +310,11 @@ check your authorized email address
 
 ```
 USAGE
-  $ bettermode whoami [--json]
+  $ bettermode whoami [--json] [-t <value>] [-d]
+
+FLAGS
+  -d, --dev                development mode
+  -t, --api-token=<value>  your API token
 
 GLOBAL FLAGS
   --json  Format output as json.
@@ -286,6 +324,15 @@ DESCRIPTION
 
 EXAMPLES
   $ bettermode whoami
+
+FLAG DESCRIPTIONS
+  -d, --dev  development mode
+
+    actions will happen in development mode
+
+  -t, --api-token=<value>  your API token
+
+    the API token that you want to use to login in the portal
 ```
 
 _See code: [dist/commands/whoami.ts](https://github.com/tribeplatform/cli/blob/v0.0.1/dist/commands/whoami.ts)_

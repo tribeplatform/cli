@@ -1,18 +1,16 @@
 import { CliUx } from '@oclif/core'
-import { SfCommand } from '@salesforce/sf-plugins-core'
 import { Network } from '@tribeplatform/gql-client/global-types'
+import { BetterCommand } from '../better-command'
 import { getClient } from '../utils'
 
 type NetworksResponse = { networks: Network[] }
 
-export default class Networks extends SfCommand<NetworksResponse> {
+export default class Networks extends BetterCommand<NetworksResponse> {
   static description = 'list your networks'
 
   static examples = [`$ bettermode networks`]
 
-  static flags = {
-    ...CliUx.ux.table.flags(),
-  }
+  static flags = { ...BetterCommand.flags, ...CliUx.ux.table.flags() }
 
   getNetworks = async (): Promise<Network[]> => {
     const client = await getClient()

@@ -1,9 +1,10 @@
-import { SfCommand, StandardColors } from '@salesforce/sf-plugins-core'
+import { StandardColors } from '@salesforce/sf-plugins-core'
+import { BetterCommand } from '../better-command'
 import { setConfigs } from '../utils'
 
 type LogoutResponse = { succeeded: boolean }
 
-export default class Logout extends SfCommand<LogoutResponse> {
+export default class Logout extends BetterCommand<LogoutResponse> {
   static description = 'logout from Bettermode portal'
 
   static examples = [`$ bettermode logout`]

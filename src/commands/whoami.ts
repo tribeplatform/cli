@@ -1,9 +1,10 @@
-import { SfCommand, StandardColors } from '@salesforce/sf-plugins-core'
+import { StandardColors } from '@salesforce/sf-plugins-core'
+import { BetterCommand } from '../better-command'
 import { getConfigs } from '../utils'
 
 type WhoAmIResponse = { email: string }
 
-export default class WhoAmI extends SfCommand<WhoAmIResponse> {
+export default class WhoAmI extends BetterCommand<WhoAmIResponse> {
   static description = 'check your authorized email address'
 
   static examples = [`$ bettermode whoami`]
