@@ -6,7 +6,7 @@ import { getClient, logger } from '@utils'
 import axios from 'axios'
 import { HttpError, InternalServerError } from 'routing-controllers'
 
-export class OAuthService {
+export class BettermodeOAuthService {
   async getTokens(input: OAuthTokensInputDto): Promise<OAuthTokensDto> {
     const { code, refreshToken, networkDomain } = input
 

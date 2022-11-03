@@ -1,7 +1,7 @@
 import { CLIENT_ID } from '@config'
 import { OAuthDto, OAuthTokensDto, OAuthTokensInputDto } from '@dtos'
 import { validationMiddleware } from '@middlewares'
-import { OAuthService } from '@services'
+import { BettermodeOAuthService } from '@services'
 import { logger } from '@utils'
 import { Response } from 'express'
 import {
@@ -17,8 +17,8 @@ import {
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi'
 
 @Controller('/oauth')
-export class WebhookController {
-  readonly oauthService = new OAuthService()
+export class BettermodeOAuthController {
+  readonly oauthService = new BettermodeOAuthService()
 
   @Get()
   @UseBefore(validationMiddleware(OAuthDto, 'params'))
