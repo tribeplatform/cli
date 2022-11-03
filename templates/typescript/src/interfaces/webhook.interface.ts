@@ -2,7 +2,7 @@ import { WebhookContext, WebhookType } from '@enums'
 import { AppInstallation, AppSettings } from './app.interface'
 import { Event } from './event.interface'
 import { FederatedSearch } from './federated-search.interface'
-import { Interaction } from './interaction.interface'
+import { InteractionInput } from './interaction.interface'
 
 export interface Challenge {
   challenge: string
@@ -39,7 +39,7 @@ export interface FederatedSearchWebhook extends BaseWebhook {
 
 export interface InteractionWebhook extends BaseWebhook {
   type: WebhookType.Interaction
-  data: Interaction
+  data: InteractionInput
 }
 
 export interface SubscriptionWebhook extends BaseWebhook {
