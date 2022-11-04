@@ -1,6 +1,5 @@
 import { App } from '@tribeplatform/gql-client/global-types'
 import { BetterCommand } from '../../better-command'
-import { UnAuthorizedError } from '../../utils'
 
 type AppsListResponse = App[]
 
@@ -10,26 +9,6 @@ export default class AppsList extends BetterCommand<AppsListResponse> {
   static examples = [`$ bettermode app list`]
 
   static flags = { ...BetterCommand.tableFlags() }
-
-  getApps = async (): Promise<App[]> => {
-    return this.runWithSpinner(async () => {
-      const client = await this.getClient()
-      if (!client) {
-        throw new UnAuthorizedError()
-      }
-
-      const { nodes: apps } = await client.query({
-        name: 'apps',
-        args: {
-          variables: { limit: 100 },
-          fields: {
-            nodes: 'basic',
-          },
-        },
-      })
-      return apps || []
-    })
-  }
 
   async run(): Promise<AppsListResponse> {
     const apps = await this.getApps()

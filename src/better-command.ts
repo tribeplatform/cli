@@ -1,6 +1,6 @@
 import { Flags } from '@oclif/core'
 import { SfCommand } from '@salesforce/sf-plugins-core'
-import { Network } from '@tribeplatform/gql-client/global-types'
+import { App, Network } from '@tribeplatform/gql-client/global-types'
 import { GlobalConfigs, LocalConfigs } from './types'
 import {
   CliClient,
@@ -98,6 +98,26 @@ export abstract class BetterCommand<T> extends SfCommand<T> {
       }
 
       return client.query({ name: 'networks', args: 'basic' })
+    })
+  }
+
+  getApps = async (): Promise<App[]> => {
+    return this.runWithSpinner(async () => {
+      const client = await this.getClient()
+      if (!client) {
+        throw new UnAuthorizedError()
+      }
+
+      const { nodes: apps } = await client.query({
+        name: 'apps',
+        args: {
+          variables: { limit: 100 },
+          fields: {
+            nodes: 'basic',
+          },
+        },
+      })
+      return apps || []
     })
   }
 }
