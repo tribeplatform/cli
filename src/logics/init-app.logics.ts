@@ -6,8 +6,13 @@ import {
   Shortcut,
 } from '@tribeplatform/gql-client/global-types'
 import * as Listr from 'listr'
-import { RC_DEV_POSTFIX, RC_FILE_NAME } from '../constants'
-import { CliClient, CliError, setLocalConfigs, Shell } from '../utils'
+import {
+  CliClient,
+  CliError,
+  getLocalConfigFileRelativePath,
+  setLocalConfigs,
+  Shell,
+} from '../utils'
 
 export const getInitAppTasks = (options: {
   client: CliClient
@@ -16,7 +21,7 @@ export const getInitAppTasks = (options: {
 }) => {
   const { client, app, dev } = options
 
-  const fileName = `${RC_FILE_NAME}${dev ? RC_DEV_POSTFIX : ''}`
+  const fileName = getLocalConfigFileRelativePath(dev)
   const files = Shell.find([fileName], { silent: true })
   if (files.length > 0) {
     throw new CliError(`The file \`${fileName}\` already exists.`)

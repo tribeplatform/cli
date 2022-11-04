@@ -1,5 +1,11 @@
 import { join } from 'path'
-import { RC_DEV_POSTFIX, RC_FILE_NAME, RC_LOCATION } from '../constants'
+import {
+  DEV_POSTFIX,
+  GLOBAL_RC_LOCATION,
+  LOCAL_RC_CONFIG_FILE_FORMAT,
+  LOCAL_RC_CONFIG_FILE_NAME,
+  LOCAL_RC_FOLDER_NAME,
+} from '../constants'
 import { GlobalConfigs, LocalConfigs } from '../types'
 import { NoAccessToConfigError } from './error.utils'
 import { hasAccessToFile, isFileExists, readJsonFile, writeJsonFile } from './file.utils'
@@ -32,13 +38,21 @@ const setCachedConfigs = (
     configs
 }
 
-const getRcPath = (options: { global: boolean; dev: boolean }): string => {
+export const getLocalConfigFileRelativePath = (dev: boolean): string => {
+  const devPostfix = dev ? DEV_POSTFIX : ''
+  return join(
+    LOCAL_RC_FOLDER_NAME,
+    LOCAL_RC_CONFIG_FILE_NAME + devPostfix + LOCAL_RC_CONFIG_FILE_FORMAT,
+  )
+}
+
+const getConfigFilePath = (options: { global: boolean; dev: boolean }): string => {
   const { global, dev } = options
 
-  const basePath = global ? RC_LOCATION : join(process.cwd(), RC_FILE_NAME)
-  if (dev) {
-    return basePath + RC_DEV_POSTFIX
-  }
+  const devPostfix = dev ? DEV_POSTFIX : ''
+  const basePath = global
+    ? join(GLOBAL_RC_LOCATION, devPostfix)
+    : join(process.cwd(), getLocalConfigFileRelativePath(dev))
 
   return basePath
 }
@@ -60,7 +74,7 @@ export const getConfigs = async (options: {
   const cachedConfig = getCachedConfigs({ global, dev })
   if (cachedConfig) return cachedConfig
 
-  const path = getRcPath({ global, dev })
+  const path = getConfigFilePath({ global, dev })
   await validateConfigFile(path)
 
   const configs = await readJsonFile<GlobalConfigs | LocalConfigs>(path)
@@ -80,7 +94,7 @@ export const setConfigs = async (
 ): Promise<void> => {
   const { global, dev } = options
 
-  const path = getRcPath({ global, dev })
+  const path = getConfigFilePath({ global, dev })
   await validateConfigFile(path)
 
   await writeJsonFile(path, configs)

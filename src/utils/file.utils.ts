@@ -1,4 +1,5 @@
-import { access, constants, readJson, stat, writeJson } from 'fs-extra'
+import { access, constants, mkdir, readJson, stat, writeJson } from 'fs-extra'
+import { dirname } from 'path'
 
 export const isFileExists = async (path: string): Promise<boolean> => {
   try {
@@ -36,5 +37,6 @@ export const writeJsonFile = async <
   path: string,
   data: T,
 ): Promise<void> => {
+  await mkdir(dirname(path), { recursive: true })
   await writeJson(path, data, { encoding: 'utf8', flag: 'w+', spaces: 2 })
 }
