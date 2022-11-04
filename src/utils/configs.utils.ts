@@ -1,9 +1,8 @@
-import { writeFile } from 'fs-extra'
 import { join } from 'path'
-import { RC_FILE_NAME, RC_LOCATION } from '../constants'
+import { RC_DEV_POSTFIX, RC_FILE_NAME, RC_LOCATION } from '../constants'
 import { GlobalConfigs, LocalConfigs } from '../types'
 import { NoAccessToConfigError } from './error.utils'
-import { hasAccessToFile, isFileExists, readJsonFile } from './file.utils'
+import { hasAccessToFile, isFileExists, readJsonFile, writeJsonFile } from './file.utils'
 
 const CACHED_CONFIGS = {
   global: {
@@ -38,7 +37,7 @@ const getRcPath = (options: { global: boolean; dev: boolean }): string => {
 
   const basePath = global ? RC_LOCATION : join(process.cwd(), RC_FILE_NAME)
   if (dev) {
-    return basePath + '.dev'
+    return basePath + RC_DEV_POSTFIX
   }
 
   return basePath
@@ -84,7 +83,7 @@ export const setConfigs = async (
   const path = getRcPath({ global, dev })
   await validateConfigFile(path)
 
-  await writeFile(path, JSON.stringify(configs || {}), { encoding: 'utf8', flag: 'w+' })
+  await writeJsonFile(path, configs)
   setCachedConfigs(configs || {}, { global, dev })
 }
 

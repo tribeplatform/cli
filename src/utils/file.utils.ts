@@ -1,4 +1,4 @@
-import { access, constants, readFile, stat, writeFile } from 'fs-extra'
+import { access, constants, readJson, stat, writeJson } from 'fs-extra'
 
 export const isFileExists = async (path: string): Promise<boolean> => {
   try {
@@ -23,9 +23,8 @@ export const readJsonFile = async <
 >(
   path: string,
 ): Promise<T | null> => {
-  const data = await readFile(path, 'utf8')
   try {
-    return JSON.parse(data)
+    return await readJson(path, 'utf8')
   } catch {
     return null
   }
@@ -37,5 +36,5 @@ export const writeJsonFile = async <
   path: string,
   data: T,
 ): Promise<void> => {
-  await writeFile(path, JSON.stringify(data), { encoding: 'utf8', flag: 'w+' })
+  await writeJson(path, data, { encoding: 'utf8', flag: 'w+', spaces: 2 })
 }
