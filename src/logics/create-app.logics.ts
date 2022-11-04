@@ -4,8 +4,10 @@ import { join } from 'path'
 import { APP_TEMPLATE_CHOICES, REPO_URL } from '../constants'
 import { AppTemplate } from '../types'
 import { CliClient, CliError, Shell } from '../utils'
+import { getInitAppTasks } from './init-app.logics'
 
 export const getCreateAppTasks = (options: {
+  dev: boolean
   client: CliClient
   template: AppTemplate
   networkId: string
@@ -13,7 +15,15 @@ export const getCreateAppTasks = (options: {
   repoName: string
   official?: boolean
 }) => {
-  const { client, template, networkId, appName, repoName, official = false } = options
+  const {
+    dev,
+    client,
+    template,
+    networkId,
+    appName,
+    repoName,
+    official = false,
+  } = options
 
   const targetDir = repoName
   const tmpDir = `${targetDir}.tmp`
@@ -114,6 +124,10 @@ export const getCreateAppTasks = (options: {
           ],
           { concurrent: true },
         ),
+    },
+    {
+      title: `Initialize app's config`,
+      task: ctx => getInitAppTasks({ client, app: ctx.app as App, dev }),
     },
   ])
 }

@@ -30,21 +30,21 @@ export type Shortcut = {
   description?: string
   favicon?: string
 
-  callbackId?: string
-  callbackUrl?: string
+  key?: string
+  interactionUrl?: string
   states?: ShortcutState[]
 }
 
 export type DynamicBlock = {
   contexts?: Context[]
 
-  slug?: string
   name?: string
   description?: string
   favicon?: string
   image?: string
 
-  callbackUrl?: string
+  key?: string
+  interactionUrl?: string
 }
 
 export type LocalConfigs = {

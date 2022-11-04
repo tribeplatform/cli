@@ -66,7 +66,7 @@ export default class InitApp extends BetterCommand<InitAppResponse> {
     })
     await tasks.run()
 
-    this.logSuccess('You have successfully initialized your app!')
+    this.logSuccess(`You have successfully initialized your app's config!`)
     return app
   }
 }

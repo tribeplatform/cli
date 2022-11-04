@@ -31,50 +31,49 @@ export abstract class BetterCommand<T> extends SfCommand<T> {
     }),
   }
 
-  getGlobalConfigs = async (): Promise<GlobalConfigs> => {
+  getGlobalFlags = async (): Promise<{
+    dev: boolean
+    accessToken?: string
+  }> => {
     const {
-      flags: { dev },
+      flags: { 'access-token': accessToken, dev = false },
     } = await this.parse(this.constructor as any)
+
+    return { dev, accessToken }
+  }
+
+  getGlobalConfigs = async (): Promise<GlobalConfigs> => {
+    const { dev } = await this.getGlobalFlags()
 
     return getGlobalConfigs(dev)
   }
 
   setGlobalConfigs = async (configs: GlobalConfigs): Promise<void> => {
-    const {
-      flags: { dev },
-    } = await this.parse(this.constructor as any)
+    const { dev } = await this.getGlobalFlags()
 
     return setGlobalConfigs(configs, { dev })
   }
 
   getLocalConfigs = async (): Promise<LocalConfigs> => {
-    const {
-      flags: { dev },
-    } = await this.parse(this.constructor as any)
+    const { dev } = await this.getGlobalFlags()
 
     return getLocalConfigs(dev)
   }
 
   setLocalConfigs = async (configs: LocalConfigs): Promise<void> => {
-    const {
-      flags: { dev },
-    } = await this.parse(this.constructor as any)
+    const { dev } = await this.getGlobalFlags()
 
     return setLocalConfigs(configs, { dev })
   }
 
   getUnAuthenticatedClient = async (): Promise<CliClient> => {
-    const {
-      flags: { dev },
-    } = await this.parse(this.constructor as any)
+    const { dev } = await this.getGlobalFlags()
 
     return getClient({ withoutToken: true, dev })
   }
 
   getClient = async (): Promise<CliClient | null> => {
-    const {
-      flags: { dev, 'access-token': customAccessToken },
-    } = await this.parse(this.constructor as any)
+    const { dev, accessToken: customAccessToken } = await this.getGlobalFlags()
 
     const { accessToken } = await this.getGlobalConfigs()
     const finalAccessToken = customAccessToken || accessToken

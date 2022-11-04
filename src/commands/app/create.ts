@@ -14,6 +14,7 @@ export default class CreateApp extends BetterCommand<CreateAppResponse> {
   static examples = [`$ bettermode app create`]
 
   async run(): Promise<CreateAppResponse> {
+    const { dev } = await this.getGlobalFlags()
     const { official } = await this.getGlobalConfigs()
     const client = await this.getClient()
     const networks = await this.getNetworks()
@@ -79,6 +80,7 @@ export default class CreateApp extends BetterCommand<CreateAppResponse> {
     }
 
     const tasks = getCreateAppTasks({
+      dev,
       client,
       template,
       networkId,
