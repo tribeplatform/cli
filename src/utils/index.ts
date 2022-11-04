@@ -1,5 +1,5 @@
 export * from './client.utils'
-export * from './configs.utils'
+export * from './configs'
 export * from './error.utils'
 export * from './file.utils'
 export * from './shell.utils'

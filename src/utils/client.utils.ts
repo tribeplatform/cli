@@ -8,7 +8,7 @@ import {
   QueryOption,
 } from '@tribeplatform/gql-client/global-types'
 import { DEV_GQL_URL, GQL_URL } from '../constants'
-import { getGlobalConfigs } from './configs.utils'
+import { getGlobalConfigs } from './configs'
 import { CliError, InvalidTokenError, UnAuthorizedError } from './error.utils'
 
 export class CliClient extends GlobalClient {

@@ -1,4 +1,13 @@
-import { access, constants, mkdir, readJson, stat, writeJson } from 'fs-extra'
+import {
+  access,
+  constants,
+  mkdir,
+  readFile as fsReadFile,
+  readJson,
+  stat,
+  writeFile as fsWriteFile,
+  writeJson,
+} from 'fs-extra'
 import { dirname } from 'path'
 
 export const isFileExists = async (path: string): Promise<boolean> => {
@@ -31,6 +40,14 @@ export const readJsonFile = async <
   }
 }
 
+export const readFile = async (path: string): Promise<string | null> => {
+  try {
+    return await fsReadFile(path, 'utf8')
+  } catch {
+    return null
+  }
+}
+
 export const writeJsonFile = async <
   T extends Record<string, unknown> = Record<string, unknown>,
 >(
@@ -39,4 +56,9 @@ export const writeJsonFile = async <
 ): Promise<void> => {
   await mkdir(dirname(path), { recursive: true })
   await writeJson(path, data, { encoding: 'utf8', flag: 'w+', spaces: 2 })
+}
+
+export const writeFile = async (path: string, data: string): Promise<void> => {
+  await mkdir(dirname(path), { recursive: true })
+  await fsWriteFile(path, data, { encoding: 'utf8', flag: 'w+' })
 }
