@@ -1,13 +1,13 @@
 import { App } from '@tribeplatform/gql-client/global-types'
-import { BetterCommand } from '../better-command'
-import { UnAuthorizedError } from '../utils'
+import { BetterCommand } from '../../better-command'
+import { UnAuthorizedError } from '../../utils'
 
-type AppsResponse = { apps: App[] }
+type AppsListResponse = App[]
 
-export default class Apps extends BetterCommand<AppsResponse> {
+export default class AppsList extends BetterCommand<AppsListResponse> {
   static description = 'list your apps'
 
-  static examples = [`$ bettermode apps`]
+  static examples = [`$ bettermode app list`]
 
   static flags = { ...BetterCommand.tableFlags() }
 
@@ -31,10 +31,10 @@ export default class Apps extends BetterCommand<AppsResponse> {
     })
   }
 
-  async run(): Promise<AppsResponse> {
+  async run(): Promise<AppsListResponse> {
     const apps = await this.getApps()
 
-    const { flags } = await this.parse(Apps)
+    const { flags } = await this.parse(AppsList)
     this.table(
       apps,
       {
@@ -73,6 +73,6 @@ export default class Apps extends BetterCommand<AppsResponse> {
         ...flags,
       },
     )
-    return { apps }
+    return apps
   }
 }

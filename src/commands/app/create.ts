@@ -1,17 +1,17 @@
 import { App } from '@tribeplatform/gql-client/global-types'
 import { join } from 'path'
-import { BetterCommand } from '../better-command'
-import { APP_TEMPLATE_CHOICES } from '../constants'
-import { getCreateAppTasks } from '../logics'
-import { AppTemplate } from '../types'
-import { CommandAbortedError, Shell, UnAuthorizedError } from '../utils'
+import { BetterCommand } from '../../better-command'
+import { APP_TEMPLATE_CHOICES } from '../../constants'
+import { getCreateAppTasks } from '../../logics'
+import { AppTemplate } from '../../types'
+import { CommandAbortedError, Shell, UnAuthorizedError } from '../../utils'
 
-type CreateAppResponse = { app: App }
+type CreateAppResponse = App
 
 export default class CreateApp extends BetterCommand<CreateAppResponse> {
   static description = 'create a new app'
 
-  static examples = [`$ bettermode create app`]
+  static examples = [`$ bettermode app create`]
 
   async run(): Promise<CreateAppResponse> {
     const { official } = await this.getGlobalConfigs()
@@ -100,6 +100,6 @@ export default class CreateApp extends BetterCommand<CreateAppResponse> {
     }
 
     this.logSuccess('You have successfully created an app!')
-    return { app }
+    return app
   }
 }

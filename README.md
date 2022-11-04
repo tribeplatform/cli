@@ -34,10 +34,10 @@ USAGE
 # Commands
 
 <!-- commands -->
-* [`bettermode apps`](#bettermode-apps)
+* [`bettermode app create`](#bettermode-app-create)
+* [`bettermode app list`](#bettermode-app-list)
 * [`bettermode autocomplete [SHELL]`](#bettermode-autocomplete-shell)
 * [`bettermode commands`](#bettermode-commands)
-* [`bettermode create-app`](#bettermode-create-app)
 * [`bettermode help [COMMAND]`](#bettermode-help-command)
 * [`bettermode login`](#bettermode-login)
 * [`bettermode logout`](#bettermode-logout)
@@ -45,13 +45,44 @@ USAGE
 * [`bettermode update [CHANNEL]`](#bettermode-update-channel)
 * [`bettermode whoami`](#bettermode-whoami)
 
-## `bettermode apps`
+## `bettermode app create`
+
+create a new app
+
+```
+USAGE
+  $ bettermode app create [--json] [-t <value>] [-d]
+
+FLAGS
+  -d, --dev                   development mode
+  -t, --access-token=<value>  your access token
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  create a new app
+
+EXAMPLES
+  $ bettermode app create
+
+FLAG DESCRIPTIONS
+  -d, --dev  development mode
+
+    actions will happen in development mode
+
+  -t, --access-token=<value>  your access token
+
+    a custom access token that you want to use to login in the portal
+```
+
+## `bettermode app list`
 
 list your apps
 
 ```
 USAGE
-  $ bettermode apps [--json] [-t <value>] [-d] [--columns <value> | -x] [--sort <value>] [--filter
+  $ bettermode app list [--json] [-t <value>] [-d] [--columns <value> | -x] [--sort <value>] [--filter
     <value>] [--output csv|json|yaml |  | [--csv | --no-truncate]] [--no-header | ]
 
 FLAGS
@@ -74,7 +105,7 @@ DESCRIPTION
   list your apps
 
 EXAMPLES
-  $ bettermode apps
+  $ bettermode app list
 
 FLAG DESCRIPTIONS
   -d, --dev  development mode
@@ -85,8 +116,6 @@ FLAG DESCRIPTIONS
 
     a custom access token that you want to use to login in the portal
 ```
-
-_See code: [dist/commands/apps.ts](https://github.com/tribeplatform/cli/blob/v0.0.3/dist/commands/apps.ts)_
 
 ## `bettermode autocomplete [SHELL]`
 
@@ -148,39 +177,6 @@ DESCRIPTION
 ```
 
 _See code: [@oclif/plugin-commands](https://github.com/oclif/plugin-commands/blob/v2.2.1/src/commands/commands.ts)_
-
-## `bettermode create-app`
-
-create a new app
-
-```
-USAGE
-  $ bettermode create-app [--json] [-t <value>] [-d]
-
-FLAGS
-  -d, --dev                   development mode
-  -t, --access-token=<value>  your access token
-
-GLOBAL FLAGS
-  --json  Format output as json.
-
-DESCRIPTION
-  create a new app
-
-EXAMPLES
-  $ bettermode create app
-
-FLAG DESCRIPTIONS
-  -d, --dev  development mode
-
-    actions will happen in development mode
-
-  -t, --access-token=<value>  your access token
-
-    a custom access token that you want to use to login in the portal
-```
-
-_See code: [dist/commands/create-app.ts](https://github.com/tribeplatform/cli/blob/v0.0.3/dist/commands/create-app.ts)_
 
 ## `bettermode help [COMMAND]`
 
