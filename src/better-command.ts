@@ -1,8 +1,16 @@
 import { Flags } from '@oclif/core'
 import { SfCommand } from '@salesforce/sf-plugins-core'
 import { Network } from '@tribeplatform/gql-client/global-types'
-import { Configs } from './types'
-import { CliClient, getClient, getConfigs, setConfigs } from './utils'
+import { GlobalConfigs, LocalConfigs } from './types'
+import {
+  CliClient,
+  getClient,
+  getGlobalConfigs,
+  getLocalConfigs,
+  setGlobalConfigs,
+  setLocalConfigs,
+  UnAuthorizedError,
+} from './utils'
 
 export abstract class BetterCommand<T> extends SfCommand<T> {
   static globalFlags = {
@@ -23,33 +31,56 @@ export abstract class BetterCommand<T> extends SfCommand<T> {
     }),
   }
 
-  getConfigs = async (): Promise<Configs> => {
+  getGlobalConfigs = async (): Promise<GlobalConfigs> => {
     const {
       flags: { dev },
-    } = await this.parse(BetterCommand)
+    } = await this.parse(this.constructor as any)
 
-    return getConfigs(dev)
+    return getGlobalConfigs(dev)
   }
 
-  setConfigs = async (configs: Configs): Promise<void> => {
+  setGlobalConfigs = async (configs: GlobalConfigs): Promise<void> => {
     const {
       flags: { dev },
-    } = await this.parse(BetterCommand)
+    } = await this.parse(this.constructor as any)
 
-    return setConfigs(configs, dev)
+    return setGlobalConfigs(configs, { dev })
   }
 
-  getClient = async (withoutToken = false): Promise<CliClient> => {
+  getLocalConfigs = async (): Promise<LocalConfigs> => {
+    const {
+      flags: { dev },
+    } = await this.parse(this.constructor as any)
+
+    return getLocalConfigs(dev)
+  }
+
+  setLocalConfigs = async (configs: LocalConfigs): Promise<void> => {
+    const {
+      flags: { dev },
+    } = await this.parse(this.constructor as any)
+
+    return setLocalConfigs(configs, { dev })
+  }
+
+  getUnAuthenticatedClient = async (): Promise<CliClient> => {
+    const {
+      flags: { dev },
+    } = await this.parse(this.constructor as any)
+
+    return getClient({ withoutToken: true, dev })
+  }
+
+  getClient = async (): Promise<CliClient | null> => {
     const {
       flags: { dev, 'access-token': customAccessToken },
-    } = await this.parse(BetterCommand)
+    } = await this.parse(this.constructor as any)
 
-    if (withoutToken) {
-      return getClient({ withoutToken, dev })
-    }
-
-    const { accessToken } = await this.getConfigs()
-    return getClient({ customAccessToken: customAccessToken || accessToken, dev })
+    const { accessToken } = await this.getGlobalConfigs()
+    const finalAccessToken = customAccessToken || accessToken
+    return finalAccessToken
+      ? getClient({ customAccessToken: finalAccessToken, dev })
+      : null
   }
 
   runWithSpinner = async <T>(action: () => Promise<T>): Promise<T> => {
@@ -62,6 +93,10 @@ export abstract class BetterCommand<T> extends SfCommand<T> {
   getNetworks = async (): Promise<Network[]> => {
     return this.runWithSpinner(async () => {
       const client = await this.getClient()
+      if (!client) {
+        throw new UnAuthorizedError()
+      }
+
       return client.query({ name: 'networks', args: 'basic' })
     })
   }

@@ -1,114 +1,99 @@
-import { access, constants, readFile, stat, writeFile } from 'fs-extra'
-import {
-  CONFIG_MAPPER,
-  OFFICIAL_EMAILS,
-  RC_LOCATION,
-  REVERSE_CONFIG_MAPPER,
-} from '../constants'
-import { Configs } from '../types'
-import { NoAccessToConfigError, UnAuthorizedError } from './error.utils'
+import { writeFile } from 'fs-extra'
+import { join } from 'path'
+import { RC_FILE_NAME, RC_LOCATION } from '../constants'
+import { GlobalConfigs, LocalConfigs } from '../types'
+import { NoAccessToConfigError } from './error.utils'
+import { hasAccessToFile, isFileExists, readJsonFile } from './file.utils'
 
-let VALIDATED = false
-let CACHED_CONFIG: Configs
+const CACHED_CONFIGS = {
+  global: {
+    dev: null as GlobalConfigs | null,
+    prod: null as GlobalConfigs | null,
+  },
+  local: {
+    dev: null as LocalConfigs | null,
+    prod: null as LocalConfigs | null,
+  },
+}
 
-let DEV_VALIDATED = false
-let DEV_CACHED_CONFIG: Configs
+const getCachedConfigs = (options: {
+  global: boolean
+  dev: boolean
+}): GlobalConfigs | LocalConfigs | null =>
+  CACHED_CONFIGS[options.global ? 'global' : 'local'][options.dev ? 'dev' : 'prod']
 
-const getRcLocation = (dev = false): string => {
+const setCachedConfigs = (
+  configs: GlobalConfigs | LocalConfigs,
+  options: {
+    global: boolean
+    dev: boolean
+  },
+): void => {
+  CACHED_CONFIGS[options.global ? 'global' : 'local'][options.dev ? 'dev' : 'prod'] =
+    configs
+}
+
+const getRcPath = (options: { global: boolean; dev: boolean }): string => {
+  const { global, dev } = options
+
+  const basePath = global ? RC_LOCATION : join(process.cwd(), RC_FILE_NAME)
   if (dev) {
-    return RC_LOCATION + '.dev'
+    return basePath + '.dev'
   }
 
-  return RC_LOCATION
+  return basePath
 }
 
-const isConfigExists = async (dev = false): Promise<boolean> => {
-  try {
-    const result = await stat(getRcLocation(dev))
-    return result.isFile()
-  } catch {
-    return false
-  }
-}
-
-const hasAccessToConfig = async (dev = false): Promise<boolean> => {
-  try {
-    await access(getRcLocation(dev), constants.W_OK | constants.R_OK)
-    return true
-  } catch {
-    return false
+const validateConfigFile = async (path: string): Promise<void> => {
+  const fileExists = await isFileExists(path)
+  const hasAccess = fileExists && (await hasAccessToFile(path))
+  if (fileExists && !hasAccess) {
+    throw new NoAccessToConfigError(path)
   }
 }
 
-const validateConfigs = async (dev = false, ignoreExistence = false): Promise<void> => {
-  const validated = dev ? DEV_VALIDATED : VALIDATED
-  if (validated) return
+export const getConfigs = async (options: {
+  global: boolean
+  dev: boolean
+}): Promise<GlobalConfigs | LocalConfigs> => {
+  const { global, dev } = options
 
-  const hasConfig = await isConfigExists(dev)
-  if (!hasConfig && !ignoreExistence) {
-    throw new UnAuthorizedError()
-  } else if (!hasConfig && ignoreExistence) {
-    return
-  }
-
-  const hasAccess = await hasAccessToConfig(dev)
-  if (!hasAccess) {
-    throw new NoAccessToConfigError()
-  }
-
-  if (dev) {
-    DEV_VALIDATED = true
-  } else {
-    VALIDATED = true
-  }
-}
-
-export const getConfigs = async (dev = false): Promise<Configs> => {
-  const cachedConfig = dev ? DEV_CACHED_CONFIG : CACHED_CONFIG
+  const cachedConfig = getCachedConfigs({ global, dev })
   if (cachedConfig) return cachedConfig
 
-  await validateConfigs(dev)
+  const path = getRcPath({ global, dev })
+  await validateConfigFile(path)
 
-  const data = await readFile(getRcLocation(dev), 'utf8')
-  const rows = data.split('\n')
-  const rc: Record<string, string> = {}
-  for (const row of rows) {
-    const separatorIndex = row.indexOf('=')
-    if (separatorIndex > 0) {
-      const key = row.slice(0, separatorIndex).trim()
-      const value = row.slice(separatorIndex + 1).trim()
-      if (REVERSE_CONFIG_MAPPER[key] && value) {
-        rc[REVERSE_CONFIG_MAPPER[key]] = value
-      }
-    }
-  }
-
-  const configs = {
-    ...rc,
-    official: OFFICIAL_EMAILS.find(email => rc.email?.endsWith(email)),
-  } as Configs
-
-  if (dev) {
-    DEV_CACHED_CONFIG = configs
-  } else {
-    CACHED_CONFIG = configs
-  }
-
-  return configs
+  const configs = await readJsonFile<GlobalConfigs | LocalConfigs>(path)
+  setCachedConfigs(configs || {}, { global, dev })
+  return configs || {}
 }
 
-export const setConfigs = async (configs: Configs, dev = false): Promise<void> => {
-  await validateConfigs(dev, true)
+export const getLocalConfigs = async (dev = false): Promise<LocalConfigs> =>
+  getConfigs({ global: false, dev }) as LocalConfigs
 
-  const data = Object.entries(configs)
-    .filter(([key]) => CONFIG_MAPPER[key])
-    .map(([key, value]) => `${CONFIG_MAPPER[key]}=${value}`)
-    .join('\n')
-  await writeFile(getRcLocation(dev), data, { encoding: 'utf8', flag: 'w+' })
+export const getGlobalConfigs = async (dev = false): Promise<GlobalConfigs> =>
+  getConfigs({ global: true, dev }) as GlobalConfigs
 
-  if (dev) {
-    DEV_CACHED_CONFIG = configs
-  } else {
-    CACHED_CONFIG = configs
-  }
+export const setConfigs = async (
+  configs: GlobalConfigs | LocalConfigs,
+  options: { global: boolean; dev: boolean },
+): Promise<void> => {
+  const { global, dev } = options
+
+  const path = getRcPath({ global, dev })
+  await validateConfigFile(path)
+
+  await writeFile(path, JSON.stringify(configs || {}), { encoding: 'utf8', flag: 'w+' })
+  setCachedConfigs(configs || {}, { global, dev })
 }
+
+export const setLocalConfigs = async (
+  configs: LocalConfigs,
+  options: { dev: boolean },
+): Promise<void> => setConfigs(configs, { ...options, global: false })
+
+export const setGlobalConfigs = async (
+  configs: GlobalConfigs,
+  options: { dev: boolean },
+): Promise<void> => setConfigs(configs, { ...options, global: true })

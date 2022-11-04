@@ -7,8 +7,9 @@ export const DEV_GQL_URL = 'https://app.dev.tribe.so/api/global/gateway'
 
 export const OFFICIAL_EMAILS = ['@tribe.so', '@bettermode.com']
 export const REPO_URL = 'git@github.com:tribeplatform/cli.git'
+export const RC_FILE_NAME = '.bettermoderc'
 export const RC_LOCATION =
-  process.env.BETTERMODE_RC_LOCATION || resolve(homedir(), '.bettermoderc')
+  process.env.BETTERMODE_RC_LOCATION || resolve(homedir(), RC_FILE_NAME)
 
 export const APP_TEMPLATE_CHOICES: Record<AppTemplate, string> = {
   typescript: 'TypeScript',

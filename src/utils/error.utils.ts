@@ -1,5 +1,3 @@
-import { RC_LOCATION } from '../constants'
-
 export class CliError extends Error {
   message = 'Unknown error.'
   actualError: Error | null = null
@@ -59,8 +57,27 @@ export class LoginError extends CliError {
   message = 'Your login attempt has been failed. Please try again later.'
 }
 
+export class ConfigFileNotExistError extends CliError {
+  message = `No config file found at `
+
+  constructor(path: string, global = true) {
+    super()
+
+    this.message += `\`${path}\`.`
+    this.message += global
+      ? ` You can create one by running \`bettermode login\`.`
+      : ` You can create one by running \`bettermode app:init\` inside your project folder.`
+  }
+}
+
 export class NoAccessToConfigError extends CliError {
-  message = `You do not have access to the config file in \`${RC_LOCATION}\`.`
+  message = `You do not have access to the config file in `
+
+  constructor(path: string) {
+    super()
+
+    this.message += `\`${path}\`.`
+  }
 }
 
 export class InvalidEmailError extends CliError {

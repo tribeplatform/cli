@@ -1,6 +1,7 @@
 import { CliUx } from '@oclif/core'
 import { App } from '@tribeplatform/gql-client/global-types'
 import { BetterCommand } from '../better-command'
+import { UnAuthorizedError } from '../utils'
 
 type AppsResponse = { apps: App[] }
 
@@ -14,6 +15,10 @@ export default class Apps extends BetterCommand<AppsResponse> {
   getApps = async (): Promise<App[]> => {
     return this.runWithSpinner(async () => {
       const client = await this.getClient()
+      if (!client) {
+        throw new UnAuthorizedError()
+      }
+
       const { nodes: apps } = await client.query({
         name: 'apps',
         args: {

@@ -9,7 +9,7 @@ export default class Logout extends BetterCommand<LogoutResponse> {
   static examples = [`$ bettermode logout`]
 
   async run(): Promise<LogoutResponse> {
-    await this.setConfigs({ accessToken: '', email: '' })
+    await this.setGlobalConfigs({})
 
     this.log(StandardColors.warning('You have successfully logged out.'))
     return { succeeded: true }

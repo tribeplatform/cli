@@ -14,9 +14,13 @@ export default class CreateApp extends BetterCommand<CreateAppResponse> {
   static examples = [`$ bettermode create app`]
 
   async run(): Promise<CreateAppResponse> {
-    const { official } = await this.getConfigs()
+    const { official } = await this.getGlobalConfigs()
     const client = await this.getClient()
     const networks = await this.getNetworks()
+
+    if (!client) {
+      throw new UnAuthorizedError()
+    }
 
     if (networks.length === 0) {
       throw new UnAuthorizedError(`You don't have any networks, please create one first.`)

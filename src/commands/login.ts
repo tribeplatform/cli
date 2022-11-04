@@ -21,7 +21,7 @@ export default class Login extends BetterCommand<LoginResponse> {
   }
 
   async sendVerificationCode(email: string): Promise<void> {
-    const client = await this.getClient(true)
+    const client = await this.getUnAuthenticatedClient()
     const result = await client.mutation({
       name: 'requestGlobalTokenCode',
       args: { variables: { input: { email } }, fields: 'basic' },
@@ -37,13 +37,13 @@ export default class Login extends BetterCommand<LoginResponse> {
   }): Promise<LoginResponse> {
     const { email, verificationCode } = options
 
-    const client = await this.getClient(true)
+    const client = await this.getUnAuthenticatedClient()
     const { accessToken } = await client.query({
       name: 'globalToken',
       args: { variables: { input: { email, verificationCode } }, fields: 'basic' },
     })
 
-    await this.setConfigs({ accessToken, email })
+    await this.setGlobalConfigs({ accessToken, email })
 
     return { email, accessToken }
   }
