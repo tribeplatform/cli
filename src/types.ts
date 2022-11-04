@@ -65,6 +65,10 @@ export type LocalConfigs = {
 
   collaborators?: string[]
   webhookSubscriptions?: string[]
+  customCodes?: {
+    head?: string
+    body?: string
+  }
 
   shortcuts?: Shortcut[]
   blocks?: DynamicBlock[]

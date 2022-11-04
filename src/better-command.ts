@@ -113,7 +113,11 @@ export abstract class BetterCommand<T> extends SfCommand<T> {
         args: {
           variables: { limit: 100 },
           fields: {
-            nodes: 'basic',
+            nodes: {
+              image: 'all',
+              favicon: 'all',
+              customCodes: 'all',
+            },
           },
         },
       })
