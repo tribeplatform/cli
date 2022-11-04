@@ -19,7 +19,7 @@ export type ShortcutState = {
 
   name?: string
   description?: string
-  faviconPath?: string
+  favicon?: string
 }
 
 export type Shortcut = {
@@ -28,7 +28,7 @@ export type Shortcut = {
 
   name?: string
   description?: string
-  faviconPath?: string
+  favicon?: string
 
   callbackId?: string
   callbackUrl?: string
@@ -37,13 +37,12 @@ export type Shortcut = {
 
 export type DynamicBlock = {
   contexts?: Context[]
-  entityType?: string
 
   slug?: string
   name?: string
   description?: string
-  faviconPath?: string
-  imagePath?: string
+  favicon?: string
+  image?: string
 
   callbackUrl?: string
 }
@@ -52,19 +51,21 @@ export type LocalConfigs = {
   id?: string
   name?: string
   slug?: string
+  status?: StoreItemStatus
+  standing?: StoreItemStanding
 
-  baseUrl?: string
   webhookUrl?: string
   federatedSearchUrl?: string
   interactionUrl?: string
   redirectUris?: string[]
 
-  status?: StoreItemStatus
-  standing?: StoreItemStanding
+  description?: string
+  favicon?: string
+  image?: string
 
+  collaborators?: string[]
   webhookSubscriptions?: string[]
 
   shortcuts?: Shortcut[]
   blocks?: DynamicBlock[]
-  settingsBlock?: DynamicBlock[]
 }
