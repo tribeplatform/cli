@@ -1,4 +1,3 @@
-import { CliUx } from '@oclif/core'
 import { Network } from '@tribeplatform/gql-client/global-types'
 import { BetterCommand } from '../better-command'
 
@@ -9,13 +8,13 @@ export default class Networks extends BetterCommand<NetworksResponse> {
 
   static examples = [`$ bettermode networks`]
 
-  static flags = { ...CliUx.ux.table.flags() }
+  static flags = { ...BetterCommand.tableFlags() }
 
   async run(): Promise<NetworksResponse> {
     const networks = await this.getNetworks()
 
     const { flags } = await this.parse(Networks)
-    CliUx.ux.table(
+    this.table(
       networks,
       {
         id: {

@@ -1,4 +1,3 @@
-import { CliUx } from '@oclif/core'
 import { App } from '@tribeplatform/gql-client/global-types'
 import { BetterCommand } from '../better-command'
 import { UnAuthorizedError } from '../utils'
@@ -10,7 +9,7 @@ export default class Apps extends BetterCommand<AppsResponse> {
 
   static examples = [`$ bettermode apps`]
 
-  static flags = { ...CliUx.ux.table.flags() }
+  static flags = { ...BetterCommand.tableFlags() }
 
   getApps = async (): Promise<App[]> => {
     return this.runWithSpinner(async () => {
@@ -36,7 +35,7 @@ export default class Apps extends BetterCommand<AppsResponse> {
     const apps = await this.getApps()
 
     const { flags } = await this.parse(Apps)
-    CliUx.ux.table(
+    this.table(
       apps,
       {
         id: {
