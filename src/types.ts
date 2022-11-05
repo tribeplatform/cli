@@ -10,7 +10,7 @@ export type AppTemplate = 'typescript'
 export type GlobalConfigs = {
   accessToken?: string
   email?: string
-  official?: boolean
+  officialPartner?: boolean
 }
 
 export type ShortcutStateConfigs = {

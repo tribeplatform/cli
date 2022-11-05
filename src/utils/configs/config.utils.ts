@@ -1,3 +1,4 @@
+import { OFFICIAL_PARTNER_EMAILS } from '../../constants'
 import { GlobalConfigs, LocalConfigs } from '../../types'
 import { readJsonFile, writeJsonFile } from '../file.utils'
 import { getConfigFilePath, validateConfigFile } from './base.utils'
@@ -39,8 +40,15 @@ export const getLocalConfigs = async (dev = false): Promise<LocalConfigs> => {
   return Object.assign(...result)
 }
 
-export const getGlobalConfigs = async (dev = false): Promise<GlobalConfigs> =>
-  getConfigs({ global: true, dev }) as GlobalConfigs
+export const getGlobalConfigs = async (dev = false): Promise<GlobalConfigs> => {
+  const result = (await getConfigs({ global: true, dev })) as GlobalConfigs
+  return {
+    ...result,
+    officialPartner: OFFICIAL_PARTNER_EMAILS.some(officialEmail =>
+      result?.email?.includes(officialEmail),
+    ),
+  }
+}
 
 export const setConfigs = async (
   configs: GlobalConfigs | LocalConfigs,

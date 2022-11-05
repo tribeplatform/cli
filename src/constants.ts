@@ -5,7 +5,7 @@ import { AppTemplate } from './types'
 export const GQL_URL = 'https://app.tribe.so/api/global/gateway'
 export const DEV_GQL_URL = 'https://app.dev.tribe.so/api/global/gateway'
 
-export const OFFICIAL_EMAILS = ['@tribe.so', '@bettermode.com']
+export const OFFICIAL_PARTNER_EMAILS = ['@tribe.so', '@bettermode.com']
 export const REPO_URL = 'git@github.com:tribeplatform/cli.git'
 
 export const LOCAL_RC_FOLDER_NAME = '.bettermode'

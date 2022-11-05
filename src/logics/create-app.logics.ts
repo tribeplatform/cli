@@ -1,4 +1,5 @@
-import { App } from '@tribeplatform/gql-client/global-types'
+import { Prompter } from '@salesforce/sf-plugins-core'
+import { App, CreateAppInput, Network } from '@tribeplatform/gql-client/global-types'
 import * as Listr from 'listr'
 import { join } from 'path'
 import { APP_TEMPLATE_CHOICES, REPO_URL } from '../constants'
@@ -6,27 +7,109 @@ import { AppTemplate } from '../types'
 import { CliClient, CliError, Shell } from '../utils'
 import { getInitAppTasks } from './init-app.logics'
 
+export type CreateAppInputs = {
+  networkId: string
+  name: string
+  slug?: string
+  description: string
+  repoOwner: string
+  repoName: string
+  template: AppTemplate
+}
+
+export const getCreateAppInputs = (options: {
+  networks: Network[]
+  officialPartner?: boolean
+}): Prompter.Questions<CreateAppInputs> => {
+  const { networks, officialPartner = false } = options
+  return [
+    {
+      name: 'networkId',
+      type: 'list',
+      default: networks[0].id,
+      message: `App's network`,
+      choices: networks.map(network => ({
+        name: network.domain,
+        value: network.id,
+      })),
+    },
+    {
+      name: 'name',
+      type: 'input',
+      message: `App's name`,
+      default: 'My new app',
+    },
+    {
+      name: 'description',
+      type: 'input',
+      message: `App's description`,
+      default: 'This is my new app',
+    },
+    officialPartner
+      ? {
+          name: 'slug',
+          type: 'input',
+          message: `App's slug`,
+          default: ({ name }: { name: string }) =>
+            `${name.toLowerCase().replace(/[^\dA-Za-z]/g, '-')}`,
+          validate: (slug: string) => /^[\dA-Za-z]+(?:-[\dA-Za-z]+)*$/.test(slug),
+        }
+      : null,
+    {
+      name: 'repoOwner',
+      type: 'input',
+      message: `Who is the GitHub owner of repository (https://github.com/OWNER/repo)`,
+      default: () => `something!!!!!`,
+      validate: (repoOwner: string) => /^[\dA-Za-z]+(?:-[\dA-Za-z]+)*$/.test(repoOwner),
+    },
+    {
+      name: 'repoName',
+      type: 'input',
+      default: ({ name, slug }: { name: string; slug?: string }) =>
+        `${(slug || name).toLowerCase().replace(/[^\dA-Za-z]/g, '-')}`,
+      validate: (repoName: string) => /^[\dA-Za-z]+(?:-[\dA-Za-z]+)*$/.test(repoName),
+      message: `What is the GitHub name of repository (https://github.com/owner/REPO)`,
+    },
+    {
+      name: 'template',
+      type: 'list',
+      default: APP_TEMPLATE_CHOICES.typescript,
+      message: `Please select your preferred app template:`,
+      choices: Object.keys(APP_TEMPLATE_CHOICES).map(template => ({
+        name: APP_TEMPLATE_CHOICES[template as AppTemplate],
+        value: template,
+      })),
+    },
+  ].filter(item => Boolean(item))
+}
+
+export const getCreateAppTargetDirs = (
+  repoName: string,
+): { targetDir: string; tmpDir: string } => ({
+  targetDir: repoName,
+  tmpDir: `${repoName}.tmp`,
+})
+
+export const removeCreateAppTargetDirs = (input: CreateAppInputs) => {
+  const { targetDir, tmpDir } = getCreateAppTargetDirs(input.repoName)
+  Shell.rm(join(process.cwd(), tmpDir), { silent: true })
+  Shell.rm(join(process.cwd(), targetDir), { silent: true })
+}
+
 export const getCreateAppTasks = (options: {
   dev: boolean
   client: CliClient
-  template: AppTemplate
-  networkId: string
-  appName: string
-  repoName: string
-  official?: boolean
+  officialPartner?: boolean
+  input: CreateAppInputs
 }) => {
   const {
     dev,
     client,
-    template,
-    networkId,
-    appName,
-    repoName,
-    official = false,
+    officialPartner = false,
+    input: { networkId, name, slug, description, repoName, template },
   } = options
 
-  const targetDir = repoName
-  const tmpDir = `${targetDir}.tmp`
+  const { targetDir, tmpDir } = getCreateAppTargetDirs(repoName)
   const cwd = join(process.cwd(), targetDir)
 
   const files = Shell.find([targetDir, tmpDir], { silent: true })
@@ -52,17 +135,37 @@ export const getCreateAppTasks = (options: {
     {
       title: 'Create the app in the portal',
       task: async ctx => {
+        const input: CreateAppInput = {
+          name,
+          networkId,
+        }
+        if (officialPartner) {
+          input.slug = slug
+        }
+
         ctx.app = await client.mutation({
           name: 'createApp',
           args: {
             variables: {
-              input: {
-                name: appName,
-                slug: repoName,
-                networkId,
-              },
+              input,
             },
             fields: 'basic',
+          },
+        })
+        ctx.app = await client.mutation({
+          name: 'updateApp',
+          args: {
+            variables: {
+              id: ctx.app.id,
+              input: {
+                description,
+              },
+            },
+            fields: {
+              customCodes: 'all',
+              favicon: 'all',
+              image: 'all',
+            },
           },
         })
       },
@@ -116,7 +219,7 @@ export const getCreateAppTasks = (options: {
                 )
 
                 Shell.rm('.git', { cwd })
-                if (!official) {
+                if (!officialPartner) {
                   Shell.rm('.circleci', { cwd })
                 }
               },
