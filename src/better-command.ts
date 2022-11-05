@@ -1,14 +1,16 @@
 import { Flags } from '@oclif/core'
 import { SfCommand } from '@salesforce/sf-plugins-core'
 import { App, Network } from '@tribeplatform/gql-client/global-types'
-import { GlobalConfigs, LocalConfigs } from './types'
+import { GithubUser, GlobalConfigs, LocalConfigs } from './types'
 import {
   CliClient,
   getClient,
+  getGithubUsername,
   getGlobalConfigs,
   getLocalConfigs,
   setGlobalConfigs,
   setLocalConfigs,
+  Shell,
   UnAuthorizedError,
 } from './utils'
 
@@ -89,38 +91,48 @@ export abstract class BetterCommand<T> extends SfCommand<T> {
     return result
   }
 
-  getNetworks = async (): Promise<Network[]> => {
-    return this.runWithSpinner(async () => {
-      const client = await this.getClient()
-      if (!client) {
-        throw new UnAuthorizedError()
+  getGithubUser = async (): Promise<GithubUser | null> => {
+    try {
+      const name = await Shell.exec('git config user.name')
+      const email = await Shell.exec('git config user.email')
+      return {
+        name,
+        email,
+        username: await getGithubUsername(email),
       }
+    } catch {
+      return null
+    }
+  }
 
-      return client.query({ name: 'networks', args: 'basic' })
-    })
+  getNetworks = async (): Promise<Network[]> => {
+    const client = await this.getClient()
+    if (!client) {
+      throw new UnAuthorizedError()
+    }
+
+    return client.query({ name: 'networks', args: 'basic' })
   }
 
   getApps = async (): Promise<App[]> => {
-    return this.runWithSpinner(async () => {
-      const client = await this.getClient()
-      if (!client) {
-        throw new UnAuthorizedError()
-      }
+    const client = await this.getClient()
+    if (!client) {
+      throw new UnAuthorizedError()
+    }
 
-      const { nodes: apps } = await client.query({
-        name: 'apps',
-        args: {
-          variables: { limit: 100 },
-          fields: {
-            nodes: {
-              image: 'all',
-              favicon: 'all',
-              customCodes: 'all',
-            },
+    const { nodes: apps } = await client.query({
+      name: 'apps',
+      args: {
+        variables: { limit: 100 },
+        fields: {
+          nodes: {
+            image: 'all',
+            favicon: 'all',
+            customCodes: 'all',
           },
         },
-      })
-      return apps || []
+      },
     })
+    return apps || []
   }
 }
