@@ -1,3 +1,4 @@
+export * from './ascii-art.utils'
 export * from './client.utils'
 export * from './configs'
 export * from './error.utils'

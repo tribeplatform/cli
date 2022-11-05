@@ -5,7 +5,7 @@ import {
   getCreateAppTasks,
   removeCreateAppTargetDirs,
 } from '../../logics'
-import { UnAuthorizedError } from '../../utils'
+import { getBettermodeTypeface, UnAuthorizedError } from '../../utils'
 
 type CreateAppResponse = App
 
@@ -15,6 +15,10 @@ export default class CreateApp extends BetterCommand<CreateAppResponse> {
   static examples = [`$ bettermode app create`]
 
   async run(): Promise<CreateAppResponse> {
+    const typeface = await getBettermodeTypeface()
+    this.log(typeface || '')
+    this.log(`Let's create your next amazing app!\n\n`)
+
     const { dev } = await this.getGlobalFlags()
     const { officialPartner } = await this.getGlobalConfigs()
     const client = await this.getClient()
