@@ -1,5 +1,10 @@
 import { Prompter } from '@salesforce/sf-plugins-core'
-import { App, CreateAppInput, Network } from '@tribeplatform/gql-client/global-types'
+import {
+  App,
+  CreateAppInput,
+  Network,
+  StoreItemStanding,
+} from '@tribeplatform/gql-client/global-types'
 import * as Listr from 'listr'
 import { join } from 'path'
 import { APP_TEMPLATE_CHOICES, REPO_URL } from '../constants'
@@ -11,9 +16,12 @@ export type CreateAppCLIInputs = {
   networkId: string
   name: string
   slug?: string
+  standing?: StoreItemStanding
   description: string
   repoOwner: string
   repoName: string
+  authorName: string
+  authorUrl: string
   template: AppTemplate
 }
 
@@ -22,7 +30,7 @@ export const getCreateAppInputs = (options: {
   officialPartner?: boolean
 }): Prompter.Questions<CreateAppCLIInputs> => {
   const { networks, officialPartner = false } = options
-  return [
+  const result: Prompter.Questions<CreateAppCLIInputs> = [
     {
       name: 'networkId',
       type: 'list',
@@ -55,6 +63,28 @@ export const getCreateAppInputs = (options: {
           validate: (slug: string) => /^[\dA-Za-z]+(?:-[\dA-Za-z]+)*$/.test(slug),
         }
       : null,
+    officialPartner
+      ? {
+          name: 'standing',
+          type: 'list',
+          message: `App's standing`,
+          default: StoreItemStanding.OFFICIAL,
+          choices: Object.values(StoreItemStanding.OFFICIAL).map(standing => ({
+            name: standing,
+            value: standing,
+          })),
+        }
+      : null,
+    {
+      name: 'template',
+      type: 'list',
+      default: APP_TEMPLATE_CHOICES.typescript,
+      message: `App's template`,
+      choices: Object.keys(APP_TEMPLATE_CHOICES).map(template => ({
+        name: APP_TEMPLATE_CHOICES[template as AppTemplate],
+        value: template,
+      })),
+    },
     {
       name: 'repoOwner',
       type: 'input',
@@ -71,16 +101,31 @@ export const getCreateAppInputs = (options: {
       message: `What is the GitHub name of repository (https://github.com/owner/REPO)`,
     },
     {
-      name: 'template',
-      type: 'list',
-      default: APP_TEMPLATE_CHOICES.typescript,
-      message: `Please select your preferred app template:`,
-      choices: Object.keys(APP_TEMPLATE_CHOICES).map(template => ({
-        name: APP_TEMPLATE_CHOICES[template as AppTemplate],
-        value: template,
-      })),
+      name: 'authorName',
+      type: 'input',
+      default: ({ repoOwner }: { repoOwner: string }) => {
+        if (officialPartner) {
+          return `Bettermode Engineering @bettermode`
+        }
+
+        return repoOwner
+      },
+      message: `Author's name`,
     },
-  ].filter(item => Boolean(item))
+    {
+      name: 'authorUrl',
+      type: 'input',
+      default: () => {
+        if (officialPartner) {
+          return `https://bettermode.com`
+        }
+
+        return null
+      },
+      message: `Author's URL (https://author-site.com)`,
+    },
+  ]
+  return result
 }
 
 export const getCreateAppTargetDirs = (
@@ -106,7 +151,18 @@ export const getCreateAppTasks = (options: {
     dev,
     client,
     officialPartner = false,
-    input: { networkId, name, slug, description, repoName, template },
+    input: {
+      networkId,
+      name,
+      slug,
+      standing,
+      description,
+      template,
+      repoOwner,
+      repoName,
+      authorName,
+      authorUrl,
+    },
   } = options
 
   const { targetDir, tmpDir } = getCreateAppTargetDirs(repoName)
@@ -159,6 +215,9 @@ export const getCreateAppTasks = (options: {
               id: ctx.app.id,
               input: {
                 description,
+                authorName,
+                authorUrl,
+                standing,
               },
             },
             fields: {
@@ -231,6 +290,19 @@ export const getCreateAppTasks = (options: {
     {
       title: `Initialize app's config`,
       task: ctx => getInitAppTasks({ client, app: ctx.app as App, dev }),
+    },
+    {
+      title: 'Setup git repository',
+      task: async () => {
+        await Shell.exec('git init', { cwd })
+        await Shell.exec(
+          `git remote add origin git@github.com:${repoOwner}/${repoName}.git`,
+          { cwd },
+        )
+        await Shell.exec('git add . -a', { cwd })
+        await Shell.exec('git commit -am "Initial setup"', { cwd })
+        await Shell.exec('git push -u origin main', { cwd, silent: true })
+      },
     },
   ])
 }

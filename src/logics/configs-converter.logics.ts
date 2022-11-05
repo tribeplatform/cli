@@ -30,7 +30,7 @@ export const appConfigsConverter = (app: App): LocalConfigs => ({
         head: app.customCodes?.head || undefined,
         body: app.customCodes?.body || undefined,
       }
-    : undefined,
+    : { head: undefined, body: undefined },
 })
 
 export const collaboratorsConfigsConverter = (
@@ -81,10 +81,17 @@ export const dynamicBlockConfigsConverter = (
 export const blocksConfigsConverter = (blocks: DynamicBlock[]): LocalConfigs => ({
   blocks: {
     defaults: blocks
-      .filter(b => Object.values(DefaultDynamicBlockKeys).includes(b.key))
+      .filter(b =>
+        Object.values(DefaultDynamicBlockKeys).includes(b.key as DefaultDynamicBlockKeys),
+      )
       .map(block => defaultDynamicBlockConfigsConverter(block)),
     customs: blocks
-      .filter(b => !Object.values(DefaultDynamicBlockKeys).includes(b.key))
+      .filter(
+        b =>
+          !Object.values(DefaultDynamicBlockKeys).includes(
+            b.key as DefaultDynamicBlockKeys,
+          ),
+      )
       .map(block => dynamicBlockConfigsConverter(block)),
   },
 })

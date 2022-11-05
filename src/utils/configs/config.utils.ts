@@ -1,7 +1,11 @@
 import { OFFICIAL_PARTNER_EMAILS } from '../../constants'
 import { GlobalConfigs, LocalConfigs } from '../../types'
 import { readJsonFile, writeJsonFile } from '../file.utils'
-import { getConfigFilePath, validateConfigFile } from './base.utils'
+import {
+  getConfigFilePath,
+  getLocalFileRelativePath,
+  validateConfigFile,
+} from './base.utils'
 import { getBlocks, setBlocks } from './blocks.utils'
 import { getCustomCodes, setCustomCodes } from './custom-codes.utils'
 import { getShortcuts, setShortcuts } from './shortcuts.utils'
@@ -20,22 +24,24 @@ export const getConfigs = async (options: {
 }
 
 export const getLocalDetailConfigs = async (options: {
-  dev: boolean
+  basePath: string
   key: string
-  getter: (dev: boolean) => unknown
+  getter: (basePath: string) => unknown
 }): Promise<LocalConfigs> => {
-  const { dev, key, getter } = options
+  const { basePath, key, getter } = options
   return {
-    [key]: await getter(dev),
+    [key]: await getter(basePath),
   }
 }
 
 export const getLocalConfigs = async (dev = false): Promise<LocalConfigs> => {
+  const basePath = getLocalFileRelativePath(dev)
+
   const result = await Promise.all([
     getConfigs({ global: false, dev }) as Promise<LocalConfigs>,
-    getLocalDetailConfigs({ dev, key: 'customCodes', getter: getCustomCodes }),
-    getLocalDetailConfigs({ dev, key: 'blocks', getter: getBlocks }),
-    getLocalDetailConfigs({ dev, key: 'shortcuts', getter: getShortcuts }),
+    getLocalDetailConfigs({ basePath, key: 'customCodes', getter: getCustomCodes }),
+    getLocalDetailConfigs({ basePath, key: 'blocks', getter: getBlocks }),
+    getLocalDetailConfigs({ basePath, key: 'shortcuts', getter: getShortcuts }),
   ])
   return Object.assign(...result)
 }
@@ -67,11 +73,13 @@ export const setLocalConfigs = async (
   options: { dev: boolean },
 ): Promise<void> => {
   const { customCodes, blocks, shortcuts, ...restConfigs } = configs
+  const basePath = getLocalFileRelativePath(options.dev)
+
   await Promise.all([
     setConfigs(restConfigs, { ...options, global: false }),
-    setCustomCodes(customCodes, options),
-    setBlocks(blocks, options),
-    setShortcuts(shortcuts, options),
+    setCustomCodes(customCodes, basePath),
+    setBlocks(blocks, basePath),
+    setShortcuts(shortcuts, basePath),
   ])
 }
 

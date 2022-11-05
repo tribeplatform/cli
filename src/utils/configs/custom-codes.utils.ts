@@ -1,29 +1,22 @@
 import { join } from 'path'
 import {
-  DEV_POSTFIX,
   LOCAL_RC_CUSTOM_CODES_FILE_FORMAT,
   LOCAL_RC_CUSTOM_CODES_FOLDER_NAME,
-  LOCAL_RC_FOLDER_NAME,
 } from '../../constants'
 import { LocalConfigs } from '../../types'
 import { readFile, writeFile } from '../file.utils'
 import { Shell } from '../shell.utils'
 
 export const getCustomCodes = async (
-  dev: boolean,
+  basePath: string,
 ): Promise<LocalConfigs['customCodes']> => {
-  const basePath = join(
-    process.cwd(),
-    LOCAL_RC_FOLDER_NAME,
-    LOCAL_RC_CUSTOM_CODES_FOLDER_NAME,
-  )
-  const files = Shell.findAll({ cwd: basePath })
+  const path = join(basePath, LOCAL_RC_CUSTOM_CODES_FOLDER_NAME)
+  const files = Shell.findAll({ cwd: path })
   const results = await Promise.all(
     files
-      ?.filter(file => dev === file.includes(DEV_POSTFIX))
       .map(file => ({
-        key: file.replace(DEV_POSTFIX, '').replace(LOCAL_RC_CUSTOM_CODES_FILE_FORMAT, ''),
-        path: join(basePath, file),
+        key: file.replace(LOCAL_RC_CUSTOM_CODES_FILE_FORMAT, ''),
+        path: join(path, file),
       }))
       .map(async ({ key, path }) => ({ key, value: await readFile(path) })),
   )
@@ -33,20 +26,16 @@ export const getCustomCodes = async (
 
 export const setCustomCodes = async (
   customCodes: LocalConfigs['customCodes'],
-  options: { dev: boolean },
+  basePath: string,
 ): Promise<void> => {
   if (!customCodes) return
 
-  const { dev } = options
-
-  const devPostfix = dev ? DEV_POSTFIX : ''
   await Promise.all(
     Object.entries(customCodes).map(async ([key, value]) => {
       const path = join(
-        process.cwd(),
-        LOCAL_RC_FOLDER_NAME,
+        basePath,
         LOCAL_RC_CUSTOM_CODES_FOLDER_NAME,
-        key + devPostfix + LOCAL_RC_CUSTOM_CODES_FILE_FORMAT,
+        key + LOCAL_RC_CUSTOM_CODES_FILE_FORMAT,
       )
       await writeFile(path, value || '')
     }),

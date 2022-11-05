@@ -1,14 +1,11 @@
-import { LOCAL_RC_BLOCKS_FILE_FORMAT, LOCAL_RC_BLOCKS_FILE_NAME } from '../../constants'
+import { join } from 'path'
+import { LOCAL_RC_BLOCKS_FILE_NAME } from '../../constants'
 import { BlocksConfigs } from '../../types'
 import { readJsonFile, writeJsonFile } from '../file.utils'
-import { getLocalFileRelativePath, validateConfigFile } from './base.utils'
+import { validateConfigFile } from './base.utils'
 
-export const getBlocks = async (dev: boolean): Promise<BlocksConfigs> => {
-  const path = getLocalFileRelativePath({
-    dev,
-    fileName: LOCAL_RC_BLOCKS_FILE_NAME,
-    fileFormat: LOCAL_RC_BLOCKS_FILE_FORMAT,
-  })
+export const getBlocks = async (basePath: string): Promise<BlocksConfigs> => {
+  const path = join(basePath, LOCAL_RC_BLOCKS_FILE_NAME)
   await validateConfigFile(path)
 
   const configs = await readJsonFile<BlocksConfigs>(path)
@@ -17,16 +14,11 @@ export const getBlocks = async (dev: boolean): Promise<BlocksConfigs> => {
 
 export const setBlocks = async (
   configs: BlocksConfigs | undefined,
-  options: { dev: boolean },
+  basePath: string,
 ): Promise<void> => {
   if (!configs) return
 
-  const { dev } = options
-  const path = getLocalFileRelativePath({
-    dev,
-    fileName: LOCAL_RC_BLOCKS_FILE_NAME,
-    fileFormat: LOCAL_RC_BLOCKS_FILE_FORMAT,
-  })
+  const path = join(basePath, LOCAL_RC_BLOCKS_FILE_NAME)
   await validateConfigFile(path)
 
   await writeJsonFile(path, configs)
