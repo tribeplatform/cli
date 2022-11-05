@@ -7,6 +7,12 @@ export type Context = 'NETWORK' | 'MEMBER' | 'SPACE' | 'POST'
 
 export type AppTemplate = 'typescript'
 
+export type GithubUser = {
+  name: string
+  email: string
+  username?: string
+}
+
 export type GlobalConfigs = {
   accessToken?: string
   email?: string
