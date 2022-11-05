@@ -1,10 +1,11 @@
+import { Prompter } from '@salesforce/sf-plugins-core'
 import {
   App,
   AppCollaborator,
   DynamicBlock,
-  Image,
   Shortcut,
 } from '@tribeplatform/gql-client/global-types'
+
 import * as Listr from 'listr'
 import {
   CliClient,
@@ -13,6 +14,29 @@ import {
   setLocalConfigs,
   Shell,
 } from '../utils'
+import {
+  appConfigsConverter,
+  blocksConfigsConverter,
+  collaboratorsConfigsConverter,
+  shortcutsConfigsConverter,
+} from './configs-converter.logics'
+
+export type InitAppCLIInputs = {
+  appId: string
+}
+
+export const getInitAppInputs = (apps: App[]): Prompter.Questions<InitAppCLIInputs> => [
+  {
+    name: 'appId',
+    type: 'list',
+    default: apps[0].id,
+    message: `Which app do you want to initialize`,
+    choices: apps.map(app => ({
+      name: app.name,
+      value: app.id,
+    })),
+  },
+]
 
 export const getInitAppTasks = (options: {
   client: CliClient
@@ -48,14 +72,14 @@ export const getInitAppTasks = (options: {
             {
               title: 'Getting shortcuts',
               task: async ctx => {
-                // const result = await client.query({
-                //   name: 'shortcuts',
-                //   args: {
-                //     fields: { nodes: { favicon: 'all', states: 'all' } },
-                //     variables: { appId: app.id, limit: 100 },
-                //   },
-                // })
-                ctx.shortcuts = []
+                const result = await client.query({
+                  name: 'shortcuts',
+                  args: {
+                    fields: { nodes: { favicon: 'all', states: 'all' } },
+                    variables: { appId: app.id, limit: 100 },
+                  },
+                })
+                ctx.shortcuts = result.nodes || []
               },
             },
             {
@@ -76,7 +100,7 @@ export const getInitAppTasks = (options: {
         ),
     },
     {
-      title: 'Finalizing config file',
+      title: 'Creating config folder',
       task: async ctx => {
         const collaborators: AppCollaborator[] = ctx.collaborators
         const shortcuts: Shortcut[] = ctx.shortcuts
@@ -84,61 +108,10 @@ export const getInitAppTasks = (options: {
 
         return setLocalConfigs(
           {
-            id: app.id,
-            name: app.name,
-            slug: app.slug,
-            status: app.status,
-            standing: app.standing,
-
-            description: app.description || undefined,
-            image: (app.image as Image)?.url,
-            favicon: (app.favicon as Image)?.url,
-
-            webhookUrl: app.webhookUrl || undefined,
-            // federatedSearchUrl: app.federatedSearchUrl || undefined,
-            // interactionUrl: app.interactionUrl || undefined,
-            // redirectUris: app.redirectUris || undefined,
-
-            collaborators: collaborators.map(c => c.email),
-            webhookSubscriptions: app.webhookSubscriptions || undefined,
-            customCodes: app.customCodes
-              ? {
-                  head: app.customCodes?.head || undefined,
-                  body: app.customCodes?.body || undefined,
-                }
-              : undefined,
-
-            shortcuts: shortcuts.map(shortcut => ({
-              context: shortcut.context,
-              entityType: shortcut.entityType || undefined,
-
-              name: shortcut.name,
-              description: shortcut.description || undefined,
-              favicon: (shortcut.favicon as Image)?.url,
-
-              callbackId: shortcut.callbackId,
-              callbackUrl: shortcut.callbackUrl || undefined,
-              states: shortcut.states?.map(shortcutState => ({
-                state: shortcutState.state,
-                condition: shortcutState.condition,
-
-                name: shortcutState.name || undefined,
-                description: shortcutState.description || undefined,
-                favicon: (shortcutState.favicon as Image)?.url,
-              })),
-            })),
-            blocks: blocks.map(block => ({
-              contexts: block.contexts || undefined,
-
-              slug: block.slug,
-              name: block.name,
-              description: block.description || undefined,
-              favicon: (block.favicon as Image)?.url,
-              image: (block.image as Image)?.url,
-
-              callbackUrl: block.callbackUrl || undefined,
-              settings: block.settings || undefined,
-            })),
+            ...appConfigsConverter(app),
+            ...collaboratorsConfigsConverter(collaborators),
+            ...blocksConfigsConverter(blocks),
+            ...shortcutsConfigsConverter(shortcuts),
           },
           { dev },
         )

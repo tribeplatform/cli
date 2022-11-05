@@ -1,7 +1,7 @@
 import { Flags } from '@oclif/core'
 import { App } from '@tribeplatform/gql-client/global-types'
 import { BetterCommand } from '../../better-command'
-import { getInitAppTasks } from '../../logics'
+import { getInitAppInputs, getInitAppTasks } from '../../logics'
 import { UnAuthorizedError } from '../../utils'
 
 type InitAppResponse = App
@@ -39,18 +39,7 @@ export default class InitApp extends BetterCommand<InitAppResponse> {
     }
 
     if (!appId) {
-      const result = await this.prompt<{ appId: string }>([
-        {
-          name: 'appId',
-          type: 'list',
-          default: apps[0].id,
-          message: `Please select a app for your app:`,
-          choices: apps.map(app => ({
-            name: app.name,
-            value: app.id,
-          })),
-        },
-      ])
+      const result = await this.prompt(getInitAppInputs(apps))
       appId = result.appId
     }
 

@@ -7,7 +7,7 @@ import { AppTemplate } from '../types'
 import { CliClient, CliError, Shell } from '../utils'
 import { getInitAppTasks } from './init-app.logics'
 
-export type CreateAppInputs = {
+export type CreateAppCLIInputs = {
   networkId: string
   name: string
   slug?: string
@@ -20,7 +20,7 @@ export type CreateAppInputs = {
 export const getCreateAppInputs = (options: {
   networks: Network[]
   officialPartner?: boolean
-}): Prompter.Questions<CreateAppInputs> => {
+}): Prompter.Questions<CreateAppCLIInputs> => {
   const { networks, officialPartner = false } = options
   return [
     {
@@ -90,7 +90,7 @@ export const getCreateAppTargetDirs = (
   tmpDir: `${repoName}.tmp`,
 })
 
-export const removeCreateAppTargetDirs = (input: CreateAppInputs) => {
+export const removeCreateAppTargetDirs = (input: CreateAppCLIInputs) => {
   const { targetDir, tmpDir } = getCreateAppTargetDirs(input.repoName)
   Shell.rm(join(process.cwd(), tmpDir), { silent: true })
   Shell.rm(join(process.cwd(), targetDir), { silent: true })
@@ -100,7 +100,7 @@ export const getCreateAppTasks = (options: {
   dev: boolean
   client: CliClient
   officialPartner?: boolean
-  input: CreateAppInputs
+  input: CreateAppCLIInputs
 }) => {
   const {
     dev,
