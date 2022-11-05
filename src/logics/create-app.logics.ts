@@ -70,7 +70,7 @@ export const getCreateAppInputs = (options: {
       type: 'list',
       message: `App's standing`,
       default: StoreItemStanding.OFFICIAL,
-      choices: Object.values(StoreItemStanding.OFFICIAL).map(standing => ({
+      choices: Object.values(StoreItemStanding).map(standing => ({
         name: standing,
         value: standing,
       })),
