@@ -7,9 +7,20 @@ export const DEV_GQL_URL = 'https://app.dev.tribe.so/api/global/gateway'
 
 export const OFFICIAL_EMAILS = ['@tribe.so', '@bettermode.com']
 export const REPO_URL = 'git@github.com:tribeplatform/cli.git'
+
 export const LOCAL_RC_FOLDER_NAME = '.bettermode'
 export const LOCAL_RC_CONFIG_FILE_NAME = 'config'
 export const LOCAL_RC_CONFIG_FILE_FORMAT = '.json'
+
+export const LOCAL_RC_CUSTOM_CODES_FOLDER_NAME = 'custom-codes'
+export const LOCAL_RC_CUSTOM_CODES_FILE_FORMAT = '.liquid'
+
+export const LOCAL_RC_BLOCKS_FILE_NAME = 'blocks'
+export const LOCAL_RC_BLOCKS_FILE_FORMAT = '.json'
+
+export const LOCAL_RC_SHORTCUTS_FILE_NAME = 'shortcuts'
+export const LOCAL_RC_SHORTCUTS_FILE_FORMAT = '.json'
+
 export const GLOBAL_RC_FILE_NAME = '.bettermoderc'
 export const DEV_POSTFIX = '.dev'
 export const GLOBAL_RC_LOCATION =

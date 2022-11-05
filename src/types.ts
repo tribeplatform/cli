@@ -13,7 +13,7 @@ export type GlobalConfigs = {
   official?: boolean
 }
 
-export type ShortcutState = {
+export type ShortcutStateConfigs = {
   state?: string
   condition?: string
 
@@ -22,7 +22,7 @@ export type ShortcutState = {
   favicon?: string
 }
 
-export type Shortcut = {
+export type ShortcutConfigs = {
   context?: Context
   entityType?: string
 
@@ -32,19 +32,25 @@ export type Shortcut = {
 
   key?: string
   interactionUrl?: string
-  states?: ShortcutState[]
+  states?: ShortcutStateConfigs[]
 }
 
-export type DynamicBlock = {
+export type DefaultDynamicBlockConfigs = {
+  key?: string
+  interactionUrl?: string
   contexts?: Context[]
+}
 
+export type DynamicBlockConfigs = DefaultDynamicBlockConfigs & {
   name?: string
   description?: string
   favicon?: string
   image?: string
+}
 
-  key?: string
-  interactionUrl?: string
+export type BlocksConfigs = {
+  defaults?: DefaultDynamicBlockConfigs[]
+  customs?: DynamicBlockConfigs[]
 }
 
 export type LocalConfigs = {
@@ -70,6 +76,6 @@ export type LocalConfigs = {
     body?: string
   }
 
-  shortcuts?: Shortcut[]
-  blocks?: DynamicBlock[]
+  shortcuts?: ShortcutConfigs[]
+  blocks?: BlocksConfigs
 }
