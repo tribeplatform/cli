@@ -49,25 +49,16 @@ export class UnAuthorizedError extends CliError {
   message = 'You are not logged in, please login first.'
 }
 
+export class NoAppConfigError extends CliError {
+  message = `No app config found, please create one first by running "bettermode app init".`
+}
+
 export class InvalidTokenError extends CliError {
-  message = 'Your token is invalid or has been expired. Please login again.'
+  message = 'Your token is invalid or has been expired, please login again.'
 }
 
 export class LoginError extends CliError {
-  message = 'Your login attempt has been failed. Please try again later.'
-}
-
-export class ConfigFileNotExistError extends CliError {
-  message = `No config file found at `
-
-  constructor(path: string, global = true) {
-    super()
-
-    this.message += `\`${path}\`.`
-    this.message += global
-      ? ` You can create one by running \`bettermode login\`.`
-      : ` You can create one by running \`bettermode app:init\` inside your project folder.`
-  }
+  message = 'Your login attempt has been failed, please try again later.'
 }
 
 export class NoAccessToConfigError extends CliError {
@@ -78,12 +69,4 @@ export class NoAccessToConfigError extends CliError {
 
     this.message += `\`${path}\`.`
   }
-}
-
-export class InvalidEmailError extends CliError {
-  message = 'The email address you entered is invalid.'
-}
-
-export class CommandAbortedError extends CliError {
-  message = 'Command aborted by the user.'
 }

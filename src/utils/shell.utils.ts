@@ -46,7 +46,9 @@ export const Shell = {
   },
   findAll: (options?: ShellOptions): string[] => {
     const { cwd } = options || {}
-    return find(cwd || '.')
+    const result = find(cwd || '.')
+    if (result.code !== 0) return []
+    return [...find(cwd || '.')]
   },
   mkdir: (dir: string | string[], options?: ShellOptions): boolean => {
     const { silent = false, cwd } = options || {}

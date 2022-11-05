@@ -71,9 +71,10 @@ export type LocalConfigs = {
 
   configs?: {
     webhookUrl?: string
-    federatedSearchUrl?: string
     interactionUrl?: string
+    federatedSearchUrl?: string
     redirectUris?: string[]
+    federatedSearchEnabled?: boolean
     collaborators?: string[]
     webhookSubscriptions?: string[]
   }

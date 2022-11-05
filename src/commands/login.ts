@@ -66,12 +66,12 @@ export default class Login extends BetterCommand<LoginResponse> {
           name: 'email',
           type: 'input',
           default: givenEmail,
-          message: 'Please enter your email address:',
+          message: 'Your email address',
         },
         {
           name: 'verificationCode',
           type: 'input',
-          message: 'Please enter the verification code that you received:',
+          message: 'The verification code that you received in your inbox',
           when: async ({ email }) => {
             if (email) {
               await this.sendVerificationCode(email)

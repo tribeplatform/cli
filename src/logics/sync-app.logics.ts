@@ -37,17 +37,20 @@ export const getInitAppInputs = (apps: App[]): Prompter.Questions<InitAppCLIInpu
   },
 ]
 
-export const getInitAppTasks = (options: {
+export const getSyncAppTasks = (options: {
   client: CliClient
   app: App
   dev: boolean
+  errorOnExisting?: boolean
 }) => {
-  const { client, app, dev } = options
+  const { client, app, dev, errorOnExisting = false } = options
 
-  const fileName = getLocalConfigFileRelativePath(dev)
-  const files = Shell.find([fileName], { silent: true })
-  if (files.length > 0) {
-    throw new CliError(`The file \`${fileName}\` already exists.`)
+  if (errorOnExisting) {
+    const fileName = getLocalConfigFileRelativePath(dev)
+    const files = Shell.find([fileName], { silent: true })
+    if (files.length > 0) {
+      throw new CliError(`The file \`${fileName}\` already exists.`)
+    }
   }
 
   return new Listr([

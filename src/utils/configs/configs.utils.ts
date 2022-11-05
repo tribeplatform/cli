@@ -29,9 +29,13 @@ export const getLocalDetailConfigs = async (options: {
   key: string
   getter: (basePath: string) => unknown
 }): Promise<LocalConfigs> => {
-  const { basePath, key, getter } = options
-  return {
-    [key]: await getter(basePath),
+  try {
+    const { basePath, key, getter } = options
+    return {
+      [key]: await getter(basePath),
+    }
+  } catch {
+    return {}
   }
 }
 

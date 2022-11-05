@@ -10,7 +10,7 @@ import { join } from 'path'
 import { APP_TEMPLATE_CHOICES, lICENSES, REPO_URL } from '../constants'
 import { AppTemplate, GithubUser } from '../types'
 import { CliClient, CliError, Shell } from '../utils'
-import { getInitAppTasks } from './init-app.logics'
+import { getSyncAppTasks } from './sync-app.logics'
 
 export type CreateAppCLIInputs = {
   networkId: string
@@ -234,30 +234,19 @@ export const getCreateAppTasks = (options: {
                 name,
                 networkId,
                 slug,
-              },
-            },
-            fields: 'basic',
-          },
-        })
-        ctx.app = await client.mutation({
-          name: 'updateApp',
-          args: {
-            variables: {
-              id: ctx.app.id,
-              input: {
-                description,
-                authorName,
-                authorUrl,
-                standing,
-                webhookUrl: `https://${domain}/webhook`,
-                interactionUrl: `https://${domain}/interaction`,
-                federatedSearchUrl: `https://${domain}/federated-search`,
-                privacyPolicyUrl: officialPartner
-                  ? `https://bettermode.io/privacy-policy`
-                  : null,
-                termsOfServiceUrl: officialPartner
-                  ? `https://bettermode.io/terms-of-service`
-                  : null,
+                // description,
+                // authorName,
+                // authorUrl,
+                // standing,
+                // webhookUrl: `https://${domain}/webhook`,
+                // interactionUrl: `https://${domain}/interaction`,
+                // federatedSearchUrl: `https://${domain}/federated-search`,
+                // privacyPolicyUrl: officialPartner
+                //   ? `https://bettermode.io/privacy-policy`
+                //   : null,
+                // termsOfServiceUrl: officialPartner
+                //   ? `https://bettermode.io/terms-of-service`
+                //   : null,
               },
             },
             fields: {
@@ -352,7 +341,8 @@ export const getCreateAppTasks = (options: {
     },
     {
       title: `Initialize app's config`,
-      task: ctx => getInitAppTasks({ client, app: ctx.app as App, dev }),
+      task: ctx =>
+        getSyncAppTasks({ client, app: ctx.app as App, dev, errorOnExisting: true }),
     },
     {
       title: 'Setup git repository',
