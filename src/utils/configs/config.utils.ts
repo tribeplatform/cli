@@ -1,7 +1,9 @@
 import { GlobalConfigs, LocalConfigs } from '../../types'
 import { readJsonFile, writeJsonFile } from '../file.utils'
 import { getConfigFilePath, validateConfigFile } from './base.utils'
+import { getBlocks, setBlocks } from './blocks.utils'
 import { getCustomCodes, setCustomCodes } from './custom-codes.utils'
+import { getShortcuts, setShortcuts } from './shortcuts.utils'
 
 export const getConfigs = async (options: {
   global: boolean
@@ -16,12 +18,25 @@ export const getConfigs = async (options: {
   return configs || {}
 }
 
-export const getLocalConfigs = async (dev = false): Promise<LocalConfigs> => {
-  const configs = (await getConfigs({ global: false, dev })) as LocalConfigs
+export const getLocalDetailConfigs = async (options: {
+  dev: boolean
+  key: string
+  getter: (dev: boolean) => unknown
+}): Promise<LocalConfigs> => {
+  const { dev, key, getter } = options
   return {
-    ...configs,
-    customCodes: await getCustomCodes(dev),
+    [key]: await getter(dev),
   }
+}
+
+export const getLocalConfigs = async (dev = false): Promise<LocalConfigs> => {
+  const result = await Promise.all([
+    getConfigs({ global: false, dev }) as Promise<LocalConfigs>,
+    getLocalDetailConfigs({ dev, key: 'customCodes', getter: getCustomCodes }),
+    getLocalDetailConfigs({ dev, key: 'blocks', getter: getBlocks }),
+    getLocalDetailConfigs({ dev, key: 'shortcuts', getter: getShortcuts }),
+  ])
+  return Object.assign(...result)
 }
 
 export const getGlobalConfigs = async (dev = false): Promise<GlobalConfigs> =>
@@ -43,9 +58,13 @@ export const setLocalConfigs = async (
   configs: LocalConfigs,
   options: { dev: boolean },
 ): Promise<void> => {
-  const { customCodes, ...restConfigs } = configs
-  await setCustomCodes(customCodes, options)
-  await setConfigs(restConfigs, { ...options, global: false })
+  const { customCodes, blocks, shortcuts, ...restConfigs } = configs
+  await Promise.all([
+    setConfigs(restConfigs, { ...options, global: false }),
+    setCustomCodes(customCodes, options),
+    setBlocks(blocks, options),
+    setShortcuts(shortcuts, options),
+  ])
 }
 
 export const setGlobalConfigs = async (

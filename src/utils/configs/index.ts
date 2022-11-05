@@ -1,3 +1,5 @@
 export * from './base.utils'
+export * from './blocks.utils'
 export * from './config.utils'
 export * from './custom-codes.utils'
+export * from './shortcuts.utils'
