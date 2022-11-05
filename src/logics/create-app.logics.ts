@@ -1,13 +1,13 @@
 import { Prompter } from '@salesforce/sf-plugins-core'
 import {
   App,
-  CreateAppInput,
+  DefaultDynamicBlockKeys,
   Network,
   StoreItemStanding,
 } from '@tribeplatform/gql-client/global-types'
 import * as Listr from 'listr'
 import { join } from 'path'
-import { APP_TEMPLATE_CHOICES, REPO_URL } from '../constants'
+import { APP_TEMPLATE_CHOICES, lICENSES, REPO_URL } from '../constants'
 import { AppTemplate } from '../types'
 import { CliClient, CliError, Shell } from '../utils'
 import { getInitAppTasks } from './init-app.logics'
@@ -18,11 +18,14 @@ export type CreateAppCLIInputs = {
   slug?: string
   standing?: StoreItemStanding
   description: string
+  domain: string
   repoOwner: string
   repoName: string
   authorName: string
   authorUrl: string
+  license: string
   template: AppTemplate
+  withDynamicSettings: boolean
 }
 
 export const getCreateAppInputs = (options: {
@@ -53,28 +56,40 @@ export const getCreateAppInputs = (options: {
       message: `App's description`,
       default: 'This is my new app',
     },
-    officialPartner
-      ? {
-          name: 'slug',
-          type: 'input',
-          message: `App's slug`,
-          default: ({ name }: { name: string }) =>
-            `${name.toLowerCase().replace(/[^\dA-Za-z]/g, '-')}`,
-          validate: (slug: string) => /^[\dA-Za-z]+(?:-[\dA-Za-z]+)*$/.test(slug),
+    {
+      name: 'slug',
+      type: 'input',
+      message: `App's slug`,
+      default: ({ name }: { name: string }) =>
+        `${name.toLowerCase().replace(/[^\dA-Za-z]/g, '-')}`,
+      validate: (slug: string) => /^[\dA-Za-z]+(?:-[\dA-Za-z]+)*$/.test(slug),
+      when: officialPartner,
+    },
+    {
+      name: 'standing',
+      type: 'list',
+      message: `App's standing`,
+      default: StoreItemStanding.OFFICIAL,
+      choices: Object.values(StoreItemStanding.OFFICIAL).map(standing => ({
+        name: standing,
+        value: standing,
+      })),
+      when: officialPartner,
+    },
+    {
+      name: 'domain',
+      type: 'input',
+      message: `App's domain`,
+      default: ({ slug }: { slug: string }) => {
+        if (officialPartner) {
+          return `${slug}.tribeplatform.app`
         }
-      : null,
-    officialPartner
-      ? {
-          name: 'standing',
-          type: 'list',
-          message: `App's standing`,
-          default: StoreItemStanding.OFFICIAL,
-          choices: Object.values(StoreItemStanding.OFFICIAL).map(standing => ({
-            name: standing,
-            value: standing,
-          })),
-        }
-      : null,
+
+        return `${slug}.tribe.localhost`
+      },
+      validate: (domain: string) =>
+        /^(?:[\dA-Za-z]+(?:-[\dA-Za-z]+)*\.){2}[\dA-Za-z]+$/.test(domain),
+    },
     {
       name: 'template',
       type: 'list',
@@ -84,6 +99,12 @@ export const getCreateAppInputs = (options: {
         name: APP_TEMPLATE_CHOICES[template as AppTemplate],
         value: template,
       })),
+    },
+    {
+      name: 'withDynamicSettings',
+      type: 'confirm',
+      message: `Do you want to add dynamic settings to your app`,
+      default: true,
     },
     {
       name: 'repoOwner',
@@ -124,6 +145,13 @@ export const getCreateAppInputs = (options: {
       },
       message: `Author's URL (https://author-site.com)`,
     },
+    {
+      name: 'license',
+      type: 'list',
+      message: `App's license`,
+      default: 'MIT',
+      choices: lICENSES,
+    },
   ]
   return result
 }
@@ -157,11 +185,14 @@ export const getCreateAppTasks = (options: {
       slug,
       standing,
       description,
+      domain,
       template,
+      withDynamicSettings,
       repoOwner,
       repoName,
       authorName,
       authorUrl,
+      license,
     },
   } = options
 
@@ -182,7 +213,10 @@ export const getCreateAppTasks = (options: {
 
         await Shell.exec(`git clone ${REPO_URL} ${tmpDir}`)
 
-        Shell.cp(`${tmpDir}/templates/${template}`, targetDir, {
+        Shell.cp(join(tmpDir, 'templates', template), targetDir, {
+          cwd: process.cwd(),
+        })
+        Shell.cp(join(tmpDir, 'licenses', license), join(targetDir, 'LICENSE.md'), {
           cwd: process.cwd(),
         })
         Shell.rm(tmpDir, { cwd: process.cwd() })
@@ -191,19 +225,15 @@ export const getCreateAppTasks = (options: {
     {
       title: 'Create the app in the portal',
       task: async ctx => {
-        const input: CreateAppInput = {
-          name,
-          networkId,
-        }
-        if (officialPartner) {
-          input.slug = slug
-        }
-
         ctx.app = await client.mutation({
           name: 'createApp',
           args: {
             variables: {
-              input,
+              input: {
+                name,
+                networkId,
+                slug,
+              },
             },
             fields: 'basic',
           },
@@ -218,6 +248,15 @@ export const getCreateAppTasks = (options: {
                 authorName,
                 authorUrl,
                 standing,
+                webhookUrl: `https://${domain}/webhook`,
+                interactionUrl: `https://${domain}/interaction`,
+                federatedSearchUrl: `https://${domain}/federated-search`,
+                privacyPolicyUrl: officialPartner
+                  ? `https://bettermode.io/privacy-policy`
+                  : null,
+                termsOfServiceUrl: officialPartner
+                  ? `https://bettermode.io/terms-of-service`
+                  : null,
               },
             },
             fields: {
@@ -227,6 +266,19 @@ export const getCreateAppTasks = (options: {
             },
           },
         })
+        if (withDynamicSettings) {
+          await client.mutation({
+            name: 'enableDefaultDynamicBlock',
+            args: {
+              variables: {
+                appId: ctx.app.id,
+                key: DefaultDynamicBlockKeys.settings,
+                input: {},
+              },
+              fields: 'basic',
+            },
+          })
+        }
       },
     },
     {
@@ -261,18 +313,28 @@ export const getCreateAppTasks = (options: {
                   ['.env.development.local', '.env.production.local'],
                   { cwd },
                 )
+                Shell.replaceString(
+                  { search: 'app-domain', replacement: domain },
+                  ['.env.production.local'],
+                  { cwd },
+                )
               },
             },
             {
               title: 'Set package name',
               task: async () => {
                 Shell.replaceString(
-                  { search: 'app-template', replacement: repoName },
+                  [
+                    { search: 'app-template', replacement: repoName },
+                    { search: 'app-description', replacement: description },
+                    { search: 'app-author', replacement: authorName },
+                    { search: 'app-license', replacement: license },
+                  ],
                   [
                     'Makefile',
                     'package.json',
-                    '.circleci/config.yml',
-                    '.vscode/launch.json',
+                    join('.circleci', 'config.yml'),
+                    join('.vscode', 'launch.json'),
                   ],
                   { cwd },
                 )

@@ -59,23 +59,22 @@ export type LocalConfigs = {
   slug?: string
   status?: StoreItemStatus
   standing?: StoreItemStanding
-
-  webhookUrl?: string
-  federatedSearchUrl?: string
-  interactionUrl?: string
-  redirectUris?: string[]
-
   description?: string
   favicon?: string
   image?: string
 
-  collaborators?: string[]
-  webhookSubscriptions?: string[]
+  configs?: {
+    webhookUrl?: string
+    federatedSearchUrl?: string
+    interactionUrl?: string
+    redirectUris?: string[]
+    collaborators?: string[]
+    webhookSubscriptions?: string[]
+  }
   customCodes?: {
     head?: string
     body?: string
   }
-
   shortcuts?: ShortcutConfigs[]
   blocks?: BlocksConfigs
 }

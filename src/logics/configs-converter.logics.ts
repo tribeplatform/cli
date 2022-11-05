@@ -8,35 +8,33 @@ import {
 } from '@tribeplatform/gql-client/global-types'
 import { DynamicBlockConfigs, LocalConfigs, ShortcutConfigs } from '../types'
 
-export const appConfigsConverter = (app: App): LocalConfigs => ({
+export const appConfigsConverter = (
+  app: App,
+  collaborators: AppCollaborator[],
+): LocalConfigs => ({
   id: app.id,
   name: app.name,
   slug: app.slug,
   status: app.status,
   standing: app.standing,
-
   description: app.description || undefined,
   image: (app.image as Image)?.url,
   favicon: (app.favicon as Image)?.url,
 
-  webhookUrl: app.webhookUrl || undefined,
-  federatedSearchUrl: app.federatedSearchUrl || undefined,
-  interactionUrl: app.interactionUrl || undefined,
-  redirectUris: app.redirectUris || undefined,
-
-  webhookSubscriptions: app.webhookSubscriptions || undefined,
+  configs: {
+    webhookUrl: app.webhookUrl || undefined,
+    federatedSearchUrl: app.federatedSearchUrl || undefined,
+    interactionUrl: app.interactionUrl || undefined,
+    redirectUris: app.redirectUris || undefined,
+    webhookSubscriptions: app.webhookSubscriptions || undefined,
+    collaborators: collaborators.map(collaborator => collaborator.email),
+  },
   customCodes: app.customCodes
     ? {
         head: app.customCodes?.head || undefined,
         body: app.customCodes?.body || undefined,
       }
     : { head: undefined, body: undefined },
-})
-
-export const collaboratorsConfigsConverter = (
-  collaborators: AppCollaborator[],
-): LocalConfigs => ({
-  collaborators: collaborators.map(collaborator => collaborator.email),
 })
 
 export const getShortcutConfigs = (shortcut: Shortcut): ShortcutConfigs => ({

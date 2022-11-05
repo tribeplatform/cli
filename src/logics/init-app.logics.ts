@@ -17,7 +17,6 @@ import {
 import {
   appConfigsConverter,
   blocksConfigsConverter,
-  collaboratorsConfigsConverter,
   shortcutsConfigsConverter,
 } from './configs-converter.logics'
 
@@ -108,8 +107,7 @@ export const getInitAppTasks = (options: {
 
         return setLocalConfigs(
           {
-            ...appConfigsConverter(app),
-            ...collaboratorsConfigsConverter(collaborators),
+            ...appConfigsConverter(app, collaborators),
             ...blocksConfigsConverter(blocks),
             ...shortcutsConfigsConverter(shortcuts),
           },
