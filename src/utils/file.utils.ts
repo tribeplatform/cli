@@ -28,11 +28,7 @@ export const hasAccessToFile = async (path: string): Promise<boolean> => {
   }
 }
 
-export const readJsonFile = async <
-  T extends Record<string, unknown> = Record<string, unknown>,
->(
-  path: string,
-): Promise<T | null> => {
+export const readJsonFile = async <T>(path: string): Promise<T | null> => {
   try {
     return await readJson(path, 'utf8')
   } catch {
@@ -48,12 +44,7 @@ export const readFile = async (path: string): Promise<string | null> => {
   }
 }
 
-export const writeJsonFile = async <
-  T extends Record<string, unknown> = Record<string, unknown>,
->(
-  path: string,
-  data: T,
-): Promise<void> => {
+export const writeJsonFile = async <T>(path: string, data: T): Promise<void> => {
   await mkdir(dirname(path), { recursive: true })
   await writeJson(path, data, { encoding: 'utf8', flag: 'w+', spaces: 2 })
 }
