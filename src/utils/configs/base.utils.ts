@@ -9,13 +9,23 @@ import {
 import { NoAccessToConfigError } from '../error.utils'
 import { hasAccessToFile, isFileExists } from '../file.utils'
 
-export const getLocalConfigFileRelativePath = (dev: boolean): string => {
+export const getLocalFileRelativePath = (options: {
+  dev: boolean
+  fileName: string
+  fileFormat: string
+}): string => {
+  const { dev, fileName, fileFormat } = options
+
   const devPostfix = dev ? DEV_POSTFIX : ''
-  return join(
-    LOCAL_RC_FOLDER_NAME,
-    LOCAL_RC_CONFIG_FILE_NAME + devPostfix + LOCAL_RC_CONFIG_FILE_FORMAT,
-  )
+  return join(LOCAL_RC_FOLDER_NAME, fileName + devPostfix + fileFormat)
 }
+
+export const getLocalConfigFileRelativePath = (dev: boolean): string =>
+  getLocalFileRelativePath({
+    dev,
+    fileName: LOCAL_RC_CONFIG_FILE_NAME,
+    fileFormat: LOCAL_RC_CONFIG_FILE_FORMAT,
+  })
 
 export const getConfigFilePath = (options: { global: boolean; dev: boolean }): string => {
   const { global, dev } = options
