@@ -19,6 +19,7 @@ export default class CreateApp extends BetterCommand<CreateAppResponse> {
     const { officialPartner } = await this.getGlobalConfigs()
     const client = await this.getClient()
     const networks = await this.getNetworks()
+    const githubUser = await this.getGithubUser()
 
     if (!client) {
       throw new UnAuthorizedError()
@@ -28,7 +29,9 @@ export default class CreateApp extends BetterCommand<CreateAppResponse> {
       throw new UnAuthorizedError(`You don't have any networks, please create one first.`)
     }
 
-    const input = await this.prompt(getCreateAppInputs({ networks, officialPartner }))
+    const input = await this.prompt(
+      getCreateAppInputs({ networks, officialPartner, githubUser }),
+    )
 
     const tasks = getCreateAppTasks({
       dev,

@@ -8,7 +8,7 @@ import {
 import * as Listr from 'listr'
 import { join } from 'path'
 import { APP_TEMPLATE_CHOICES, lICENSES, REPO_URL } from '../constants'
-import { AppTemplate } from '../types'
+import { AppTemplate, GithubUser } from '../types'
 import { CliClient, CliError, Shell } from '../utils'
 import { getInitAppTasks } from './init-app.logics'
 
@@ -30,9 +30,10 @@ export type CreateAppCLIInputs = {
 
 export const getCreateAppInputs = (options: {
   networks: Network[]
+  githubUser: GithubUser | null
   officialPartner?: boolean
 }): Prompter.Questions<CreateAppCLIInputs> => {
-  const { networks, officialPartner = false } = options
+  const { networks, githubUser, officialPartner = false } = options
   const result: Prompter.Questions<CreateAppCLIInputs> = [
     {
       name: 'networkId',
@@ -110,7 +111,7 @@ export const getCreateAppInputs = (options: {
       name: 'repoOwner',
       type: 'input',
       message: `Who is the GitHub owner of repository (https://github.com/OWNER/repo)`,
-      default: () => `something!!!!!`,
+      default: () => `${githubUser?.username || githubUser?.email?.split('@')?.[0]}`,
       validate: (repoOwner: string) => /^[\dA-Za-z]+(?:-[\dA-Za-z]+)*$/.test(repoOwner),
     },
     {
@@ -129,7 +130,7 @@ export const getCreateAppInputs = (options: {
           return `Bettermode Engineering @bettermode`
         }
 
-        return repoOwner
+        return githubUser ? `${githubUser.name} @${githubUser.username}` : repoOwner
       },
       message: `Author's name`,
     },
