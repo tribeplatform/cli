@@ -1,4 +1,5 @@
-.bettermode
+.bettermode/configs.json
+.bettermode/dev/configs.json
 
 *-debug.log
 *-error.log
