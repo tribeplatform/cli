@@ -11,6 +11,7 @@ export const REPO_URL = 'git@github.com:tribeplatform/cli.git'
 export const LOCAL_RC_DEV_FOLDER_NAME = 'dev'
 
 export const LOCAL_RC_FOLDER_NAME = '.bettermode'
+export const LOCAL_RC_INFO_FILE_NAME = 'info.json'
 export const LOCAL_RC_CONFIG_FILE_NAME = 'configs.json'
 export const LOCAL_RC_BLOCKS_FILE_NAME = 'blocks.json'
 export const LOCAL_RC_SHORTCUTS_FILE_NAME = 'shortcuts.json'

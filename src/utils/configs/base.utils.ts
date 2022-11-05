@@ -2,9 +2,9 @@ import { join } from 'path'
 import {
   GLOBAL_RC_DEV_POSTFIX,
   GLOBAL_RC_LOCATION,
-  LOCAL_RC_CONFIG_FILE_NAME,
   LOCAL_RC_DEV_FOLDER_NAME,
   LOCAL_RC_FOLDER_NAME,
+  LOCAL_RC_INFO_FILE_NAME,
 } from '../../constants'
 import { NoAccessToConfigError } from '../error.utils'
 import { hasAccessToFile, isFileExists } from '../file.utils'
@@ -18,7 +18,7 @@ export const getLocalFileRelativePath = (dev: boolean): string => {
 }
 
 export const getLocalConfigFileRelativePath = (dev: boolean): string =>
-  join(getLocalFileRelativePath(dev), LOCAL_RC_CONFIG_FILE_NAME)
+  join(getLocalFileRelativePath(dev), LOCAL_RC_INFO_FILE_NAME)
 
 export const getConfigFilePath = (options: { global: boolean; dev: boolean }): string => {
   const { global, dev } = options

@@ -1,6 +1,7 @@
 import { OFFICIAL_PARTNER_EMAILS } from '../../constants'
 import { GlobalConfigs, LocalConfigs } from '../../types'
 import { readJsonFile, writeJsonFile } from '../file.utils'
+import { getAppConfigs, setAppConfigs } from './app-configs.utils'
 import {
   getConfigFilePath,
   getLocalFileRelativePath,
@@ -39,6 +40,7 @@ export const getLocalConfigs = async (dev = false): Promise<LocalConfigs> => {
 
   const result = await Promise.all([
     getConfigs({ global: false, dev }) as Promise<LocalConfigs>,
+    getLocalDetailConfigs({ basePath, key: 'configs', getter: getAppConfigs }),
     getLocalDetailConfigs({ basePath, key: 'customCodes', getter: getCustomCodes }),
     getLocalDetailConfigs({ basePath, key: 'blocks', getter: getBlocks }),
     getLocalDetailConfigs({ basePath, key: 'shortcuts', getter: getShortcuts }),
@@ -72,11 +74,12 @@ export const setLocalConfigs = async (
   configs: LocalConfigs,
   options: { dev: boolean },
 ): Promise<void> => {
-  const { customCodes, blocks, shortcuts, ...restConfigs } = configs
+  const { configs: appConfigs, customCodes, blocks, shortcuts, ...restConfigs } = configs
   const basePath = getLocalFileRelativePath(options.dev)
 
   await Promise.all([
     setConfigs(restConfigs, { ...options, global: false }),
+    setAppConfigs(appConfigs, basePath),
     setCustomCodes(customCodes, basePath),
     setBlocks(blocks, basePath),
     setShortcuts(shortcuts, basePath),
