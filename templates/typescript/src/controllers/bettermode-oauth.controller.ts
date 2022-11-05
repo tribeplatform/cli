@@ -16,7 +16,7 @@ import {
 } from 'routing-controllers'
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi'
 
-@Controller('/oauth')
+@Controller('/bettermode/oauth')
 export class BettermodeOAuthController {
   readonly oauthService = new BettermodeOAuthService()
 
