@@ -26,11 +26,21 @@ export const APP_TEMPLATE_CHOICES: Record<AppTemplate, string> = {
   typescript: 'TypeScript',
 }
 
-export const CONFIG_MAPPER: Record<string, string> = {
-  accessToken: 'ACCESS_TOKEN',
-  email: 'EMAIL',
-  official: 'OFFICIAL',
-}
-export const REVERSE_CONFIG_MAPPER = Object.fromEntries(
-  Object.entries(CONFIG_MAPPER).map(([key, value]) => [value, key]),
-)
+export const lICENSES = [
+  {
+    name: 'MIT',
+    value: 'MIT',
+  },
+  {
+    name: 'Apache 2.0',
+    value: 'Apache-2.0',
+  },
+  {
+    name: 'GNU GPL v3',
+    value: 'GPL-3.0',
+  },
+  {
+    name: 'ISC',
+    value: 'ISC',
+  },
+]
