@@ -1,5 +1,9 @@
 .bettermode/configs.json
-.bettermode/dev/configs.json
+.bettermode/collaborators.json
+.bettermode/publications.json
+.bettermode.dev/configs.json
+.bettermode.dev/collaborators.json
+.bettermode.dev/publications.json
 
 # Logs
 logs

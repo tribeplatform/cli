@@ -28,7 +28,7 @@ export const getGlobalConfigFilePath = (dev: boolean): string => {
 
 export const getLocalFileRelativePath = (dev: boolean): string => {
   if (dev) {
-    return join(LOCAL_RC_FOLDER_NAME, LOCAL_RC_DEV_FOLDER_NAME)
+    return LOCAL_RC_DEV_FOLDER_NAME
   }
 
   return LOCAL_RC_FOLDER_NAME

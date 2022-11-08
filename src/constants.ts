@@ -8,9 +8,8 @@ export const DEV_GQL_URL = 'https://app.dev.tribe.so/api/global/gateway'
 export const OFFICIAL_PARTNER_EMAILS = ['@tribe.so', '@bettermode.com']
 export const REPO_URL = 'git@github.com:tribeplatform/cli.git'
 
-export const LOCAL_RC_DEV_FOLDER_NAME = 'dev'
-
 export const LOCAL_RC_FOLDER_NAME = '.bettermode'
+export const LOCAL_RC_DEV_FOLDER_NAME = LOCAL_RC_FOLDER_NAME + '.dev'
 export const LOCAL_RC_INFO_FILE_NAME = 'info.json'
 export const LOCAL_RC_CONFIG_FILE_NAME = 'configs.json'
 export const LOCAL_RC_COLLABORATOR_FILE_NAME = 'collaborators.json'
