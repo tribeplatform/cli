@@ -1,3 +1,5 @@
+import * as execa from 'execa'
+import * as open from 'open'
 import { join } from 'path'
 import { cp, exec, find, mkdir, rm, sed, which } from 'shelljs'
 import { CliError } from './error.utils'
@@ -19,6 +21,14 @@ export const Shell = {
         resolve(stdout)
       })
     })
+  },
+  execAndBindStdout: async (command: string, options?: ShellOptions): Promise<void> => {
+    const { cwd, silent = false } = options || {}
+    try {
+      await execa.command(command, { cwd }).stdout?.pipe(process.stdout)
+    } catch (error) {
+      if (!silent) throw error
+    }
   },
   which: (command: string, options?: ShellOptions): boolean => {
     const { silent = false } = options || {}
@@ -115,5 +125,15 @@ export const Shell = {
     }
 
     return true
+  },
+  open: async (pathOrUrl: string, options?: ShellOptions): Promise<boolean> => {
+    const { silent = false } = options || {}
+    try {
+      await open(pathOrUrl)
+      return true
+    } catch (error) {
+      if (!silent) throw error
+      return false
+    }
   },
 }
