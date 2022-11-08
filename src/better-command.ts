@@ -90,8 +90,8 @@ export abstract class BetterCommand<T> extends SfCommand<T> {
       : null
   }
 
-  runWithSpinner = async <T>(action: () => Promise<T>): Promise<T> => {
-    this.spinner.start('Getting your info ')
+  runWithSpinner = async <T>(message: string, action: () => Promise<T>): Promise<T> => {
+    this.spinner.start(`${message} `)
     const result = await action()
     this.spinner.stop('done\n')
     return result
