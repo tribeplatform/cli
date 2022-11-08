@@ -41,7 +41,7 @@ export const getCreateAppInputs = (options: {
   officialPartner?: boolean
 }): Prompter.Questions<CreateAppCLIInputs> => {
   const { devNetworks, networks, githubUser, officialPartner = false } = options
-  const result: Prompter.Questions<CreateAppCLIInputs> = [
+  return [
     {
       name: 'devNetworkId',
       type: 'list',
@@ -180,7 +180,6 @@ export const getCreateAppInputs = (options: {
       choices: lICENSES,
     },
   ]
-  return result
 }
 
 export const getCreateAppTargetDirs = (
