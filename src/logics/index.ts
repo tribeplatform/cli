@@ -1,3 +1,7 @@
 export * from './configs-converter.logics'
 export * from './create-app.logics'
 export * from './sync-app.logics'
+export * from './update-app.logics'
+export * from './update-block.logics'
+export * from './update-collaborators.logics'
+export * from './update-shortcut.logics'
