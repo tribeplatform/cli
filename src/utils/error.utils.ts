@@ -61,8 +61,8 @@ export class LoginError extends CliError {
   message = 'Your login attempt has been failed, please try again later.'
 }
 
-export class NoAccessToConfigError extends CliError {
-  message = `You do not have access to the config file in `
+export class NoAccessToFileError extends CliError {
+  message = `You do not have access to this file: `
 
   constructor(path: string) {
     super()

@@ -1,27 +1,37 @@
-import { OFFICIAL_PARTNER_EMAILS } from '../../constants'
+import { join } from 'path'
+import {
+  GLOBAL_RC_DEV_POSTFIX,
+  GLOBAL_RC_LOCATION,
+  LOCAL_RC_DEV_FOLDER_NAME,
+  LOCAL_RC_FOLDER_NAME,
+  OFFICIAL_PARTNER_EMAILS,
+} from '../../constants'
 import { GlobalConfigs, LocalConfigs } from '../../types'
-import { readJsonFile, writeJsonFile } from '../file.utils'
+import { readJsonFile, validateAccessToFile, writeJsonFile } from '../file.utils'
+import { getAppBlocksConfigs, setAppBlocksConfigs } from './app-blocks.utils'
+import {
+  getAppCollaboratorsConfigs,
+  setAppCollaboratorsConfigs,
+} from './app-collaborators.utils'
 import { getAppConfigs, setAppConfigs } from './app-configs.utils'
 import {
-  getConfigFilePath,
-  getLocalFileRelativePath,
-  validateConfigFile,
-} from './base.utils'
-import { getBlocks, setBlocks } from './blocks.utils'
-import { getCustomCodes, setCustomCodes } from './custom-codes.utils'
-import { getShortcuts, setShortcuts } from './shortcuts.utils'
+  getAppCustomCodesConfigs,
+  setAppCustomCodesConfigs,
+} from './app-custom-codes.utils'
+import { getAppInfo, setAppInfo } from './app-info.utils'
+import { getAppShortcutsConfigs, setAppShortcutsConfigs } from './app-shortcuts.utils'
 
-export const getConfigs = async (options: {
-  global: boolean
-  dev: boolean
-}): Promise<GlobalConfigs | LocalConfigs> => {
-  const { global, dev } = options
+export const getGlobalConfigFilePath = (dev: boolean): string => {
+  const devPostfix = dev ? GLOBAL_RC_DEV_POSTFIX : ''
+  return GLOBAL_RC_LOCATION + devPostfix
+}
 
-  const path = getConfigFilePath({ global, dev })
-  await validateConfigFile(path)
+export const getLocalFileRelativePath = (dev: boolean): string => {
+  if (dev) {
+    return join(LOCAL_RC_FOLDER_NAME, LOCAL_RC_DEV_FOLDER_NAME)
+  }
 
-  const configs = await readJsonFile<GlobalConfigs | LocalConfigs>(path)
-  return configs || {}
+  return LOCAL_RC_FOLDER_NAME
 }
 
 export const getLocalDetailConfigs = async (options: {
@@ -43,17 +53,30 @@ export const getLocalConfigs = async (dev = false): Promise<LocalConfigs> => {
   const basePath = getLocalFileRelativePath(dev)
 
   const result = await Promise.all([
-    getConfigs({ global: false, dev }) as Promise<LocalConfigs>,
+    getLocalDetailConfigs({ basePath, key: 'info', getter: getAppInfo }),
     getLocalDetailConfigs({ basePath, key: 'configs', getter: getAppConfigs }),
-    getLocalDetailConfigs({ basePath, key: 'customCodes', getter: getCustomCodes }),
-    getLocalDetailConfigs({ basePath, key: 'blocks', getter: getBlocks }),
-    getLocalDetailConfigs({ basePath, key: 'shortcuts', getter: getShortcuts }),
+    getLocalDetailConfigs({
+      basePath,
+      key: 'collaborators',
+      getter: getAppCollaboratorsConfigs,
+    }),
+    getLocalDetailConfigs({
+      basePath,
+      key: 'customCodes',
+      getter: getAppCustomCodesConfigs,
+    }),
+    getLocalDetailConfigs({ basePath, key: 'blocks', getter: getAppBlocksConfigs }),
+    getLocalDetailConfigs({ basePath, key: 'shortcuts', getter: getAppShortcutsConfigs }),
   ])
   return Object.assign(...result)
 }
 
 export const getGlobalConfigs = async (dev = false): Promise<GlobalConfigs> => {
-  const result = (await getConfigs({ global: true, dev })) as GlobalConfigs
+  const path = getGlobalConfigFilePath(dev)
+  await validateAccessToFile(path)
+
+  const configs = await readJsonFile<GlobalConfigs>(path)
+  const result = configs || {}
   return {
     ...result,
     officialPartner: OFFICIAL_PARTNER_EMAILS.some(officialEmail =>
@@ -62,35 +85,43 @@ export const getGlobalConfigs = async (dev = false): Promise<GlobalConfigs> => {
   }
 }
 
-export const setConfigs = async (
-  configs: GlobalConfigs | LocalConfigs,
-  options: { global: boolean; dev: boolean },
-): Promise<void> => {
-  const { global, dev } = options
-
-  const path = getConfigFilePath({ global, dev })
-  await validateConfigFile(path)
-
-  await writeJsonFile(path, configs)
-}
-
 export const setLocalConfigs = async (
   configs: LocalConfigs,
-  options: { dev: boolean },
+  options: { dev: boolean; cwd?: string },
 ): Promise<void> => {
-  const { configs: appConfigs, customCodes, blocks, shortcuts, ...restConfigs } = configs
-  const basePath = getLocalFileRelativePath(options.dev)
+  const {
+    info,
+    configs: appConfigs,
+    collaborators,
+    customCodes,
+    blocks,
+    shortcuts,
+  } = configs
+  const { dev, cwd } = options
+
+  let basePath = getLocalFileRelativePath(dev)
+  if (cwd) {
+    basePath = join(cwd, basePath)
+  }
 
   await Promise.all([
-    setConfigs(restConfigs, { ...options, global: false }),
+    setAppInfo(info, basePath),
     setAppConfigs(appConfigs, basePath),
-    setCustomCodes(customCodes, basePath),
-    setBlocks(blocks, basePath),
-    setShortcuts(shortcuts, basePath),
+    setAppCollaboratorsConfigs(collaborators, basePath),
+    setAppCustomCodesConfigs(customCodes, basePath),
+    setAppBlocksConfigs(blocks, basePath),
+    setAppShortcutsConfigs(shortcuts, basePath),
   ])
 }
 
 export const setGlobalConfigs = async (
   configs: GlobalConfigs,
   options: { dev: boolean },
-): Promise<void> => setConfigs(configs, { ...options, global: true })
+): Promise<void> => {
+  const { dev } = options
+
+  const path = getGlobalConfigFilePath(dev)
+  await validateAccessToFile(path)
+
+  await writeJsonFile(path, configs)
+}

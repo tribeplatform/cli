@@ -9,6 +9,7 @@ import {
   writeJson,
 } from 'fs-extra'
 import { dirname } from 'path'
+import { NoAccessToFileError } from './error.utils'
 
 export const isFileExists = async (path: string): Promise<boolean> => {
   try {
@@ -28,19 +29,19 @@ export const hasAccessToFile = async (path: string): Promise<boolean> => {
   }
 }
 
-export const readJsonFile = async <T>(path: string): Promise<T | null> => {
+export const readJsonFile = async <T>(path: string): Promise<T | undefined> => {
   try {
     return await readJson(path, 'utf8')
   } catch {
-    return null
+    return undefined
   }
 }
 
-export const readFile = async (path: string): Promise<string | null> => {
+export const readFile = async (path: string): Promise<string | undefined> => {
   try {
     return await fsReadFile(path, 'utf8')
   } catch {
-    return null
+    return undefined
   }
 }
 
@@ -52,4 +53,12 @@ export const writeJsonFile = async <T>(path: string, data: T): Promise<void> => 
 export const writeFile = async (path: string, data: string): Promise<void> => {
   await mkdir(dirname(path), { recursive: true })
   await fsWriteFile(path, data, { encoding: 'utf8', flag: 'w+' })
+}
+
+export const validateAccessToFile = async (path: string): Promise<void> => {
+  const fileExists = await isFileExists(path)
+  const hasAccess = fileExists && (await hasAccessToFile(path))
+  if (fileExists && !hasAccess) {
+    throw new NoAccessToFileError(path)
+  }
 }

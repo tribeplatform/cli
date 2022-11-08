@@ -1,9 +1,8 @@
 import {
+  PermissionContext,
   StoreItemStanding,
   StoreItemStatus,
 } from '@tribeplatform/gql-client/global-types'
-
-export type Context = 'NETWORK' | 'MEMBER' | 'SPACE' | 'POST'
 
 export type AppTemplate = 'typescript'
 
@@ -20,8 +19,8 @@ export type GlobalConfigs = {
 }
 
 export type ShortcutStateConfigs = {
-  state?: string
-  condition?: string
+  state: string
+  condition: string
 
   name?: string
   description?: string
@@ -29,26 +28,26 @@ export type ShortcutStateConfigs = {
 }
 
 export type ShortcutConfigs = {
-  context?: Context
+  context: PermissionContext
   entityType?: string
 
-  name?: string
+  name: string
   description?: string
   favicon?: string
 
-  key?: string
+  key: string
   interactionUrl?: string
   states?: ShortcutStateConfigs[]
 }
 
 export type DefaultDynamicBlockConfigs = {
-  key?: string
+  key: string
   interactionUrl?: string
-  contexts?: Context[]
+  contexts?: PermissionContext[]
 }
 
 export type DynamicBlockConfigs = DefaultDynamicBlockConfigs & {
-  name?: string
+  name: string
   description?: string
   favicon?: string
   image?: string
@@ -59,29 +58,42 @@ export type BlocksConfigs = {
   customs?: DynamicBlockConfigs[]
 }
 
-export type LocalConfigs = {
-  id?: string
-  name?: string
-  slug?: string
-  status?: StoreItemStatus
-  standing?: StoreItemStanding
+export type CustomCodeConfigs = {
+  head?: string
+  body?: string
+}
+
+export type CollaboratorConfigs = string[]
+
+export type AppConfigs = {
+  webhookUrl?: string
+  interactionUrl?: string
+  federatedSearchUrl?: string
+  redirectUris?: string[]
+  federatedSearchEnabled: boolean
+  webhookSubscriptions?: string[]
+}
+
+export type AppInfo = {
+  id: string
+  name: string
+  slug: string
+  status: StoreItemStatus
+  standing: StoreItemStanding
   description?: string
   favicon?: string
   image?: string
+  authorName?: string
+  authorUrl?: string
+  privacyPolicyUrl?: string
+  termsOfServiceUrl?: string
+}
 
-  configs?: {
-    webhookUrl?: string
-    interactionUrl?: string
-    federatedSearchUrl?: string
-    redirectUris?: string[]
-    federatedSearchEnabled?: boolean
-    collaborators?: string[]
-    webhookSubscriptions?: string[]
-  }
-  customCodes?: {
-    head?: string
-    body?: string
-  }
+export type LocalConfigs = {
+  info?: AppInfo
+  configs?: AppConfigs
+  collaborators?: CollaboratorConfigs
+  customCodes?: CustomCodeConfigs
   shortcuts?: ShortcutConfigs[]
   blocks?: BlocksConfigs
 }

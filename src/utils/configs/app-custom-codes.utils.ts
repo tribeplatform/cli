@@ -3,13 +3,13 @@ import {
   LOCAL_RC_CUSTOM_CODES_FILE_FORMAT,
   LOCAL_RC_CUSTOM_CODES_FOLDER_NAME,
 } from '../../constants'
-import { LocalConfigs } from '../../types'
+import { CustomCodeConfigs } from '../../types'
 import { readFile, writeFile } from '../file.utils'
 import { Shell } from '../shell.utils'
 
-export const getCustomCodes = async (
+export const getAppCustomCodesConfigs = async (
   basePath: string,
-): Promise<LocalConfigs['customCodes']> => {
+): Promise<CustomCodeConfigs | undefined> => {
   const path = join(basePath, LOCAL_RC_CUSTOM_CODES_FOLDER_NAME)
   const files = Shell.findAll({ cwd: path })
   const results = await Promise.all(
@@ -21,11 +21,15 @@ export const getCustomCodes = async (
       .map(async ({ key, path }) => ({ key, value: await readFile(path) })),
   )
 
-  return Object.fromEntries(results.map(({ key, value }) => [key, value || undefined]))
+  const result = Object.fromEntries(
+    results.map(({ key, value }) => [key, value || undefined]),
+  )
+  if (Object.keys(result).length === 0) return undefined
+  return result
 }
 
-export const setCustomCodes = async (
-  customCodes: LocalConfigs['customCodes'],
+export const setAppCustomCodesConfigs = async (
+  customCodes: CustomCodeConfigs | undefined,
   basePath: string,
 ): Promise<void> => {
   if (!customCodes) return
