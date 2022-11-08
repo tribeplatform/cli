@@ -23,7 +23,7 @@ $ npm install -g @tribeplatform/cli
 $ bettermode COMMAND
 running command...
 $ bettermode (--version)
-@tribeplatform/cli/0.0.5 darwin-arm64 node-v16.13.0
+@tribeplatform/cli/0.0.6 darwin-arm64 node-v16.13.0
 $ bettermode --help [COMMAND]
 USAGE
   $ bettermode COMMAND
@@ -38,6 +38,7 @@ USAGE
 * [`bettermode app init`](#bettermode-app-init)
 * [`bettermode app list`](#bettermode-app-list)
 * [`bettermode app publish`](#bettermode-app-publish)
+* [`bettermode app start`](#bettermode-app-start)
 * [`bettermode app sync`](#bettermode-app-sync)
 * [`bettermode app unpublish`](#bettermode-app-unpublish)
 * [`bettermode app update`](#bettermode-app-update)
@@ -47,6 +48,7 @@ USAGE
 * [`bettermode login`](#bettermode-login)
 * [`bettermode logout`](#bettermode-logout)
 * [`bettermode networks`](#bettermode-networks)
+* [`bettermode ngrok`](#bettermode-ngrok)
 * [`bettermode update [CHANNEL]`](#bettermode-update-channel)
 * [`bettermode whoami`](#bettermode-whoami)
 
@@ -190,6 +192,44 @@ FLAG DESCRIPTIONS
   -p, --publicly  publish publicly
 
     publish the app publicly for all networks
+
+  -t, --access-token=<value>  your access token
+
+    a custom access token that you want to use to login in the portal
+```
+
+## `bettermode app start`
+
+start app with ngrok
+
+```
+USAGE
+  $ bettermode app start [--json] [-t <value>] [-d] [-s <value>]
+
+FLAGS
+  -d, --dev                   development mode
+  -s, --sub-domain=<value>    your ngrok sub domain
+  -t, --access-token=<value>  your access token
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  start app with ngrok
+
+EXAMPLES
+  $ bettermode app start
+
+  $ bettermode app start --sub-domain my-sub-domain
+
+FLAG DESCRIPTIONS
+  -d, --dev  development mode
+
+    actions will happen in development mode
+
+  -s, --sub-domain=<value>  your ngrok sub domain
+
+    the ngrok sub domain that you want to use to start the tunnel
 
   -t, --access-token=<value>  your access token
 
@@ -413,7 +453,7 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/login.ts](https://github.com/tribeplatform/cli/blob/v0.0.5/dist/commands/login.ts)_
+_See code: [dist/commands/login.ts](https://github.com/tribeplatform/cli/blob/v0.0.6/dist/commands/login.ts)_
 
 ## `bettermode logout`
 
@@ -446,7 +486,7 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/logout.ts](https://github.com/tribeplatform/cli/blob/v0.0.5/dist/commands/logout.ts)_
+_See code: [dist/commands/logout.ts](https://github.com/tribeplatform/cli/blob/v0.0.6/dist/commands/logout.ts)_
 
 ## `bettermode networks`
 
@@ -489,7 +529,47 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/networks.ts](https://github.com/tribeplatform/cli/blob/v0.0.5/dist/commands/networks.ts)_
+_See code: [dist/commands/networks.ts](https://github.com/tribeplatform/cli/blob/v0.0.6/dist/commands/networks.ts)_
+
+## `bettermode ngrok`
+
+setup your ngrok account
+
+```
+USAGE
+  $ bettermode ngrok [--json] [-t <value>] [-d] [-a <value>]
+
+FLAGS
+  -a, --auth-token=<value>    your ngrok auth token
+  -d, --dev                   development mode
+  -t, --access-token=<value>  your access token
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  setup your ngrok account
+
+EXAMPLES
+  $ bettermode ngrok
+
+  $ bettermode ngrok --auth-token=your-auth-token
+
+FLAG DESCRIPTIONS
+  -a, --auth-token=<value>  your ngrok auth token
+
+    the ngrok auth token that you want to use to start the tunnel
+
+  -d, --dev  development mode
+
+    actions will happen in development mode
+
+  -t, --access-token=<value>  your access token
+
+    a custom access token that you want to use to login in the portal
+```
+
+_See code: [dist/commands/ngrok.ts](https://github.com/tribeplatform/cli/blob/v0.0.6/dist/commands/ngrok.ts)_
 
 ## `bettermode update [CHANNEL]`
 
@@ -559,5 +639,5 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/whoami.ts](https://github.com/tribeplatform/cli/blob/v0.0.5/dist/commands/whoami.ts)_
+_See code: [dist/commands/whoami.ts](https://github.com/tribeplatform/cli/blob/v0.0.6/dist/commands/whoami.ts)_
 <!-- commandsstop -->

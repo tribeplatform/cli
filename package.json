@@ -1,6 +1,6 @@
 {
   "name": "@tribeplatform/cli",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "The CLI to manage apps in Bettermode platform",
   "author": "Bettermode Engineering",
   "bin": {
