@@ -44,10 +44,10 @@ export abstract class BetterCommand<T> extends SfCommand<T> {
     return { dev, accessToken }
   }
 
-  getGlobalConfigs = async (): Promise<GlobalConfigs> => {
+  getGlobalConfigs = async (customDev?: boolean): Promise<GlobalConfigs> => {
     const { dev } = await this.getGlobalFlags()
 
-    return getGlobalConfigs(dev)
+    return getGlobalConfigs(customDev === undefined ? dev : customDev)
   }
 
   setGlobalConfigs = async (configs: GlobalConfigs): Promise<void> => {
@@ -56,10 +56,10 @@ export abstract class BetterCommand<T> extends SfCommand<T> {
     return setGlobalConfigs(configs, { dev })
   }
 
-  getLocalConfigs = async (): Promise<LocalConfigs> => {
+  getLocalConfigs = async (customDev?: boolean): Promise<LocalConfigs> => {
     const { dev } = await this.getGlobalFlags()
 
-    return getLocalConfigs(dev)
+    return getLocalConfigs(customDev === undefined ? dev : customDev)
   }
 
   setLocalConfigs = async (configs: LocalConfigs): Promise<void> => {
@@ -68,19 +68,25 @@ export abstract class BetterCommand<T> extends SfCommand<T> {
     return setLocalConfigs(configs, { dev })
   }
 
-  getUnAuthenticatedClient = async (): Promise<CliClient> => {
+  getUnAuthenticatedClient = async (customDev?: boolean): Promise<CliClient> => {
     const { dev } = await this.getGlobalFlags()
 
-    return getClient({ withoutToken: true, dev })
+    return getClient({
+      withoutToken: true,
+      dev: customDev === undefined ? dev : customDev,
+    })
   }
 
-  getClient = async (): Promise<CliClient | null> => {
+  getClient = async (customDev?: boolean): Promise<CliClient | null> => {
     const { dev, accessToken: customAccessToken } = await this.getGlobalFlags()
 
-    const { accessToken } = await this.getGlobalConfigs()
+    const { accessToken } = await this.getGlobalConfigs(customDev)
     const finalAccessToken = customAccessToken || accessToken
     return finalAccessToken
-      ? getClient({ customAccessToken: finalAccessToken, dev })
+      ? getClient({
+          customAccessToken: finalAccessToken,
+          dev: customDev === undefined ? dev : customDev,
+        })
       : null
   }
 
@@ -105,8 +111,8 @@ export abstract class BetterCommand<T> extends SfCommand<T> {
     }
   }
 
-  getNetworks = async (): Promise<Network[]> => {
-    const client = await this.getClient()
+  getNetworks = async (customDev?: boolean): Promise<Network[]> => {
+    const client = await this.getClient(customDev)
     if (!client) {
       throw new UnAuthorizedError()
     }
@@ -114,8 +120,8 @@ export abstract class BetterCommand<T> extends SfCommand<T> {
     return client.query({ name: 'networks', args: 'basic' })
   }
 
-  getApps = async (): Promise<App[]> => {
-    const client = await this.getClient()
+  getApps = async (customDev?: boolean): Promise<App[]> => {
+    const client = await this.getClient(customDev)
     if (!client) {
       throw new UnAuthorizedError()
     }
