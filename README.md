@@ -23,7 +23,7 @@ $ npm install -g @tribeplatform/cli
 $ bettermode COMMAND
 running command...
 $ bettermode (--version)
-@tribeplatform/cli/0.0.3 darwin-arm64 node-v16.13.0
+@tribeplatform/cli/0.0.4 darwin-arm64 node-v16.13.0
 $ bettermode --help [COMMAND]
 USAGE
   $ bettermode COMMAND
@@ -35,7 +35,12 @@ USAGE
 
 <!-- commands -->
 * [`bettermode app create`](#bettermode-app-create)
+* [`bettermode app init`](#bettermode-app-init)
 * [`bettermode app list`](#bettermode-app-list)
+* [`bettermode app publish`](#bettermode-app-publish)
+* [`bettermode app sync`](#bettermode-app-sync)
+* [`bettermode app unpublish`](#bettermode-app-unpublish)
+* [`bettermode app update`](#bettermode-app-update)
 * [`bettermode autocomplete [SHELL]`](#bettermode-autocomplete-shell)
 * [`bettermode commands`](#bettermode-commands)
 * [`bettermode help [COMMAND]`](#bettermode-help-command)
@@ -76,6 +81,42 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
+## `bettermode app init`
+
+initialize an existing app into the current directory
+
+```
+USAGE
+  $ bettermode app init [--json] [-t <value>] [-d] [-i <value>]
+
+FLAGS
+  -d, --dev                   development mode
+  -i, --id=<value>            the app id
+  -t, --access-token=<value>  your access token
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  initialize an existing app into the current directory
+
+EXAMPLES
+  $ bettermode app init --id tj7oAwlJsO61
+
+FLAG DESCRIPTIONS
+  -d, --dev  development mode
+
+    actions will happen in development mode
+
+  -i, --id=<value>  the app id
+
+    the id of the app that you want to initialize
+
+  -t, --access-token=<value>  your access token
+
+    a custom access token that you want to use to login in the portal
+```
+
 ## `bettermode app list`
 
 list your apps
@@ -106,6 +147,144 @@ DESCRIPTION
 
 EXAMPLES
   $ bettermode app list
+
+FLAG DESCRIPTIONS
+  -d, --dev  development mode
+
+    actions will happen in development mode
+
+  -t, --access-token=<value>  your access token
+
+    a custom access token that you want to use to login in the portal
+```
+
+## `bettermode app publish`
+
+publish app
+
+```
+USAGE
+  $ bettermode app publish [--json] [-t <value>] [-d] [-p]
+
+FLAGS
+  -d, --dev                   development mode
+  -p, --publicly              publish publicly
+  -t, --access-token=<value>  your access token
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  publish app
+
+EXAMPLES
+  $ bettermode app publish
+
+  $ bettermode app publish --publicly
+
+FLAG DESCRIPTIONS
+  -d, --dev  development mode
+
+    actions will happen in development mode
+
+  -p, --publicly  publish publicly
+
+    publish the app publicly for all networks
+
+  -t, --access-token=<value>  your access token
+
+    a custom access token that you want to use to login in the portal
+```
+
+## `bettermode app sync`
+
+sync app configs
+
+```
+USAGE
+  $ bettermode app sync [--json] [-t <value>] [-d]
+
+FLAGS
+  -d, --dev                   development mode
+  -t, --access-token=<value>  your access token
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  sync app configs
+
+EXAMPLES
+  $ bettermode app sync
+
+FLAG DESCRIPTIONS
+  -d, --dev  development mode
+
+    actions will happen in development mode
+
+  -t, --access-token=<value>  your access token
+
+    a custom access token that you want to use to login in the portal
+```
+
+## `bettermode app unpublish`
+
+unpublish app
+
+```
+USAGE
+  $ bettermode app unpublish [--json] [-t <value>] [-d] [-p]
+
+FLAGS
+  -d, --dev                   development mode
+  -p, --publicly              unpublish publicly
+  -t, --access-token=<value>  your access token
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  unpublish app
+
+EXAMPLES
+  $ bettermode app unpublish
+
+  $ bettermode app unpublish --publicly
+
+FLAG DESCRIPTIONS
+  -d, --dev  development mode
+
+    actions will happen in development mode
+
+  -p, --publicly  unpublish publicly
+
+    unpublish the app publicly from all networks (except the privately published ones)
+
+  -t, --access-token=<value>  your access token
+
+    a custom access token that you want to use to login in the portal
+```
+
+## `bettermode app update`
+
+update app configs
+
+```
+USAGE
+  $ bettermode app update [--json] [-t <value>] [-d]
+
+FLAGS
+  -d, --dev                   development mode
+  -t, --access-token=<value>  your access token
+
+GLOBAL FLAGS
+  --json  Format output as json.
+
+DESCRIPTION
+  update app configs
+
+EXAMPLES
+  $ bettermode app update
 
 FLAG DESCRIPTIONS
   -d, --dev  development mode
@@ -234,7 +413,7 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/login.ts](https://github.com/tribeplatform/cli/blob/v0.0.3/dist/commands/login.ts)_
+_See code: [dist/commands/login.ts](https://github.com/tribeplatform/cli/blob/v0.0.4/dist/commands/login.ts)_
 
 ## `bettermode logout`
 
@@ -267,7 +446,7 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/logout.ts](https://github.com/tribeplatform/cli/blob/v0.0.3/dist/commands/logout.ts)_
+_See code: [dist/commands/logout.ts](https://github.com/tribeplatform/cli/blob/v0.0.4/dist/commands/logout.ts)_
 
 ## `bettermode networks`
 
@@ -310,7 +489,7 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/networks.ts](https://github.com/tribeplatform/cli/blob/v0.0.3/dist/commands/networks.ts)_
+_See code: [dist/commands/networks.ts](https://github.com/tribeplatform/cli/blob/v0.0.4/dist/commands/networks.ts)_
 
 ## `bettermode update [CHANNEL]`
 
@@ -380,5 +559,5 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/whoami.ts](https://github.com/tribeplatform/cli/blob/v0.0.3/dist/commands/whoami.ts)_
+_See code: [dist/commands/whoami.ts](https://github.com/tribeplatform/cli/blob/v0.0.4/dist/commands/whoami.ts)_
 <!-- commandsstop -->
