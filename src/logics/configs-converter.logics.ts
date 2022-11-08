@@ -6,7 +6,12 @@ import {
   Image,
   Shortcut,
 } from '@tribeplatform/gql-client/global-types'
-import { DynamicBlockConfigs, LocalConfigs, ShortcutConfigs } from '../types'
+import {
+  DefaultDynamicBlockConfigs,
+  DynamicBlockConfigs,
+  LocalConfigs,
+  ShortcutConfigs,
+} from '../types'
 
 export const appConfigsConverter = (
   app: App,
@@ -66,21 +71,19 @@ export const shortcutsConfigsConverter = (shortcuts: Shortcut[]): LocalConfigs =
 
 export const defaultDynamicBlockConfigsConverter = (
   block: DynamicBlock,
-): DynamicBlockConfigs => ({
-  name: block.name,
+): DefaultDynamicBlockConfigs => ({
   key: block.key,
   interactionUrl: block.interactionUrl || undefined,
   contexts: block.contexts || undefined,
-  description: block.description || undefined,
-  favicon: (block.favicon as Image)?.url,
-  image: (block.image as Image)?.url,
 })
 
 export const dynamicBlockConfigsConverter = (
   block: DynamicBlock,
 ): DynamicBlockConfigs => ({
-  ...defaultDynamicBlockConfigsConverter(block),
   name: block.name,
+  key: block.key,
+  interactionUrl: block.interactionUrl || undefined,
+  contexts: block.contexts || undefined,
   description: block.description || undefined,
   favicon: (block.favicon as Image)?.url,
   image: (block.image as Image)?.url,

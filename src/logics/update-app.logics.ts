@@ -37,36 +37,37 @@ export const getUpdateAppTasks = (options: {
     customCodes = customCodesConfig
   }
 
-  const tasks: Listr.ListrTask<{ app: App }>[] = [
-    {
-      title: 'Update app info',
-      task: async (ctx: { app: App }) => {
-        ctx.app = await client.mutation({
-          name: 'updateApp',
-          args: {
-            variables: {
-              id: appId as string,
-              input: {
-                ...info,
-                ...configs,
-                customCodes,
-                standing: officialPartner ? standing : undefined,
+  return new Listr(
+    [
+      {
+        title: 'Update app info',
+        task: async (ctx: { app: App }) => {
+          ctx.app = await client.mutation({
+            name: 'updateApp',
+            args: {
+              variables: {
+                id: appId as string,
+                input: {
+                  ...info,
+                  ...configs,
+                  customCodes,
+                  standing: officialPartner ? standing : undefined,
+                },
+              },
+              fields: {
+                customCodes: 'all',
+                favicon: 'all',
+                image: 'all',
               },
             },
-            fields: {
-              customCodes: 'all',
-              favicon: 'all',
-              image: 'all',
-            },
-          },
-        })
+          })
+        },
       },
-    },
-    getUpdateCollaboratorsTasks({ client, localConfigs }),
-    getUpdateShortcutTask({ client, localConfigs }),
-    getUpdateDefaultBlocksTask({ client, localConfigs }),
-    getUpdateCustomBlocksTask({ client, localConfigs }),
-  ].filter(task => task !== undefined) as Listr.ListrTask<{ app: App }>[]
-
-  return new Listr(tasks, { concurrent: true })
+      getUpdateCollaboratorsTasks({ client, localConfigs }),
+      getUpdateShortcutTask({ client, localConfigs }),
+      getUpdateDefaultBlocksTask({ client, localConfigs }),
+      getUpdateCustomBlocksTask({ client, localConfigs }),
+    ],
+    { concurrent: true },
+  )
 }

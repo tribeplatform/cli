@@ -47,7 +47,7 @@ export const getSyncAppTasks = (options: {
   return new Listr([
     {
       title: `Getting app info`,
-      task: ctx =>
+      task: () =>
         new Listr(
           [
             {
@@ -77,7 +77,7 @@ export const getSyncAppTasks = (options: {
             },
             {
               title: 'Getting dynamic blocks',
-              task: async () => {
+              task: async ctx => {
                 const result = await client.query({
                   name: 'dynamicBlocks',
                   args: {
@@ -95,9 +95,9 @@ export const getSyncAppTasks = (options: {
     {
       title: 'Creating config folder',
       task: async ctx => {
-        const collaborators: AppCollaborator[] = ctx.collaborators
-        const shortcuts: Shortcut[] = ctx.shortcuts
-        const blocks: DynamicBlock[] = ctx.blocks
+        const collaborators = ctx.collaborators
+        const shortcuts = ctx.shortcuts
+        const blocks = ctx.blocks
 
         return setLocalConfigs(
           {

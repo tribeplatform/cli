@@ -4,7 +4,7 @@ import {
 } from '@tribeplatform/gql-client/global-types'
 import { ListrTask } from 'listr'
 import { DynamicBlockConfigs, LocalConfigs } from '../types'
-import { CliClient } from '../utils'
+import { CliClient, CliError } from '../utils'
 
 export const convertBlockImages = (
   block: DynamicBlockConfigs,
@@ -20,14 +20,13 @@ export const convertBlockImages = (
 export const getUpdateDefaultBlocksTask = (options: {
   client: CliClient
   localConfigs: LocalConfigs
-}): ListrTask | undefined => {
+}): ListrTask => {
   const {
     client,
-    localConfigs: { info: { id: appId } = {}, blocks = {} },
+    localConfigs: { info: { id } = {}, blocks = {} },
   } = options
+  const appId = id as string
   const { defaults: defaultBlocks } = blocks
-
-  if (!appId) return
 
   return {
     title: 'Update default dynamic blocks',
@@ -37,14 +36,33 @@ export const getUpdateDefaultBlocksTask = (options: {
       }
     },
     task: async () => {
+      const defaultBlockKeys = Object.values(DefaultDynamicBlockKeys)
+      const wrongDefaultBlockKeys = defaultBlocks
+        ?.map(b => b.key)
+        .filter(
+          key => !defaultBlockKeys.includes(key as unknown as DefaultDynamicBlockKeys),
+        )
+      if (wrongDefaultBlockKeys?.length) {
+        throw new CliError(
+          `Wrong default block keys: ${wrongDefaultBlockKeys.join(', ')}`,
+        )
+      }
+
       await Promise.all(
-        Object.values(DefaultDynamicBlockKeys).map(key => {
+        defaultBlockKeys.map(key => {
           const block = defaultBlocks?.find(b => b.key === key)
           if (block) {
             return client.mutation({
               name: 'enableDefaultDynamicBlock',
               args: {
-                variables: { appId, key, input: block },
+                variables: {
+                  appId,
+                  key,
+                  input: {
+                    contexts: block.contexts,
+                    interactionUrl: block.interactionUrl,
+                  },
+                },
                 fields: 'basic',
               },
             })
@@ -66,15 +84,14 @@ export const getUpdateDefaultBlocksTask = (options: {
 export const getUpdateCustomBlocksTask = (options: {
   client: CliClient
   localConfigs: LocalConfigs
-}): ListrTask | undefined => {
+}): ListrTask => {
   const {
     client,
-    localConfigs: { info: { id: appId } = {}, blocks = {} },
+    localConfigs: { info: { id } = {}, blocks = {} },
   } = options
+  const appId = id as string
   const { customs: customBlocksWithRelativeImages } = blocks
   const customBlocks = customBlocksWithRelativeImages?.map(convertBlockImages)
-
-  if (!appId) return
 
   return {
     title: 'Update custom dynamic blocks',
@@ -84,13 +101,18 @@ export const getUpdateCustomBlocksTask = (options: {
       }
     },
     task: async () => {
-      const { nodes: currentBlocks } = await client.query({
+      const { nodes: currentBlocksWithDefaults } = await client.query({
         name: 'dynamicBlocks',
         args: {
           fields: { nodes: 'basic' },
           variables: { appId, limit: 100 },
         },
       })
+      const defaultBlockKeys = Object.values(DefaultDynamicBlockKeys)
+      const currentBlocks = currentBlocksWithDefaults?.filter(
+        ({ key }) =>
+          !defaultBlockKeys.includes(key as unknown as DefaultDynamicBlockKeys),
+      )
 
       const blockKeys = new Set(currentBlocks?.map(b => b.key))
       const deletedBlocks = currentBlocks?.filter(

@@ -5,12 +5,12 @@ import { CliClient } from '../utils'
 export const getUpdateCollaboratorsTasks = (options: {
   client: CliClient
   localConfigs: LocalConfigs
-}): ListrTask | undefined => {
+}): ListrTask => {
   const {
     client,
-    localConfigs: { info: { id: appId } = {}, collaborators },
+    localConfigs: { info: { id } = {}, collaborators },
   } = options
-  if (!appId) return
+  const appId = id as string
 
   return {
     title: 'Update collaborators',

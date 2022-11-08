@@ -21,14 +21,13 @@ export const convertShortcutImages = (shortcut: ShortcutConfigs): CreateShortcut
 export const getUpdateShortcutTask = (options: {
   client: CliClient
   localConfigs: LocalConfigs
-}): ListrTask | undefined => {
+}): ListrTask => {
   const {
     client,
-    localConfigs: { info: { id: appId } = {}, shortcuts: shortcutsWithRelativeImages },
+    localConfigs: { info: { id } = {}, shortcuts: shortcutsWithRelativeImages },
   } = options
+  const appId = id as string
   const shortcuts = shortcutsWithRelativeImages?.map(convertShortcutImages)
-
-  if (!appId) return
 
   return {
     title: 'Update shortcuts',
