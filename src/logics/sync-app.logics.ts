@@ -7,13 +7,7 @@ import {
 } from '@tribeplatform/gql-client/global-types'
 
 import * as Listr from 'listr'
-import {
-  CliClient,
-  CliError,
-  getLocalConfigFileRelativePath,
-  setLocalConfigs,
-  Shell,
-} from '../utils'
+import { CliClient, setLocalConfigs } from '../utils'
 import {
   appConfigsConverter,
   blocksConfigsConverter,
@@ -41,17 +35,14 @@ export const getSyncAppTasks = (options: {
   client: CliClient
   app: App
   dev: boolean
-  errorOnExisting?: boolean
-}) => {
-  const { client, app, dev, errorOnExisting = false } = options
-
-  if (errorOnExisting) {
-    const fileName = getLocalConfigFileRelativePath(dev)
-    const files = Shell.find([fileName], { silent: true })
-    if (files.length > 0) {
-      throw new CliError(`The file \`${fileName}\` already exists.`)
-    }
-  }
+  cwd?: string
+}): Listr<{
+  app: App
+  collaborators: AppCollaborator[]
+  shortcuts: Shortcut[]
+  blocks: DynamicBlock[]
+}> => {
+  const { client, app, dev, cwd } = options
 
   return new Listr([
     {
@@ -114,7 +105,7 @@ export const getSyncAppTasks = (options: {
             ...blocksConfigsConverter(blocks),
             ...shortcutsConfigsConverter(shortcuts),
           },
-          { dev },
+          { dev, cwd },
         )
       },
     },

@@ -2,7 +2,7 @@ import { Flags } from '@oclif/core'
 import { App } from '@tribeplatform/gql-client/global-types'
 import { BetterCommand } from '../../better-command'
 import { getInitAppInputs, getSyncAppTasks } from '../../logics'
-import { UnAuthorizedError } from '../../utils'
+import { CliError, UnAuthorizedError } from '../../utils'
 
 type InitAppResponse = App
 
@@ -27,12 +27,18 @@ export default class InitApp extends BetterCommand<InitAppResponse> {
     } = await this.parse(InitApp)
     let appId = id
 
+    const { info: { id: localAppId } = {} } = await this.getLocalConfigs()
     const client = await this.getClient()
-    const apps = await this.getApps()
 
     if (!client) {
       throw new UnAuthorizedError()
     }
+
+    if (localAppId) {
+      throw new CliError(`The app config has been already initialized.`)
+    }
+
+    const apps = await this.getApps()
 
     if (apps.length === 0) {
       throw new UnAuthorizedError(`You don't have any apps, please create one first.`)
@@ -48,7 +54,7 @@ export default class InitApp extends BetterCommand<InitAppResponse> {
       throw new Error(`App with id ${appId} not found.`)
     }
 
-    const tasks = getSyncAppTasks({ client, app, dev, errorOnExisting: true })
+    const tasks = getSyncAppTasks({ client, app, dev })
     await tasks.run()
 
     this.logSuccess(`You have successfully initialized your app's config!`)

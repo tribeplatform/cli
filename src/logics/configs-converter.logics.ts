@@ -12,23 +12,29 @@ export const appConfigsConverter = (
   app: App,
   collaborators: AppCollaborator[],
 ): LocalConfigs => ({
-  id: app.id,
-  name: app.name,
-  slug: app.slug,
-  status: app.status,
-  standing: app.standing,
-  description: app.description || undefined,
-  image: (app.image as Image)?.url,
-  favicon: (app.favicon as Image)?.url,
-
+  info: {
+    id: app.id,
+    name: app.name,
+    slug: app.slug,
+    status: app.status,
+    standing: app.standing,
+    description: app.description || undefined,
+    image: (app.image as Image)?.url,
+    favicon: (app.favicon as Image)?.url,
+    authorName: app.authorName || undefined,
+    authorUrl: app.authorUrl || undefined,
+    privacyPolicyUrl: app.privacyPolicyUrl || undefined,
+    termsOfServiceUrl: app.termsOfServiceUrl || undefined,
+  },
   configs: {
     webhookUrl: app.webhookUrl || undefined,
-    federatedSearchUrl: app.federatedSearchUrl || undefined,
     interactionUrl: app.interactionUrl || undefined,
+    federatedSearchUrl: app.federatedSearchUrl || undefined,
     redirectUris: app.redirectUris || undefined,
+    federatedSearchEnabled: app.federatedSearchEnabled,
     webhookSubscriptions: app.webhookSubscriptions || undefined,
-    collaborators: collaborators.map(collaborator => collaborator.email),
   },
+  collaborators: collaborators.map(collaborator => collaborator.email),
   customCodes: app.customCodes
     ? {
         head: app.customCodes?.head || undefined,
@@ -61,9 +67,13 @@ export const shortcutsConfigsConverter = (shortcuts: Shortcut[]): LocalConfigs =
 export const defaultDynamicBlockConfigsConverter = (
   block: DynamicBlock,
 ): DynamicBlockConfigs => ({
+  name: block.name,
   key: block.key,
   interactionUrl: block.interactionUrl || undefined,
   contexts: block.contexts || undefined,
+  description: block.description || undefined,
+  favicon: (block.favicon as Image)?.url,
+  image: (block.image as Image)?.url,
 })
 
 export const dynamicBlockConfigsConverter = (

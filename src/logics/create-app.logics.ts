@@ -1,8 +1,11 @@
 import { Prompter } from '@salesforce/sf-plugins-core'
 import {
   App,
+  AppCollaborator,
   DefaultDynamicBlockKeys,
+  DynamicBlock,
   Network,
+  Shortcut,
   StoreItemStanding,
 } from '@tribeplatform/gql-client/global-types'
 import * as Listr from 'listr'
@@ -175,7 +178,12 @@ export const getCreateAppTasks = (options: {
   client: CliClient
   officialPartner?: boolean
   input: CreateAppCLIInputs
-}) => {
+}): Listr<{
+  app: App
+  collaborators: AppCollaborator[]
+  shortcuts: Shortcut[]
+  blocks: DynamicBlock[]
+}> => {
   const {
     dev,
     client,
@@ -234,19 +242,19 @@ export const getCreateAppTasks = (options: {
                 name,
                 networkId,
                 slug,
-                // description,
-                // authorName,
-                // authorUrl,
-                // standing,
-                // webhookUrl: `https://${domain}/webhook`,
-                // interactionUrl: `https://${domain}/interaction`,
-                // federatedSearchUrl: `https://${domain}/federated-search`,
-                // privacyPolicyUrl: officialPartner
-                //   ? `https://bettermode.io/privacy-policy`
-                //   : null,
-                // termsOfServiceUrl: officialPartner
-                //   ? `https://bettermode.io/terms-of-service`
-                //   : null,
+                description,
+                authorName,
+                authorUrl,
+                standing,
+                webhookUrl: `https://${domain}/webhook`,
+                interactionUrl: `https://${domain}/interaction`,
+                federatedSearchUrl: `https://${domain}/federated-search`,
+                privacyPolicyUrl: officialPartner
+                  ? `https://bettermode.io/privacy-policy`
+                  : null,
+                termsOfServiceUrl: officialPartner
+                  ? `https://bettermode.io/terms-of-service`
+                  : null,
               },
             },
             fields: {
@@ -341,20 +349,23 @@ export const getCreateAppTasks = (options: {
     },
     {
       title: `Initialize app's config`,
-      task: ctx =>
-        getSyncAppTasks({ client, app: ctx.app as App, dev, errorOnExisting: true }),
+      task: ctx => getSyncAppTasks({ client, app: ctx.app as App, dev, cwd }),
     },
     {
       title: 'Setup git repository',
-      task: async () => {
-        await Shell.exec('git init', { cwd })
-        await Shell.exec(
-          `git remote add origin git@github.com:${repoOwner}/${repoName}.git`,
-          { cwd },
-        )
-        await Shell.exec('git add . -a', { cwd })
-        await Shell.exec('git commit -am "Initial setup"', { cwd })
-        await Shell.exec('git push -u origin main', { cwd, silent: true })
+      task: async (ctx, task) => {
+        try {
+          await Shell.exec('git init', { cwd })
+          await Shell.exec(
+            `git remote add origin git@github.com:${repoOwner}/${repoName}.git`,
+            { cwd },
+          )
+          await Shell.exec('git add --all', { cwd })
+          await Shell.exec('git commit -m "Initial setup"', { cwd })
+          await Shell.exec('git push -u origin main', { cwd })
+        } catch {
+          task.skip('Git repository not initialized, please do it manually.')
+        }
       },
     },
   ])

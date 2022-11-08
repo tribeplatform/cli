@@ -12,7 +12,7 @@ export default class SyncApp extends BetterCommand<SyncAppResponse> {
 
   async run(): Promise<SyncAppResponse> {
     const { dev } = await this.getGlobalFlags()
-    const { id } = await this.getLocalConfigs()
+    const { info: { id } = {} } = await this.getLocalConfigs()
     const client = await this.getClient()
 
     if (!client) {
@@ -34,7 +34,7 @@ export default class SyncApp extends BetterCommand<SyncAppResponse> {
       throw new Error(`App with id ${id} not found.`)
     }
 
-    const tasks = getSyncAppTasks({ client, app, dev, errorOnExisting: false })
+    const tasks = getSyncAppTasks({ client, app, dev })
     await tasks.run()
 
     this.logSuccess(`You have successfully synced your app's config!`)
