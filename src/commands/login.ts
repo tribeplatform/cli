@@ -1,6 +1,7 @@
 import { Flags } from '@oclif/core'
 import { ActionStatus } from '@tribeplatform/gql-client/global-types'
 import { BetterCommand } from '../better-command'
+import { OFFICIAL_PARTNER_EMAILS } from '../constants'
 import { LoginError, ServerError } from '../utils'
 
 type LoginResponse = { email: string; accessToken: string }
@@ -50,8 +51,9 @@ export default class Login extends BetterCommand<LoginResponse> {
 
   async run(): Promise<LoginResponse> {
     const {
-      flags: { email: givenEmail, 'access-token': accessToken },
+      flags: { email: givenEmail },
     } = await this.parse(Login)
+    const { dev, accessToken } = await this.getGlobalFlags()
 
     let result: LoginResponse | null = null
 
@@ -67,6 +69,22 @@ export default class Login extends BetterCommand<LoginResponse> {
           type: 'input',
           default: givenEmail,
           message: 'Your email address',
+          validate: (email: string) => {
+            if (
+              dev &&
+              OFFICIAL_PARTNER_EMAILS.every(
+                officialEmail => !email.endsWith(officialEmail),
+              )
+            ) {
+              return 'Please use an official partner email address'
+            }
+
+            if (!email || !/^[\w+.-]+@[\dA-Za-z-]+\.[\d.A-Za-z-]+$/.test(email)) {
+              return 'Please use a valid email address'
+            }
+
+            return true
+          },
         },
         {
           name: 'verificationCode',
