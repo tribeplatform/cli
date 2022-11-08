@@ -1,11 +1,12 @@
 import { App, Network } from '@tribeplatform/gql-client/global-types'
 import { BetterCommand } from '../../better-command'
+import { TYPEFACE } from '../../constants'
 import {
   getCreateAppInputs,
   getCreateAppTasks,
   removeCreateAppTargetDirs,
 } from '../../logics'
-import { CliClient, getBettermodeTypeface, UnAuthorizedError } from '../../utils'
+import { CliClient, UnAuthorizedError } from '../../utils'
 
 type CreateAppResponse = App
 
@@ -39,8 +40,7 @@ export default class CreateApp extends BetterCommand<CreateAppResponse> {
       throw new UnAuthorizedError(`You don't have any networks, please create one first.`)
     }
 
-    const typeface = await getBettermodeTypeface()
-    this.log(typeface || '')
+    this.log(TYPEFACE)
     this.log(`Let's create your next amazing app!\n\n`)
 
     const input = await this.prompt(
