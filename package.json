@@ -36,9 +36,8 @@
     "@oclif/plugin-warn-if-update-available": "^2.0.12",
     "@octokit/rest": "^19.0.5",
     "@salesforce/sf-plugins-core": "^1.17.3",
-    "@tribeplatform/gql-client": "^2.1.1",
+    "@tribeplatform/gql-client": "^2.2.4",
     "fs-extra": "^10.1.0",
-    "gql-client": "^1.0.0",
     "listr": "^0.14.3",
     "shelljs": "^0.8.5"
   },

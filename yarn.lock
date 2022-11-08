@@ -899,10 +899,10 @@
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-2.0.0.tgz#f544a148d3ab35801c1f633a7441fd87c2e484bf"
   integrity sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==
 
-"@tribeplatform/gql-client@^2.1.1":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@tribeplatform/gql-client/-/gql-client-2.1.1.tgz#5a41bee5eb17391c6b9f0f4341ff8752966ab228"
-  integrity sha512-TxyXVPmFKCBLBcWJXYM60Zs3qI2js6a271/4JEAlBL10gIM+BiWqGPji6imK0quwsUS89vd+bzFpsJb1UlLa3A==
+"@tribeplatform/gql-client@^2.2.4":
+  version "2.2.4"
+  resolved "https://registry.yarnpkg.com/@tribeplatform/gql-client/-/gql-client-2.2.4.tgz#c68e4e6f9c10e7e1a9ee980e406e49f81e42ac40"
+  integrity sha512-iBNpz9XMMlyzf8XPmw4jGxt2GAwKhrKegcnCbzBG5+Zd3fwzX16aluJWNLt7Z2UTXCuD2V7hxXWjUiFLgWAQQA==
   dependencies:
     graphql "^15.5.1"
     graphql-request "^4.2.0"
@@ -3315,13 +3315,6 @@ globby@^11.0.1, globby@^11.0.3, globby@^11.1.0:
     ignore "^5.2.0"
     merge2 "^1.4.1"
     slash "^3.0.0"
-
-gql-client@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/gql-client/-/gql-client-1.0.0.tgz#ea647d508ef1e441726487e640478f73d28bfb80"
-  integrity sha512-tUM4NtKkvv/HEB0VYR9xHIV/gCiqUzhsuolMiFbPHD2d1hqHOjkse4Ax/lz3iRftbKK8VGl4QQ8i9LBQ0cBeqg==
-  dependencies:
-    stealthy-require "^1.1.1"
 
 graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.5, graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.6, graceful-fs@^4.2.9:
   version "4.2.10"
@@ -5977,11 +5970,6 @@ stdout-stderr@^0.1.9:
   dependencies:
     debug "^4.1.1"
     strip-ansi "^6.0.0"
-
-stealthy-require@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/stealthy-require/-/stealthy-require-1.1.1.tgz#35b09875b4ff49f26a777e509b3090a3226bf24b"
-  integrity sha512-ZnWpYnYugiOVEY5GkcuJK1io5V8QmNYChG62gSit9pQVGErXtrKuPC55ITaVSukmMta5qpMU7vqLt2Lnni4f/g==
 
 string-argv@^0.3.1:
   version "0.3.1"
