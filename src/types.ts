@@ -16,6 +16,7 @@ export type GlobalConfigs = {
   accessToken?: string
   email?: string
   officialPartner?: boolean
+  ngrokToken?: string
 }
 
 export type ShortcutStateConfigs = {
