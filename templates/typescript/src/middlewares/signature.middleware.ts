@@ -1,15 +1,14 @@
-import { NextFunction, Request, Response } from 'express'
-
 import { IGNORE_SIGNATURE, SIGNING_SECRET } from '@config'
 import { HttpError } from '@errors'
 import { verifySignature } from '@logics'
 import { Logger } from '@utils'
+import { NextFunction, Request, Response } from 'express'
 
 export const signatureMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const logger = new Logger('SignatureMiddleware')
   const timestamp = parseInt(req.header('x-tribe-request-timestamp'), 10)
   const signature = req.header('x-tribe-signature')
-  const rawBody = req['rawBody']
+  const rawBody = req.rawBody
 
   if (IGNORE_SIGNATURE) {
     return next()

@@ -1,4 +1,4 @@
-export enum PrimaryScopes {
+export enum PrimaryScope {
   FullAccess = '*',
 
   /**

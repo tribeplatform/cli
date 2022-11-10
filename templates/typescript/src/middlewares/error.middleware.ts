@@ -15,8 +15,9 @@ export const errorMiddleware = (
   try {
     logger.error(error, { method: req.method, path: req.path })
     res.status(status).json({ message })
-  } catch (error) {
-    logger.error(error)
-    next(error)
+    return next()
+  } catch (err) {
+    logger.error(err)
+    return next(err)
   }
 }

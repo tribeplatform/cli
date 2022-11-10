@@ -1,14 +1,14 @@
 import { InteractionType } from '@enums'
 import { SlateDto } from '@tribeplatform/slate-kit/dtos'
 
-export interface InteractionInput<P = Record<string, unknown>> {
+export interface InteractionInput<T = { [key: string]: unknown }> {
   actorId: string
   appId: string
   interactionId: string
   dynamicBlockId?: string
   callbackId?: string
   shortcutState?: string
-  inputs?: P
+  inputs?: T
 }
 
 export interface BaseInteraction {
@@ -22,18 +22,18 @@ export interface CloseInteraction extends BaseInteraction {
 
 export interface OpenModalInteraction extends BaseInteraction {
   type: InteractionType.OpenModal
-  props: Record<string, unknown>
+  props: { [key: string]: unknown }
   slate: SlateDto
 }
 
 export interface OpenToastInteraction extends BaseInteraction {
   type: InteractionType.OpenToast
-  props: Record<string, unknown>
+  props: { [key: string]: unknown }
 }
 
 export interface RedirectInteraction extends BaseInteraction {
   type: InteractionType.Redirect
-  props: Record<string, unknown>
+  props: { [key: string]: unknown }
 }
 
 export interface ReloadInteraction extends BaseInteraction {

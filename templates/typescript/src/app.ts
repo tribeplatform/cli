@@ -37,8 +37,8 @@ class App {
       globalLogger.info(`🚀 App listening on the port ${this.port}`)
       globalLogger.info(`=================================`)
     })
-    server.on('error', e => {
-      globalLogger.error(e)
+    server.on('error', error => {
+      globalLogger.error(error)
     })
     return server
   }
@@ -63,7 +63,7 @@ class App {
         origin: ORIGIN,
         credentials: CREDENTIALS,
       },
-      controllers: controllers,
+      controllers,
       defaultErrorHandler: false,
     })
   }
@@ -75,7 +75,7 @@ class App {
     })
 
     const routingControllersOptions = {
-      controllers: controllers,
+      controllers,
     }
 
     const storage = getMetadataArgsStorage()

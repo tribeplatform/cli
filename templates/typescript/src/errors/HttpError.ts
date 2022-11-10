@@ -1,13 +1,13 @@
 import { HttpError as RoutingHttpError } from 'routing-controllers'
 
-export type ErrorAdditionalInfo = Omit<Record<string, unknown>, 'error'> & {
+export type ErrorAdditionalInfo = Omit<{ [key: string]: unknown }, 'error'> & {
   error?: Error
 }
 
 export class HttpError extends RoutingHttpError {
   public status: number
   public message: string
-  public additionalInfo?: Omit<Record<string, unknown>, 'error'>
+  public additionalInfo?: Omit<{ [key: string]: unknown }, 'error'>
   public originalError?: Error
 
   constructor(status: number, message: string, additionalInfo?: ErrorAdditionalInfo) {

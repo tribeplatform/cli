@@ -1,9 +1,9 @@
+import { ErrorCode, WebhookType } from '@enums'
 import { IsEnum, IsOptional, IsString } from 'class-validator'
 
-import { ErrorCodes, WebhookType } from '@enums'
 import { WebhookStatus } from '../enums/webhook-status.enum'
 
-export class WebhookResponseDto<P = unknown> {
+export class WebhookResponseDto<T = unknown> {
   @IsEnum(WebhookType)
   type: WebhookType
 
@@ -11,11 +11,11 @@ export class WebhookResponseDto<P = unknown> {
   status: WebhookStatus
 
   @IsOptional()
-  data?: P
+  data?: T
 
   @IsOptional()
-  @IsEnum(ErrorCodes)
-  errorCode?: ErrorCodes
+  @IsEnum(ErrorCode)
+  errorCode?: ErrorCode
 
   @IsOptional()
   @IsString()

@@ -1,4 +1,4 @@
-export enum ErrorCodes {
+export enum ErrorCode {
   UnknownError = 1,
   ServerError = 10,
   ServiceTimeout = 30,

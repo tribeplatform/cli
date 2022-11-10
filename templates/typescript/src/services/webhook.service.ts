@@ -28,6 +28,7 @@ export class WebhookService {
   ): Promise<GeneralWebhookResponse> {
     let network: Network
     let graphqlUrl: string
+
     try {
       const client = await getNetworkClient(webhook.networkId)
       graphqlUrl = client.graphqlUrl
@@ -35,8 +36,8 @@ export class WebhookService {
         name: 'network',
         args: 'basic',
       })
-    } catch (e) {
-      this.logger.error('GQL Client Error', e)
+    } catch (error) {
+      this.logger.error('GQL Client Error', error)
       return getServiceUnavailableError(webhook)
     }
 
@@ -47,8 +48,8 @@ export class WebhookService {
         domain: network.domain,
         graphqlUrl,
       })
-    } catch (e) {
-      this.logger.error('Database Error', e)
+    } catch (error) {
+      this.logger.error('Database Error', error)
       return getServiceUnavailableError(webhook)
     }
 
@@ -63,8 +64,8 @@ export class WebhookService {
   ): Promise<GeneralWebhookResponse> {
     try {
       await NetworkRepository.delete(webhook.networkId)
-    } catch (e) {
-      this.logger.error('Database Error', e)
+    } catch (error) {
+      this.logger.error('Database Error', error)
       return getServiceUnavailableError(webhook)
     }
 
@@ -77,7 +78,7 @@ export class WebhookService {
   async handleSubscriptionWebhook(
     webhook: SubscriptionWebhook,
   ): Promise<GeneralWebhookResponse> {
-    // TODO: Handle subscription webhooks here
+    // Handle subscription webhooks here
 
     return {
       type: webhook.type,
@@ -88,7 +89,7 @@ export class WebhookService {
   async handleFederatedSearchWebhook(
     webhook: FederatedSearchWebhook,
   ): Promise<FederatedSearchWebhookResponse> {
-    // TODO: Handle federated search webhook here
+    // Handle federated search webhook here
 
     return {
       type: webhook.type,
@@ -100,7 +101,7 @@ export class WebhookService {
   async handleInteractionWebhook(
     webhook: InteractionWebhook,
   ): Promise<InteractionWebhookResponse> {
-    // TODO: Handle interaction webhook here
+    // Handle interaction webhook here
 
     return {
       type: webhook.type,

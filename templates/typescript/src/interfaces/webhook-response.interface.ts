@@ -1,10 +1,11 @@
-import { ErrorCodes, WebhookStatus, WebhookType } from '@enums'
+import { ErrorCode, WebhookStatus, WebhookType } from '@enums'
+
 import { FederatedSearchResult } from './federated-search.interface'
 import { InteractionData } from './interaction.interface'
 import { CustomSettings } from './settings.interface'
 import { Challenge } from './webhook.interface'
 
-export type BaseSuccessWebhookResponse = {
+export interface BaseSuccessWebhookResponse {
   toStore?: CustomSettings
 }
 
@@ -17,7 +18,7 @@ export interface SuccessWebhookResponse {
 export interface FailedWebhookResponse {
   type: WebhookType
   status: WebhookStatus.Failed
-  errorCode: ErrorCodes
+  errorCode: ErrorCode
   errorMessage: string
 }
 

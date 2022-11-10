@@ -1,4 +1,3 @@
-import { CLIENT_ID } from '@config'
 import { OAuthDto, OAuthTokensDto, OAuthTokensInputDto } from '@dtos'
 import { validationMiddleware } from '@middlewares'
 import { BettermodeOAuthService } from '@services'
@@ -32,14 +31,7 @@ export class BettermodeOAuthController {
   ): Promise<Response> {
     this.logger.verbose('Received oauth redirect request', input)
 
-    const { networkDomain, redirectUri, scopes } = input
-    response.redirect(
-      `https://${networkDomain}/oauth/authorize?${new URLSearchParams({
-        client_id: CLIENT_ID,
-        redirect_uri: redirectUri,
-        scopes: scopes.join(' '),
-      }).toString()}`,
-    )
+    response.redirect(this.oauthService.getRedirectUrl(input))
     return response
   }
 
@@ -51,6 +43,6 @@ export class BettermodeOAuthController {
   async tokens(@Body() input: OAuthTokensInputDto): Promise<OAuthTokensDto> {
     this.logger.verbose('Received oauth tokens request', input)
 
-    return await this.oauthService.getTokens(input)
+    return this.oauthService.getTokens(input)
   }
 }

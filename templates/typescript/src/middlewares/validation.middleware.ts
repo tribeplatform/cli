@@ -1,5 +1,5 @@
 import { HttpError } from '@errors'
-import { plainToClass } from 'class-transformer'
+import { plainToInstance } from 'class-transformer'
 import { validate, ValidationError } from 'class-validator'
 import { RequestHandler } from 'express'
 
@@ -18,14 +18,14 @@ export const validationMiddleware = (
   forbidNonWhitelisted = true,
 ): RequestHandler => {
   return (req, res, next) => {
-    const obj = plainToClass(type, req[value])
-    validate(obj, { skipMissingProperties, whitelist, forbidNonWhitelisted }).then(
+    const obj = plainToInstance(type, req[value])
+    return validate(obj, { skipMissingProperties, whitelist, forbidNonWhitelisted }).then(
       (errors: ValidationError[]) => {
         if (errors.length > 0) {
           const message = errors.map(getAllNestedErrors).join(', ')
-          next(new HttpError(400, message))
+          return next(new HttpError(400, message))
         } else {
-          next()
+          return next()
         }
       },
     )

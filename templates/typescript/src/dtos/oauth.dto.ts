@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+
 import { IsArray, IsString, IsUrl } from 'class-validator'
 
 export class OAuthDto {

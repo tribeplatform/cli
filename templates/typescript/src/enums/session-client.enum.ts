@@ -1,6 +1,6 @@
 export enum SessionClient {
-  WEB,
-  IOS,
-  ANDROID,
-  SERVER,
+  Web = 'WEB',
+  Ios = 'IOS',
+  Android = 'ANDROID',
+  Server = 'SERVER',
 }

@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+
 import { CLIENT_ID, CLIENT_SECRET } from '@config'
-import { OAuthTokensDto, OAuthTokensInputDto } from '@dtos'
+import { OAuthDto, OAuthTokensDto, OAuthTokensInputDto } from '@dtos'
 import { HttpError, InternalServerError } from '@errors'
 import { OAuthToken } from '@interfaces'
 import { MemberRepository } from '@repositories'
@@ -8,6 +10,15 @@ import axios from 'axios'
 
 export class BettermodeOAuthService {
   readonly logger = new Logger(BettermodeOAuthService.name)
+
+  getRedirectUrl(input: OAuthDto): string {
+    const { networkDomain, redirectUri, scopes } = input
+    return `https://${networkDomain}/oauth/authorize?${new URLSearchParams({
+      client_id: CLIENT_ID,
+      redirect_uri: redirectUri,
+      scopes: scopes.join(' '),
+    }).toString()}`
+  }
 
   async getTokens(input: OAuthTokensInputDto): Promise<OAuthTokensDto> {
     const { code, refreshToken, networkDomain } = input

@@ -1,9 +1,10 @@
 import {
   AppInstallationContext,
   AppInstallationStatus,
-  PrimaryScopes,
+  PrimaryScope,
   WebhookContext,
 } from '@enums'
+
 import { CustomSettings } from './settings.interface'
 import { TemplateMapping } from './template-mapping.interface'
 
@@ -38,7 +39,7 @@ export interface AppInstallation {
   status: AppInstallationStatus
   context: AppInstallationContext
   entityId: string
-  permissions: PrimaryScopes[]
+  permissions: PrimaryScope[]
 
   uninstallationReason?: string
 

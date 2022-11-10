@@ -1,4 +1,5 @@
 import { WebhookContext, WebhookType } from '@enums'
+
 import { AppInstallation, AppSettings } from './app.interface'
 import { Event } from './event.interface'
 import { FederatedSearch } from './federated-search.interface'
