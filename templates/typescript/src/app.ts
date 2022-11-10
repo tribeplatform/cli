@@ -1,6 +1,8 @@
 import { CREDENTIALS, NODE_ENV, ORIGIN, PORT } from '@config'
+import { Request } from '@interfaces'
 import { errorMiddleware } from '@middlewares'
 import { globalLogger, stream } from '@utils'
+import bodyParser from 'body-parser'
 import { defaultMetadataStorage } from 'class-transformer'
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema'
 import compression from 'compression'
@@ -47,6 +49,13 @@ class App {
   }
 
   private initializeMiddlewares() {
+    this.app.use(
+      bodyParser.json({
+        verify: (req: Request, res, buf) => {
+          req.rawBody = buf
+        },
+      }),
+    )
     this.app.use(morgan('dev', { stream }))
     this.app.use(hpp())
     this.app.use(helmet())
