@@ -5,27 +5,19 @@ import {
 } from '../../constants'
 import { CustomCodeConfigs } from '../../types'
 import { readFile, writeFile } from '../file.utils'
-import { Shell } from '../shell.utils'
 
 export const getAppCustomCodesConfigs = async (
   basePath: string,
 ): Promise<CustomCodeConfigs | undefined> => {
   const path = join(basePath, LOCAL_RC_CUSTOM_CODES_FOLDER_NAME)
-  const files = Shell.findAll({ cwd: path })
-  const results = await Promise.all(
-    files
-      .map(file => ({
-        key: file.replace(LOCAL_RC_CUSTOM_CODES_FILE_FORMAT, ''),
-        path: join(path, file),
-      }))
-      .map(async ({ key, path }) => ({ key, value: await readFile(path) })),
-  )
+  const [head, body] = await Promise.all([
+    await readFile(join(path, `head${LOCAL_RC_CUSTOM_CODES_FILE_FORMAT}`)),
+    await readFile(join(path, `body${LOCAL_RC_CUSTOM_CODES_FILE_FORMAT}`)),
+  ])
 
-  const result = Object.fromEntries(results.map(({ key, value }) => [key, value || null]))
-  if (Object.keys(result).length === 0) return undefined
   return {
-    head: result.head || null,
-    body: result.body || null,
+    head: head || null,
+    body: body || null,
   }
 }
 
