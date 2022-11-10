@@ -2,12 +2,7 @@ import { App, UpdateAppInput } from '@tribeplatform/gql-client/global-types'
 import * as Listr from 'listr'
 import { AppInfo, LocalConfigs } from '../types'
 import { CliClient } from '../utils'
-import {
-  getUpdateCustomBlocksTask,
-  getUpdateDefaultBlocksTask,
-} from './update-block.logics'
-import { getUpdateCollaboratorsTasks } from './update-collaborators.logics'
-import { getUpdateShortcutTask } from './update-shortcut.logics'
+import { convertBlockImages, convertShortcutImages } from './configs-converter.logics'
 
 export const convertAppImages = (shortcut: Omit<AppInfo, 'id'>): UpdateAppInput => {
   const { favicon: faviconId, image: imageId, ...rest } = shortcut
@@ -29,8 +24,17 @@ export const getUpdateAppTasks = (options: {
     info: { id: appId, status, standing, ...infoWithRelativeImages } = {},
     configs,
     customCodes: customCodesConfig,
+    collaborators,
+    shortcuts: shortcutsWithRelativeImages,
+    blocks: { defaults: defaultBlocks, customs: customBlocks } = {},
   } = localConfigs
   const info = convertAppImages(infoWithRelativeImages as Omit<AppInfo, 'id'>)
+  const shortcuts =
+    shortcutsWithRelativeImages?.map(shortcut => convertShortcutImages(shortcut)) || []
+  const dynamicBlocks = [
+    ...(defaultBlocks || []),
+    ...(customBlocks || []).map(block => convertBlockImages(block)),
+  ]
 
   let customCodes: LocalConfigs['customCodes'] | null = null
   if (customCodesConfig?.head || customCodesConfig?.body) {
@@ -52,6 +56,9 @@ export const getUpdateAppTasks = (options: {
                   ...configs,
                   customCodes,
                   standing: officialPartner ? standing : undefined,
+                  collaborators,
+                  shortcuts,
+                  dynamicBlocks,
                 },
               },
               fields: {
@@ -63,10 +70,6 @@ export const getUpdateAppTasks = (options: {
           })
         },
       },
-      getUpdateCollaboratorsTasks({ client, localConfigs }),
-      getUpdateShortcutTask({ client, localConfigs }),
-      getUpdateDefaultBlocksTask({ client, localConfigs }),
-      getUpdateCustomBlocksTask({ client, localConfigs }),
     ],
     { concurrent: true },
   )

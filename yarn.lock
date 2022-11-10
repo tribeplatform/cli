@@ -912,9 +912,9 @@
   integrity sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==
 
 "@tribeplatform/gql-client@^2.2.4":
-  version "2.2.4"
-  resolved "https://registry.yarnpkg.com/@tribeplatform/gql-client/-/gql-client-2.2.4.tgz#c68e4e6f9c10e7e1a9ee980e406e49f81e42ac40"
-  integrity sha512-iBNpz9XMMlyzf8XPmw4jGxt2GAwKhrKegcnCbzBG5+Zd3fwzX16aluJWNLt7Z2UTXCuD2V7hxXWjUiFLgWAQQA==
+  version "2.2.6"
+  resolved "https://registry.yarnpkg.com/@tribeplatform/gql-client/-/gql-client-2.2.6.tgz#1e6904bc2a6ab271fd1013f37150fb8ccf235e23"
+  integrity sha512-ErLljAfA4dGM7AGEz8sQngCQV3Hkji1r2JmDl5DgNueLSR6eOmatCpyS+f0jh0NA/yjtlCVdm7vrIOWOJjII4g==
   dependencies:
     graphql "^15.5.1"
     graphql-request "^4.2.0"

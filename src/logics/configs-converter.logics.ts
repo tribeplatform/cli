@@ -1,6 +1,8 @@
 import {
   App,
   AppCollaborator,
+  CreateDynamicBlockInput,
+  CreateShortcutInput,
   DefaultDynamicBlockKeys,
   DynamicBlock,
   Image,
@@ -105,3 +107,29 @@ export const blocksConfigsConverter = (blocks: DynamicBlock[]): LocalConfigs => 
       .map(block => dynamicBlockConfigsConverter(block)),
   },
 })
+
+export const convertShortcutImages = (shortcut: ShortcutConfigs): CreateShortcutInput => {
+  const { favicon: faviconId, states, ...rest } = shortcut
+  return {
+    ...rest,
+    faviconId,
+    states: states?.map(state => {
+      const { favicon: faviconId, ...rest } = state
+      return {
+        ...rest,
+        faviconId,
+      }
+    }),
+  }
+}
+
+export const convertBlockImages = (
+  block: DynamicBlockConfigs,
+): CreateDynamicBlockInput => {
+  const { favicon: faviconId, image: imageId, ...rest } = block
+  return {
+    ...rest,
+    faviconId,
+    imageId,
+  }
+}
