@@ -217,8 +217,8 @@ export const createApp = async (options: {
           authorUrl,
           standing,
           webhookUrl: `https://${domain}/webhook`,
-          interactionUrl: `https://${domain}/interaction`,
-          federatedSearchUrl: `https://${domain}/federated-search`,
+          interactionUrl: `https://${domain}/webhook/interaction`,
+          federatedSearchUrl: `https://${domain}/webhook/federated-search`,
           privacyPolicyUrl: officialPartner
             ? `https://bettermode.io/privacy-policy`
             : null,
@@ -409,6 +409,10 @@ export const getCreateAppTasks = (options: {
                     {
                       search: 'LOG_FORMAT = pretty',
                       replacement: 'LOG_FORMAT = json',
+                    },
+                    {
+                      search: 'ORIGIN = *',
+                      replacement: `ORIGIN = ${domain}`,
                     },
                   ],
                   ['.env.production.local'],
