@@ -1,5 +1,9 @@
 import { Flags } from '@oclif/core'
-import { Action, ActionStatus } from '@tribeplatform/gql-client/global-types'
+import {
+  Action,
+  ActionStatus,
+  StoreItemStatus,
+} from '@tribeplatform/gql-client/global-types'
 import { BetterCommand } from '../../better-command'
 import { getSyncAppTasks } from '../../logics'
 import { CliError, NoAppConfigError, UnAuthorizedError } from '../../utils'
@@ -42,7 +46,32 @@ export default class UnPublishApp extends BetterCommand<UnPublishAppResponse> {
       throw new NoAppConfigError()
     }
 
-    if (!publicly) {
+    let result: UnPublishAppResponse
+    if (publicly) {
+      const appBeforeUpdate = await client.query({
+        name: 'app',
+        args: {
+          fields: 'basic',
+          variables: { id: appId },
+        },
+      })
+
+      if (!appBeforeUpdate) {
+        throw new CliError(`App not found.`)
+      }
+
+      if (appBeforeUpdate.status === StoreItemStatus.PRIVATE) {
+        throw new CliError(`App is already unpublished.`)
+      }
+
+      result = await client.mutation({
+        name: 'unpublishApp',
+        args: {
+          fields: 'basic',
+          variables: { id: appId },
+        },
+      })
+    } else {
       const networks = await this.getNetworks()
       const publications = await client.query({
         name: 'appPublications',
@@ -56,7 +85,7 @@ export default class UnPublishApp extends BetterCommand<UnPublishAppResponse> {
         throw new UnAuthorizedError(`You didn't publish this app to any network yet.`)
       }
 
-      const result = await this.prompt<{ networkId: string }>([
+      const input = await this.prompt<{ networkId: string }>([
         {
           name: 'networkId',
           type: 'list',
@@ -68,46 +97,33 @@ export default class UnPublishApp extends BetterCommand<UnPublishAppResponse> {
           })),
         },
       ])
-      networkId = result.networkId
-    }
+      networkId = input.networkId
 
-    const result = await this.runWithSpinner('Un publishing your app', () => {
-      if (publicly) {
-        return client.mutation({
-          name: 'unpublishApp',
-          args: {
-            fields: 'basic',
-            variables: { id: appId },
-          },
-        })
-      }
-
-      return client.mutation({
+      result = await client.mutation({
         name: 'unPublishAppPrivately',
         args: {
           fields: 'basic',
           variables: { appId, networkId: networkId as string },
         },
       })
-    })
+    }
 
-    if (result?.status === ActionStatus.succeeded) {
-      const app = await client.query({
-        name: 'app',
-        args: {
-          variables: { id: appId },
-          fields: { customCodes: 'all', favicon: 'all', image: 'all' },
-        },
-      })
-
-      const tasks = getSyncAppTasks({ client, app, dev })
-      await tasks.run()
-
-      this.logSuccess(`You have successfully unpublished your app!`)
-    } else {
+    if (result.status !== ActionStatus.succeeded) {
       throw new CliError(`Cannot unpublish the app right now, please try again later.`)
     }
 
+    const app = await client.query({
+      name: 'app',
+      args: {
+        variables: { id: appId },
+        fields: { customCodes: 'all', favicon: 'all', image: 'all' },
+      },
+    })
+
+    const tasks = getSyncAppTasks({ client, app, dev })
+    await tasks.run()
+
+    this.logSuccess(`You have successfully unpublished your app!`)
     return result
   }
 }

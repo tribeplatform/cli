@@ -3,6 +3,7 @@ import {
   Action,
   ActionStatus,
   AppPublication,
+  StoreItemStatus,
 } from '@tribeplatform/gql-client/global-types'
 import { BetterCommand } from '../../better-command'
 import { getSyncAppTasks } from '../../logics'
@@ -42,72 +43,94 @@ export default class PublishApp extends BetterCommand<PublishAppResponse> {
       throw new NoAppConfigError()
     }
 
-    if (!publicly) {
-      const networks = await this.getNetworks()
+    let result: PublishAppResponse
+    if (publicly) {
+      const appBeforeUpdate = await client.query({
+        name: 'app',
+        args: {
+          fields: 'basic',
+          variables: { id: appId },
+        },
+      })
 
-      if (networks.length === 0) {
-        throw new UnAuthorizedError(
-          `You don't have any networks, please create one first.`,
-        )
+      if (!appBeforeUpdate) {
+        throw new CliError(`App not found.`)
       }
 
-      const result = await this.prompt<{ networkId: string }>([
+      if (appBeforeUpdate.status === StoreItemStatus.PUBLIC) {
+        throw new CliError(`App is already published publicly.`)
+      }
+
+      result = await client.mutation({
+        name: 'publishApp',
+        args: {
+          fields: 'basic',
+          variables: { id: appId },
+        },
+      })
+
+      if (result.status !== ActionStatus.succeeded) {
+        throw new CliError(`Cannot publish the app right now, please try again later.`)
+      }
+    } else {
+      const networks = await this.getNetworks()
+      const appPublications = await client.query({
+        name: 'appPublications',
+        args: {
+          fields: 'basic',
+          variables: { appId },
+        },
+      })
+      const availableNetworks = networks.filter(
+        network =>
+          !appPublications?.find(
+            appPublication => appPublication.networkId === network.id,
+          ),
+      )
+
+      if (networks.length === 0) {
+        throw new CliError(`You don't have any networks, please create one first.`)
+      }
+
+      if (availableNetworks.length === 0) {
+        throw new CliError(`You have already published this app to all your networks.`)
+      }
+
+      const input = await this.prompt<{ networkId: string }>([
         {
           name: 'networkId',
           type: 'list',
-          default: networks[0].id,
+          default: availableNetworks[0].id,
           message: `Which network do you want to publish to`,
-          choices: networks.map(network => ({
+          choices: availableNetworks.map(network => ({
             name: network.domain,
             value: network.id,
           })),
         },
       ])
-      networkId = result.networkId
-    }
+      networkId = input.networkId
 
-    const result = await this.runWithSpinner<Action | AppPublication>(
-      'Publishing your app',
-      () => {
-        if (publicly) {
-          return client.mutation({
-            name: 'publishApp',
-            args: {
-              fields: 'basic',
-              variables: { id: appId },
-            },
-          })
-        }
-
-        return client.mutation({
-          name: 'publishAppPrivately',
-          args: {
-            fields: 'basic',
-            variables: { appId, networkId: networkId as string },
-          },
-        })
-      },
-    )
-
-    if (
-      (result as Action)?.status === ActionStatus.succeeded ||
-      (result as AppPublication)?.id
-    ) {
-      const app = await client.query({
-        name: 'app',
+      result = await client.mutation({
+        name: 'publishAppPrivately',
         args: {
-          variables: { id: appId },
-          fields: { customCodes: 'all', favicon: 'all', image: 'all' },
+          fields: 'basic',
+          variables: { appId, networkId: networkId as string },
         },
       })
-
-      const tasks = getSyncAppTasks({ client, app, dev })
-      await tasks.run()
-
-      this.logSuccess(`You have successfully published your app!`)
-    } else {
-      throw new CliError(`Cannot publish the app right now, please try again later.`)
     }
+
+    const app = await client.query({
+      name: 'app',
+      args: {
+        variables: { id: appId },
+        fields: { customCodes: 'all', favicon: 'all', image: 'all' },
+      },
+    })
+
+    const tasks = getSyncAppTasks({ client, app, dev })
+    await tasks.run()
+
+    this.logSuccess(`You have successfully published your app!`)
 
     return result
   }
