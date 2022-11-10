@@ -21,11 +21,12 @@ export const getAppCustomCodesConfigs = async (
       .map(async ({ key, path }) => ({ key, value: await readFile(path) })),
   )
 
-  const result = Object.fromEntries(
-    results.map(({ key, value }) => [key, value || undefined]),
-  )
+  const result = Object.fromEntries(results.map(({ key, value }) => [key, value || null]))
   if (Object.keys(result).length === 0) return undefined
-  return result
+  return {
+    head: result.head || null,
+    body: result.body || null,
+  }
 }
 
 export const setAppCustomCodesConfigs = async (

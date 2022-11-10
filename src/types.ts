@@ -23,56 +23,56 @@ export type ShortcutStateConfigs = {
   state: string
   condition: string
 
-  name?: string
-  description?: string
-  favicon?: string
+  name: string | null
+  description: string | null
+  favicon: string | null
 }
 
 export type ShortcutConfigs = {
   context: PermissionContext
-  entityType?: string
+  entityType: string | null
 
   name: string
-  description?: string
-  favicon?: string
+  description: string | null
+  favicon: string | null
 
   key: string
-  interactionUrl?: string
-  states?: ShortcutStateConfigs[]
+  interactionUrl: string | null
+  states: ShortcutStateConfigs[] | null
 }
 
 export type DefaultDynamicBlockConfigs = {
   key: string
-  interactionUrl?: string
-  contexts?: PermissionContext[]
+  interactionUrl: string | null
+  contexts: PermissionContext[] | null
 }
 
 export type DynamicBlockConfigs = DefaultDynamicBlockConfigs & {
   name: string
-  description?: string
-  favicon?: string
-  image?: string
+  description: string | null
+  favicon: string | null
+  image: string | null
 }
 
 export type BlocksConfigs = {
-  defaults?: DefaultDynamicBlockConfigs[]
-  customs?: DynamicBlockConfigs[]
+  defaults: DefaultDynamicBlockConfigs[]
+  customs: DynamicBlockConfigs[]
 }
 
 export type CustomCodeConfigs = {
-  head?: string
-  body?: string
+  head: string | null
+  body: string | null
 }
 
 export type CollaboratorConfigs = string[]
 
 export type AppConfigs = {
-  webhookUrl?: string
-  interactionUrl?: string
-  federatedSearchUrl?: string
-  redirectUris?: string[]
+  webhookUrl: string | null
+  interactionUrl: string | null
+  federatedSearchUrl: string | null
+  redirectUris: string[] | null
   federatedSearchEnabled: boolean
-  webhookSubscriptions?: string[]
+  webhookSubscriptions: string[] | null
 }
 
 export type AppInfo = {
@@ -81,13 +81,13 @@ export type AppInfo = {
   slug: string
   status: StoreItemStatus
   standing: StoreItemStanding
-  description?: string
-  favicon?: string
-  image?: string
-  authorName?: string
-  authorUrl?: string
-  privacyPolicyUrl?: string
-  termsOfServiceUrl?: string
+  description: string | null
+  favicon: string | null
+  image: string | null
+  authorName: string | null
+  authorUrl: string | null
+  privacyPolicyUrl: string | null
+  termsOfServiceUrl: string | null
 }
 
 export type LocalConfigs = {

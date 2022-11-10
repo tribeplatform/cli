@@ -23,10 +23,9 @@ export const getUpdateDefaultBlocksTask = (options: {
 }): ListrTask => {
   const {
     client,
-    localConfigs: { info: { id } = {}, blocks = {} },
+    localConfigs: { info: { id } = {}, blocks: { defaults: defaultBlocks } = {} },
   } = options
   const appId = id as string
-  const { defaults: defaultBlocks } = blocks
 
   return {
     title: 'Update default dynamic blocks',
@@ -87,16 +86,18 @@ export const getUpdateCustomBlocksTask = (options: {
 }): ListrTask => {
   const {
     client,
-    localConfigs: { info: { id } = {}, blocks = {} },
+    localConfigs: {
+      info: { id } = {},
+      blocks: { customs: customBlocksWithRelativeImages } = {},
+    },
   } = options
   const appId = id as string
-  const { customs: customBlocksWithRelativeImages } = blocks
   const customBlocks = customBlocksWithRelativeImages?.map(convertBlockImages)
 
   return {
     title: 'Update custom dynamic blocks',
     skip: () => {
-      if (blocks === undefined) {
+      if (customBlocksWithRelativeImages === undefined) {
         return 'No custom blocks to update'
       }
     },

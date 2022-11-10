@@ -23,46 +23,45 @@ export const appConfigsConverter = (
     slug: app.slug,
     status: app.status,
     standing: app.standing,
-    description: app.description || undefined,
+    description: app.description || null,
     image: (app.image as Image)?.url,
     favicon: (app.favicon as Image)?.url,
-    authorName: app.authorName || undefined,
-    authorUrl: app.authorUrl || undefined,
-    privacyPolicyUrl: app.privacyPolicyUrl || undefined,
-    termsOfServiceUrl: app.termsOfServiceUrl || undefined,
+    authorName: app.authorName || null,
+    authorUrl: app.authorUrl || null,
+    privacyPolicyUrl: app.privacyPolicyUrl || null,
+    termsOfServiceUrl: app.termsOfServiceUrl || null,
   },
   configs: {
-    webhookUrl: app.webhookUrl || undefined,
-    interactionUrl: app.interactionUrl || undefined,
-    federatedSearchUrl: app.federatedSearchUrl || undefined,
-    redirectUris: app.redirectUris || undefined,
+    webhookUrl: app.webhookUrl || null,
+    interactionUrl: app.interactionUrl || null,
+    federatedSearchUrl: app.federatedSearchUrl || null,
+    redirectUris: app.redirectUris || null,
     federatedSearchEnabled: app.federatedSearchEnabled,
-    webhookSubscriptions: app.webhookSubscriptions || undefined,
+    webhookSubscriptions: app.webhookSubscriptions || null,
   },
   collaborators: collaborators.map(collaborator => collaborator.email),
-  customCodes: app.customCodes
-    ? {
-        head: app.customCodes?.head || undefined,
-        body: app.customCodes?.body || undefined,
-      }
-    : { head: undefined, body: undefined },
+  customCodes: {
+    head: app.customCodes?.head || null,
+    body: app.customCodes?.body || null,
+  },
 })
 
 export const getShortcutConfigs = (shortcut: Shortcut): ShortcutConfigs => ({
   context: shortcut.context,
-  entityType: shortcut.entityType || undefined,
+  entityType: shortcut.entityType || null,
   name: shortcut.name,
-  description: shortcut.description || undefined,
+  description: shortcut.description || null,
   favicon: (shortcut.favicon as Image)?.url,
   key: shortcut.key,
-  interactionUrl: shortcut.interactionUrl || undefined,
-  states: shortcut.states?.map(shortcutState => ({
-    state: shortcutState.state,
-    condition: shortcutState.condition,
-    name: shortcutState.name || undefined,
-    description: shortcutState.description || undefined,
-    favicon: (shortcutState.favicon as Image)?.url,
-  })),
+  interactionUrl: shortcut.interactionUrl || null,
+  states:
+    shortcut.states?.map(shortcutState => ({
+      state: shortcutState.state,
+      condition: shortcutState.condition,
+      name: shortcutState.name || null,
+      description: shortcutState.description || null,
+      favicon: (shortcutState.favicon as Image)?.url,
+    })) || null,
 })
 
 export const shortcutsConfigsConverter = (shortcuts: Shortcut[]): LocalConfigs => ({
@@ -73,8 +72,8 @@ export const defaultDynamicBlockConfigsConverter = (
   block: DynamicBlock,
 ): DefaultDynamicBlockConfigs => ({
   key: block.key,
-  interactionUrl: block.interactionUrl || undefined,
-  contexts: block.contexts || undefined,
+  interactionUrl: block.interactionUrl || null,
+  contexts: block.contexts || null,
 })
 
 export const dynamicBlockConfigsConverter = (
@@ -82,9 +81,9 @@ export const dynamicBlockConfigsConverter = (
 ): DynamicBlockConfigs => ({
   name: block.name,
   key: block.key,
-  interactionUrl: block.interactionUrl || undefined,
-  contexts: block.contexts || undefined,
-  description: block.description || undefined,
+  interactionUrl: block.interactionUrl || null,
+  contexts: block.contexts || null,
+  description: block.description || null,
   favicon: (block.favicon as Image)?.url,
   image: (block.image as Image)?.url,
 })
