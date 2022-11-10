@@ -273,6 +273,7 @@ export const getCreateAppTasks = (options: {
     description,
     devDomain,
     domain,
+    name,
     template,
     withDynamicSettings,
     repoOwner,
@@ -412,6 +413,7 @@ export const getCreateAppTasks = (options: {
               task: async () => {
                 Shell.replaceString(
                   [
+                    { search: 'app-name', replacement: name },
                     { search: 'app-template', replacement: repoName },
                     { search: 'app-description', replacement: description },
                     { search: 'app-author', replacement: authorName },
@@ -425,6 +427,7 @@ export const getCreateAppTasks = (options: {
                     'Makefile',
                     'package.json',
                     'LICENSE.md',
+                    'README.md',
                     join('.circleci', 'config.yml'),
                     join('.vscode', 'launch.json'),
                   ],
