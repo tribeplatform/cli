@@ -2,7 +2,7 @@ import { CLIENT_ID } from '@config'
 import { OAuthDto, OAuthTokensDto, OAuthTokensInputDto } from '@dtos'
 import { validationMiddleware } from '@middlewares'
 import { BettermodeOAuthService } from '@services'
-import { logger } from '@utils'
+import { Logger } from '@utils'
 import { Response } from 'express'
 import {
   Body,
@@ -19,6 +19,7 @@ import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi'
 @Controller('/bettermode/oauth')
 export class BettermodeOAuthController {
   readonly oauthService = new BettermodeOAuthService()
+  readonly logger = new Logger(BettermodeOAuthController.name)
 
   @Get()
   @UseBefore(validationMiddleware(OAuthDto, 'params'))
@@ -29,7 +30,7 @@ export class BettermodeOAuthController {
     input: OAuthDto,
     @Res() response: Response,
   ): Promise<Response> {
-    logger.verbose('Received oauth redirect request', input)
+    this.logger.verbose('Received oauth redirect request', input)
 
     const { networkDomain, redirectUri, scopes } = input
     response.redirect(
@@ -48,7 +49,7 @@ export class BettermodeOAuthController {
   @ResponseSchema(OAuthTokensDto)
   @HttpCode(200)
   async tokens(@Body() input: OAuthTokensInputDto): Promise<OAuthTokensDto> {
-    logger.verbose('Received oauth tokens request', input)
+    this.logger.verbose('Received oauth tokens request', input)
 
     return await this.oauthService.getTokens(input)
   }

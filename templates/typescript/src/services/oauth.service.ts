@@ -1,12 +1,14 @@
 import { CLIENT_ID, CLIENT_SECRET } from '@config'
 import { OAuthTokensDto, OAuthTokensInputDto } from '@dtos'
+import { HttpError, InternalServerError } from '@exceptions'
 import { OAuthToken } from '@interfaces'
 import { MemberRepository } from '@repositories'
-import { getClient, logger } from '@utils'
+import { getClient, Logger } from '@utils'
 import axios from 'axios'
-import { HttpError, InternalServerError } from 'routing-controllers'
 
 export class BettermodeOAuthService {
+  readonly logger = new Logger(BettermodeOAuthService.name)
+
   async getTokens(input: OAuthTokensInputDto): Promise<OAuthTokensDto> {
     const { code, refreshToken, networkDomain } = input
 
@@ -27,17 +29,15 @@ export class BettermodeOAuthService {
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        throw new HttpError(error.response.status, error.response.data)
+        throw new HttpError(error.response.status, error.response.data, { error })
       } else if (error.request) {
         // The request was made but no response was received
         // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
         // http.ClientRequest in node.js
-        logger.error(error)
-        throw new InternalServerError('No response received.')
+        throw new InternalServerError('No response received.', { error })
       } else {
         // Something happened in setting up the request that triggered an Error
-        logger.error(error)
-        throw new InternalServerError('Unknown error happened.')
+        throw new InternalServerError('Unknown error happened.', { error })
       }
     }
 

@@ -1,4 +1,4 @@
-import { HttpException } from '@exceptions'
+import { HttpError } from '@exceptions'
 import { plainToClass } from 'class-transformer'
 import { validate, ValidationError } from 'class-validator'
 import { RequestHandler } from 'express'
@@ -23,7 +23,7 @@ export const validationMiddleware = (
       (errors: ValidationError[]) => {
         if (errors.length > 0) {
           const message = errors.map(getAllNestedErrors).join(', ')
-          next(new HttpException(400, message))
+          next(new HttpError(400, message))
         } else {
           next()
         }

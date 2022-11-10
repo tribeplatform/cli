@@ -14,9 +14,11 @@ import {
 import { getChallengeResponse, getServiceUnavailableError } from '@logics'
 import { NetworkRepository } from '@repositories'
 import { Network } from '@tribeplatform/gql-client/types'
-import { getNetworkClient, logger } from '@utils'
+import { getNetworkClient, Logger } from '@utils'
 
 export class WebhookService {
+  readonly logger = new Logger(WebhookService.name)
+
   async handleTestWebhook(webhook: TestWebhook): Promise<TestWebhookResponse> {
     return getChallengeResponse(webhook)
   }
@@ -34,7 +36,7 @@ export class WebhookService {
         args: 'basic',
       })
     } catch (e) {
-      logger.error('GQL Client Error', e)
+      this.logger.error('GQL Client Error', e)
       return getServiceUnavailableError(webhook)
     }
 
@@ -46,7 +48,7 @@ export class WebhookService {
         graphqlUrl,
       })
     } catch (e) {
-      logger.error('Database Error', e)
+      this.logger.error('Database Error', e)
       return getServiceUnavailableError(webhook)
     }
 
@@ -62,7 +64,7 @@ export class WebhookService {
     try {
       await NetworkRepository.delete(webhook.networkId)
     } catch (e) {
-      logger.error('Database Error', e)
+      this.logger.error('Database Error', e)
       return getServiceUnavailableError(webhook)
     }
 

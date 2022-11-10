@@ -402,6 +402,14 @@ export const getCreateAppTasks = (options: {
                       search: 'signing-secret',
                       replacement: app?.webhookSignSecret as string,
                     },
+                    {
+                      search: 'LOG_LEVEL = verbose',
+                      replacement: 'LOG_LEVEL = info',
+                    },
+                    {
+                      search: 'LOG_FORMAT = pretty',
+                      replacement: 'LOG_FORMAT = json',
+                    },
                   ],
                   ['.env.production.local'],
                   { cwd },

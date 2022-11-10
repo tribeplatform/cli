@@ -10,7 +10,7 @@ import {
 } from '@interfaces'
 import { signatureMiddleware, validationMiddleware } from '@middlewares'
 import { WebhookService } from '@services'
-import { logger } from '@utils'
+import { Logger } from '@utils'
 import { Body, Controller, HttpCode, Post, UseBefore } from 'routing-controllers'
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi'
 
@@ -18,6 +18,7 @@ import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi'
 @UseBefore(signatureMiddleware)
 export class WebhookController {
   readonly webhookService = new WebhookService()
+  readonly logger = new Logger(WebhookController.name)
 
   @Post()
   @UseBefore(validationMiddleware(WebhookDto, 'body'))
@@ -25,7 +26,7 @@ export class WebhookController {
   @ResponseSchema(WebhookResponseDto)
   @HttpCode(200)
   async receiveWebhook(@Body() webhook: Webhook): Promise<WebhookResponse> {
-    logger.verbose('Received webhook', webhook)
+    this.logger.verbose('Received webhook', webhook)
 
     switch (webhook.type) {
       case WebhookType.Test:
@@ -37,7 +38,7 @@ export class WebhookController {
       case WebhookType.Subscription:
         return this.webhookService.handleSubscriptionWebhook(webhook)
       default:
-        logger.verbose('Received unknown webhook', webhook)
+        this.logger.verbose('Received unknown webhook', webhook)
         return {
           type: webhook.type,
           status: WebhookStatus.Succeeded,
@@ -53,7 +54,7 @@ export class WebhookController {
   async receiveFederatedSearch(
     @Body() webhook: FederatedSearchWebhook,
   ): Promise<FederatedSearchWebhookResponse> {
-    logger.verbose('Received federated search request', webhook)
+    this.logger.verbose('Received federated search request', webhook)
 
     return this.webhookService.handleFederatedSearchWebhook(webhook)
   }
@@ -66,7 +67,7 @@ export class WebhookController {
   async receiveInteraction(
     @Body() webhook: InteractionWebhook,
   ): Promise<InteractionWebhookResponse> {
-    logger.verbose('Received interaction request', webhook)
+    this.logger.verbose('Received interaction request', webhook)
 
     return this.webhookService.handleInteractionWebhook(webhook)
   }

@@ -1,6 +1,6 @@
-import { CREDENTIALS, LOG_FORMAT, NODE_ENV, ORIGIN, PORT } from '@config'
+import { CREDENTIALS, NODE_ENV, ORIGIN, PORT } from '@config'
 import { errorMiddleware } from '@middlewares'
-import { logger, stream } from '@utils'
+import { globalLogger, stream } from '@utils'
 import { defaultMetadataStorage } from 'class-transformer'
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema'
 import compression from 'compression'
@@ -32,13 +32,13 @@ class App {
 
   public listen() {
     const server = this.app.listen(this.port, () => {
-      logger.info(`=================================`)
-      logger.info(`======= ENV: ${this.env} =======`)
-      logger.info(`🚀 App listening on the port ${this.port}`)
-      logger.info(`=================================`)
+      globalLogger.info(`=================================`)
+      globalLogger.info(`======= ENV: ${this.env} =======`)
+      globalLogger.info(`🚀 App listening on the port ${this.port}`)
+      globalLogger.info(`=================================`)
     })
     server.on('error', e => {
-      logger.error(e)
+      globalLogger.error(e)
     })
     return server
   }
@@ -48,7 +48,7 @@ class App {
   }
 
   private initializeMiddlewares() {
-    this.app.use(morgan(LOG_FORMAT, { stream }))
+    this.app.use(morgan('dev', { stream }))
     this.app.use(hpp())
     this.app.use(helmet())
     this.app.use(compression())

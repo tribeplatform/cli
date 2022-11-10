@@ -1,12 +1,14 @@
 import { CLIENT_ID, CLIENT_SECRET } from '@config'
 import { GlobalClient, TribeClient } from '@tribeplatform/gql-client'
-import { logger } from './logger.utils'
+import { Logger } from './logger.utils'
+
+const logger = new Logger('GQLClient')
 
 export const gqlClient = new GlobalClient({
   clientId: CLIENT_ID,
   clientSecret: CLIENT_SECRET,
   onError: (errors, client, error) => {
-    logger.error('GQL Client Error', { errors, client, error })
+    logger.error(error, { errors, client })
   },
 })
 

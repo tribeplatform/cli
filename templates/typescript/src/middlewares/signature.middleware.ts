@@ -1,11 +1,12 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { IGNORE_SIGNATURE, SIGNING_SECRET } from '@config'
-import { HttpException } from '@exceptions'
+import { HttpError } from '@exceptions'
 import { verifySignature } from '@logics'
-import { logger } from '@utils'
+import { Logger } from '@utils'
 
 export const signatureMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  const logger = new Logger('SignatureMiddleware')
   const timestamp = parseInt(req.header('x-tribe-request-timestamp'), 10)
   const signature = req.header('x-tribe-signature')
   const rawBody = req['rawBody']
@@ -24,5 +25,5 @@ export const signatureMiddleware = (req: Request, res: Response, next: NextFunct
   } catch (err) {
     logger.error(err)
   }
-  return next(new HttpException(403, 'The x-tribe-signature is not valid.'))
+  return next(new HttpError(403, 'The x-tribe-signature is not valid.'))
 }
