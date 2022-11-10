@@ -52,7 +52,7 @@ yarn docker:down
 
 ## Docker stopped working
 
-If you are using Docker to run the app, you must be aware that in case of adding a new dependency, you must rebuild the image. You can do that by running the following command:
+If you are using Docker to run the app, you must be aware that in case of adding a new dependency or changing the DB schema (with Prisma), you must rebuild the image. You can do that by running the following command:
 
 ```bash
 yarn docker:down
