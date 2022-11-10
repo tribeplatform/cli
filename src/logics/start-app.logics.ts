@@ -64,7 +64,7 @@ export const getStartAppTasks = (options: {
   app: App
   ngrokToken: string | undefined
   ngrokRegion: NgrokRegion | undefined
-}): Listr<{ url: string; domain: string }> => {
+}): Listr<{ url: string; domain: string; app: App }> => {
   const { dev, client, subdomain, app, ngrokToken, ngrokRegion } = options
 
   return new Listr([
@@ -85,7 +85,7 @@ export const getStartAppTasks = (options: {
         const { domain } = ctx
 
         try {
-          await client.mutation({
+          ctx.app = await client.mutation({
             name: 'updateApp',
             args: {
               fields: { image: 'all', favicon: 'all', customCodes: 'all' },
@@ -202,7 +202,7 @@ export const getStartAppTasks = (options: {
     },
     {
       title: 'Sync app configs',
-      task: () => getSyncAppTasks({ client, app, dev }) as Listr,
+      task: ctx => getSyncAppTasks({ client, app: ctx.app, dev }) as Listr,
     },
     {
       title: 'Run app in docker mode',
