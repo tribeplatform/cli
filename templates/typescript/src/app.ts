@@ -31,12 +31,16 @@ class App {
   }
 
   public listen() {
-    this.app.listen(this.port, () => {
+    const server = this.app.listen(this.port, () => {
       logger.info(`=================================`)
       logger.info(`======= ENV: ${this.env} =======`)
       logger.info(`🚀 App listening on the port ${this.port}`)
       logger.info(`=================================`)
     })
+    server.on('error', e => {
+      logger.error(e)
+    })
+    return server
   }
 
   public getServer() {
