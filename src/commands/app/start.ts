@@ -30,7 +30,8 @@ export default class StartApp extends BetterCommand<StartAppResponse> {
       flags: { 'sub-domain': inputSubdomain },
     } = await this.parse(StartApp)
     const { dev } = await this.getGlobalFlags()
-    const { ngrokToken, email, officialPartner } = await this.getGlobalConfigs()
+    const { ngrokToken } = await this.getGlobalConfigs(false)
+    const { email, officialPartner } = await this.getGlobalConfigs()
     const { info: { id } = {} } = await this.getLocalConfigs()
     const client = await this.getClient()
 

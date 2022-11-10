@@ -26,14 +26,14 @@ export default class SetupNgrok extends BetterCommand<SetupNgrokResponse> {
     const {
       flags: { 'auth-token': inputAuthToken },
     } = await this.parse(SetupNgrok)
-    const globalConfigs = await this.getGlobalConfigs()
+    const globalConfigs = await this.getGlobalConfigs(false)
     let authToken = inputAuthToken
 
     if (!authToken) {
       const result = await this.prompt<{ authToken: string }>([
         {
           name: 'authToken',
-          type: 'input',
+          type: 'password',
           message: 'Your ngrok auth token',
         },
       ])
@@ -42,7 +42,7 @@ export default class SetupNgrok extends BetterCommand<SetupNgrokResponse> {
 
     await ngrok.authtoken(authToken)
 
-    await this.setGlobalConfigs({ ...globalConfigs, ngrokToken: authToken })
+    await this.setGlobalConfigs({ ...globalConfigs, ngrokToken: authToken }, false)
 
     this.logSuccess(
       'Token added. Now you can run `bettermode app start` to start the tunnel.',

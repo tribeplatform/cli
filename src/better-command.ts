@@ -50,10 +50,10 @@ export abstract class BetterCommand<T> extends SfCommand<T> {
     return getGlobalConfigs(customDev === undefined ? dev : customDev)
   }
 
-  setGlobalConfigs = async (configs: GlobalConfigs): Promise<void> => {
+  setGlobalConfigs = async (configs: GlobalConfigs, customDev?: boolean): Promise<void> => {
     const { dev } = await this.getGlobalFlags()
 
-    return setGlobalConfigs(configs, { dev })
+    return setGlobalConfigs(configs, { dev: customDev === undefined ? dev : customDev })
   }
 
   getLocalConfigs = async (customDev?: boolean): Promise<LocalConfigs> => {
