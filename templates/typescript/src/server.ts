@@ -1,3 +1,5 @@
+import 'reflect-metadata'
+
 import Controllers from '@controllers'
 import { validateEnv } from '@utils'
 
