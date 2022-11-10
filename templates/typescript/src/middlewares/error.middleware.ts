@@ -1,4 +1,4 @@
-import { HttpError } from '@exceptions'
+import { HttpError } from '@errors'
 import { Logger } from '@utils'
 import { NextFunction, Request, Response } from 'express'
 

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { IGNORE_SIGNATURE, SIGNING_SECRET } from '@config'
-import { HttpError } from '@exceptions'
+import { HttpError } from '@errors'
 import { verifySignature } from '@logics'
 import { Logger } from '@utils'
 

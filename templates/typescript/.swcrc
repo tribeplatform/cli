@@ -24,7 +24,7 @@
       "@controllers": ["controllers"],
       "@dtos": ["dtos"],
       "@enums": ["enums"],
-      "@exceptions": ["exceptions"],
+      "@errors": ["errors"],
       "@interfaces": ["interfaces"],
       "@middlewares": ["middlewares"],
       "@repositories": ["repositories"],

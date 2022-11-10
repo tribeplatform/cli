@@ -1,6 +1,6 @@
 import { CLIENT_ID, CLIENT_SECRET } from '@config'
 import { OAuthTokensDto, OAuthTokensInputDto } from '@dtos'
-import { HttpError, InternalServerError } from '@exceptions'
+import { HttpError, InternalServerError } from '@errors'
 import { OAuthToken } from '@interfaces'
 import { MemberRepository } from '@repositories'
 import { getClient, Logger } from '@utils'
