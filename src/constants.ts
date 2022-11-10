@@ -54,3 +54,18 @@ export const TYPEFACE = `
 \\_____/\\___|\\__|\\__\\___|_|  |_| |_| |_|\\___/ \\__,_|\\___|
 
 `
+
+export const PUBLIC_PUBLISH_MESSAGE = `
+This command will result in your app being published to the public Bettermode app store.
+It means that anyone can use your app in their Bettermode store.
+
+By publishing your app, you agree to the Bettermode terms of service and privacy policy:
+https://bettermode.com/terms-of-service
+https://bettermode.com/private-policy
+`
+
+export const PUBLIC_UNPUBLISH_MESSAGE = `
+This command will result in your app being unpublished from the public Bettermode app store.
+It means that no one can see your app in their Bettermode store.
+Also, all your app installations will be removed, and all associated settings will be deleted.
+`

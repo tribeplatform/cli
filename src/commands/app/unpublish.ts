@@ -4,7 +4,9 @@ import {
   ActionStatus,
   StoreItemStatus,
 } from '@tribeplatform/gql-client/global-types'
+import * as chalk from 'chalk'
 import { BetterCommand } from '../../better-command'
+import { PUBLIC_UNPUBLISH_MESSAGE } from '../../constants'
 import { getSyncAppTasks } from '../../logics'
 import { CliError, NoAppConfigError, UnAuthorizedError } from '../../utils'
 
@@ -62,6 +64,23 @@ export default class UnPublishApp extends BetterCommand<UnPublishAppResponse> {
 
       if (appBeforeUpdate.status === StoreItemStatus.PRIVATE) {
         throw new CliError(`App is already unpublished.`)
+      }
+
+      this.warn(PUBLIC_UNPUBLISH_MESSAGE)
+      const { confirmed } = await this.prompt<{ confirmed: string }>([
+        {
+          name: 'confirmed',
+          type: 'input',
+          message: chalk.reset(
+            `Please type ${chalk.bold(appBeforeUpdate.slug)}${chalk.reset(
+              ' to confirm',
+            )}`,
+          ),
+        },
+      ])
+
+      if (confirmed !== appBeforeUpdate.slug) {
+        throw new CliError(`Confirmation failed.`)
       }
 
       result = await client.mutation({

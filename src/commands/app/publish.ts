@@ -5,7 +5,9 @@ import {
   AppPublication,
   StoreItemStatus,
 } from '@tribeplatform/gql-client/global-types'
+import * as chalk from 'chalk'
 import { BetterCommand } from '../../better-command'
+import { PUBLIC_PUBLISH_MESSAGE } from '../../constants'
 import { getSyncAppTasks } from '../../logics'
 import { CliError, NoAppConfigError, UnAuthorizedError } from '../../utils'
 
@@ -59,6 +61,23 @@ export default class PublishApp extends BetterCommand<PublishAppResponse> {
 
       if (appBeforeUpdate.status === StoreItemStatus.PUBLIC) {
         throw new CliError(`App is already published publicly.`)
+      }
+
+      this.warn(PUBLIC_PUBLISH_MESSAGE)
+      const { confirmed } = await this.prompt<{ confirmed: string }>([
+        {
+          name: 'confirmed',
+          type: 'input',
+          message: chalk.reset(
+            `Please type ${chalk.bold(appBeforeUpdate.slug)}${chalk.reset(
+              ' to confirm',
+            )}`,
+          ),
+        },
+      ])
+
+      if (confirmed !== appBeforeUpdate.slug) {
+        throw new CliError(`Confirmation failed.`)
       }
 
       result = await client.mutation({
