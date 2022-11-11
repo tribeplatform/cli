@@ -107,7 +107,7 @@ export const getStartAppTasks = (options: {
           const { nodes: shortcutsNodes } = await client.query({
             name: 'shortcuts',
             args: {
-              fields: 'basic',
+              fields: { nodes: 'basic' },
               variables: { appId: app.id, limit: 100 },
             },
           })
