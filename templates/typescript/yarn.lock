@@ -981,12 +981,13 @@
     graphql-tag "^2.11.0"
     jwt-decode "^3.1.2"
 
-"@tribeplatform/node-logger@^1.0.3":
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/@tribeplatform/node-logger/-/node-logger-1.0.3.tgz#51df64314a88d626df506b8f58513b4fe9222be2"
-  integrity sha512-VtfuXq9lKyyaAwgMk/JhzYnqmchXMAyx+7GloGC+Z5329W7aLgjU7LemnvuBEpS62IjyF8q2ilSED2SGPSQM8Q==
+"@tribeplatform/node-logger@^1.0.12":
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/@tribeplatform/node-logger/-/node-logger-1.0.12.tgz#293d7936290595f432fd244d00fc891779dd36ae"
+  integrity sha512-gn/RMDM7+WqofcxR0Y8nTqd4ElVTRWLQRscr1EVLABiwTgjYKZutWW0xdmTyQUCRP1UYt285hhAXX/frfsLzhQ==
   dependencies:
     axios "^0.27.2"
+    chalk "^4.1.2"
     logform "^2.4.2"
     winston "^3.8.1"
 
@@ -2037,7 +2038,7 @@ chalk@^2.0.0:
     escape-string-regexp "^1.0.5"
     supports-color "^5.3.0"
 
-chalk@^4.0.0:
+chalk@^4.0.0, chalk@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/chalk/-/chalk-4.1.2.tgz#aac4e2b7734a740867aeb16bf02aad556a1e7a01"
   integrity sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==

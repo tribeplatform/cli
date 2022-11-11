@@ -4,6 +4,7 @@ import { Logger as BettermodeLogger } from '@tribeplatform/node-logger'
 export class Logger extends BettermodeLogger {
   constructor(context?: string) {
     super({
+      applicationName: 'server',
       context,
       format: LOG_FORMAT,
       level: LOG_LEVEL,
@@ -11,7 +12,7 @@ export class Logger extends BettermodeLogger {
   }
 }
 
-const globalLogger = new Logger('Server')
+const globalLogger = new Logger()
 
 const stream = {
   write: (message: string) => {

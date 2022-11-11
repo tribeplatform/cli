@@ -34,7 +34,7 @@ class App {
   public listen() {
     const server = this.app.listen(this.port, () => {
       globalLogger.info(`=================================`)
-      globalLogger.info(`======= ENV: ${this.env} =======`)
+      globalLogger.info(`======= ENV: ${this.env} ========`)
       globalLogger.info(`🚀 App listening on the port ${this.port}`)
       globalLogger.info(`=================================`)
     })
