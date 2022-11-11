@@ -1,6 +1,6 @@
 {
   "name": "@tribeplatform/cli",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "The CLI to manage apps in Bettermode platform",
   "author": "Bettermode Engineering",
   "bin": {
@@ -86,6 +86,11 @@
       "@oclif/plugin-autocomplete",
       "@salesforce/sf-plugins-core"
     ],
+    "update": {
+      "s3": {
+        "bucket": "bettermode-cli"
+      }
+    },
     "topicSeparator": " ",
     "topics": {
       "app": {
