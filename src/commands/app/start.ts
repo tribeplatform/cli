@@ -97,6 +97,9 @@ export default class StartApp extends BetterCommand<StartAppResponse> {
           SCRIPT_START_APP_FILE_NAME + SCRIPT_FILE_FORMAT,
         )}`,
       )
+      await new Promise(resolve => {
+        setTimeout(() => resolve(true), 3000)
+      })
       await Shell.open(url, { silent: true })
     } catch (error) {
       await ngrok.kill()
