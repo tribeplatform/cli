@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+  proxy:
+    image: nginx:alpine
+    ports:
+      - '80:80'
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    restart: 'unless-stopped'
+    networks:
+      - backend
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+
+  mongo:
+    image: prismagraphql/mongo-single-replica:4.4.3-bionic
+    restart: always
+    ports:
+      - '27017:27017'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+      MONGO_INITDB_DATABASE: app
+      INIT_WAIT_SEC: 3
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  data:
+    driver: local
