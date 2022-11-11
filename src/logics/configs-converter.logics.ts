@@ -133,3 +133,15 @@ export const convertBlockImages = (
     imageId,
   }
 }
+
+export const convertBlocksToCreateInput = (
+  blocks: DynamicBlock[],
+): CreateDynamicBlockInput[] => {
+  return blocks.map(block => convertBlockImages(dynamicBlockConfigsConverter(block)))
+}
+
+export const convertShortcutsToCreateInput = (
+  shortcuts: Shortcut[],
+): CreateShortcutInput[] => {
+  return shortcuts.map(shortcut => convertShortcutImages(getShortcutConfigs(shortcut)))
+}

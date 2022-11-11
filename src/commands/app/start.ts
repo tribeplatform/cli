@@ -1,7 +1,13 @@
 import { Flags } from '@oclif/core'
 import { StoreItemStatus } from '@tribeplatform/gql-client/global-types'
 import * as ngrok from 'ngrok'
+import { join } from 'path'
 import { BetterCommand } from '../../better-command'
+import {
+  SCRIPT_FILE_FORMAT,
+  SCRIPT_FOLDER_NAME,
+  SCRIPT_START_APP_FILE_NAME,
+} from '../../constants'
 import { getStartAppInputs, getStartAppTasks } from '../../logics'
 import { NoAppConfigError, Shell, UnAuthorizedError } from '../../utils'
 
@@ -83,9 +89,15 @@ export default class StartApp extends BetterCommand<StartAppResponse> {
     const { url } = await tasks.run()
 
     try {
-      await Shell.open(url, { silent: true })
       this.logSuccess(`The app has been started successfully on ${url}`)
-      await Shell.execAndBindStdout(`yarn docker:logs server`)
+      await Shell.execAndBindStdout(
+        `sh ${join(
+          process.cwd(),
+          SCRIPT_FOLDER_NAME,
+          SCRIPT_START_APP_FILE_NAME + SCRIPT_FILE_FORMAT,
+        )}`,
+      )
+      await Shell.open(url, { silent: true })
     } catch (error) {
       await ngrok.kill()
       throw error

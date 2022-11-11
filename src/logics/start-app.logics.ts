@@ -1,8 +1,18 @@
 import { Prompter } from '@salesforce/sf-plugins-core'
-import { App, DefaultDynamicBlockKeys } from '@tribeplatform/gql-client/global-types'
+import { App } from '@tribeplatform/gql-client/global-types'
 import * as Listr from 'listr'
 import * as ngrok from 'ngrok'
+import { join } from 'path'
+import {
+  SCRIPT_FILE_FORMAT,
+  SCRIPT_FOLDER_NAME,
+  SCRIPT_PRE_LOAD_APP_FILE_NAME,
+} from '../constants'
 import { CliClient, replaceDomain, Shell } from '../utils'
+import {
+  convertBlocksToCreateInput,
+  convertShortcutsToCreateInput,
+} from './configs-converter.logics'
 import { getSyncAppTasks } from './sync-app.logics'
 
 export type NgrokRegion = 'us' | 'eu' | 'au' | 'ap' | 'sa' | 'jp' | 'in'
@@ -85,24 +95,6 @@ export const getStartAppTasks = (options: {
         const { domain } = ctx
 
         try {
-          ctx.app = await client.mutation({
-            name: 'updateApp',
-            args: {
-              fields: { image: 'all', favicon: 'all', customCodes: 'all' },
-              variables: {
-                id: app.id,
-                input: {
-                  webhookUrl: replaceDomain(app.webhookUrl || undefined, domain),
-                  interactionUrl: replaceDomain(app.interactionUrl || undefined, domain),
-                  federatedSearchUrl: replaceDomain(
-                    app.federatedSearchUrl || undefined,
-                    domain,
-                  ),
-                },
-              },
-            },
-          })
-
           const { nodes: blocksNodes } = await client.query({
             name: 'dynamicBlocks',
             args: {
@@ -121,79 +113,31 @@ export const getStartAppTasks = (options: {
           })
           const shortcuts = shortcutsNodes || []
 
-          await Promise.all([
-            ...blocks
-              .filter(block => block.interactionUrl)
-              .filter(block =>
-                Object.values(DefaultDynamicBlockKeys).includes(
-                  block.key as unknown as DefaultDynamicBlockKeys,
-                ),
-              )
-              .map(block =>
-                client.mutation({
-                  name: 'enableDefaultDynamicBlock',
-                  args: {
-                    fields: 'basic',
-                    variables: {
-                      appId: app.id,
-                      key: block.key as unknown as DefaultDynamicBlockKeys,
-                      input: {
-                        interactionUrl: replaceDomain(
-                          block.interactionUrl || undefined,
-                          domain,
-                        ),
-                      },
-                    },
-                  },
-                }),
-              ),
-            ...blocks
-              .filter(block => block.interactionUrl)
-              .filter(
-                block =>
-                  !Object.values(DefaultDynamicBlockKeys).includes(
-                    block.key as unknown as DefaultDynamicBlockKeys,
+          ctx.app = await client.mutation({
+            name: 'updateApp',
+            args: {
+              fields: { image: 'all', favicon: 'all', customCodes: 'all' },
+              variables: {
+                id: app.id,
+                input: {
+                  webhookUrl: replaceDomain(app.webhookUrl || undefined, domain),
+                  interactionUrl: replaceDomain(app.interactionUrl || undefined, domain),
+                  federatedSearchUrl: replaceDomain(
+                    app.federatedSearchUrl || undefined,
+                    domain,
                   ),
-              )
-              .map(block =>
-                client.mutation({
-                  name: 'updateDynamicBlock',
-                  args: {
-                    fields: 'basic',
-                    variables: {
-                      appId: app.id,
-                      blockId: block.id,
-                      input: {
-                        interactionUrl: replaceDomain(
-                          block.interactionUrl || undefined,
-                          domain,
-                        ),
-                      },
-                    },
-                  },
-                }),
-              ),
-            ...shortcuts
-              .filter(shortcut => shortcut.interactionUrl)
-              .map(shortcut =>
-                client.mutation({
-                  name: 'updateShortcut',
-                  args: {
-                    fields: 'basic',
-                    variables: {
-                      appId: app.id,
-                      id: shortcut.id,
-                      input: {
-                        interactionUrl: replaceDomain(
-                          shortcut.interactionUrl || undefined,
-                          domain,
-                        ),
-                      },
-                    },
-                  },
-                }),
-              ),
-          ])
+                  dynamicBlocks: convertBlocksToCreateInput(blocks).map(block => ({
+                    ...block,
+                    url: replaceDomain(block.interactionUrl || undefined, domain),
+                  })),
+                  shortcuts: convertShortcutsToCreateInput(shortcuts).map(shortcut => ({
+                    ...shortcut,
+                    url: replaceDomain(shortcut.interactionUrl || undefined, domain),
+                  })),
+                },
+              },
+            },
+          })
         } catch (error) {
           await ngrok.kill()
           throw error
@@ -205,10 +149,16 @@ export const getStartAppTasks = (options: {
       task: ctx => getSyncAppTasks({ client, app: ctx.app, dev }) as Listr,
     },
     {
-      title: 'Run app in docker mode',
+      title: 'Run pre-load script',
       task: async () => {
         try {
-          await Shell.exec(`yarn docker:up`)
+          await Shell.exec(
+            `sh ${join(
+              process.cwd(),
+              SCRIPT_FOLDER_NAME,
+              SCRIPT_PRE_LOAD_APP_FILE_NAME + SCRIPT_FILE_FORMAT,
+            )}`,
+          )
         } catch (error) {
           await ngrok.kill()
           throw error

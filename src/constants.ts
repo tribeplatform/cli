@@ -23,6 +23,11 @@ export const GLOBAL_RC_DEV_POSTFIX = '.dev'
 export const GLOBAL_RC_LOCATION =
   process.env.BETTERMODE_RC_LOCATION || resolve(homedir(), GLOBAL_RC_FILE_NAME)
 
+export const SCRIPT_FOLDER_NAME = 'scripts'
+export const SCRIPT_FILE_FORMAT = '.bettermode.sh'
+export const SCRIPT_PRE_LOAD_APP_FILE_NAME = 'pre-load'
+export const SCRIPT_START_APP_FILE_NAME = 'start'
+
 export const APP_TEMPLATE_CHOICES: Record<AppTemplate, string> = {
   typescript: 'TypeScript',
 }
