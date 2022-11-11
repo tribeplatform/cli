@@ -1,4 +1,4 @@
-import { ErrorAdditionalInfo, HttpError } from './HttpError'
+import { ErrorAdditionalInfo, HttpError } from './http.error'
 
 export class InternalServerError extends HttpError {
   constructor(message: string, additionalInfo?: ErrorAdditionalInfo) {

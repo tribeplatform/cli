@@ -6,7 +6,8 @@ import { Logger } from '@utils'
 import { NextFunction, Response } from 'express'
 
 export const signatureMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  const logger = new Logger('SignatureMiddleware')
+  const logger = new Logger(signatureMiddleware.name)
+
   const timestamp = parseInt(req.header('x-tribe-request-timestamp'), 10)
   const signature = req.header('x-tribe-signature')
 

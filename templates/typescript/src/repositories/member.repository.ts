@@ -9,8 +9,8 @@ export const MemberRepository = {
   create: (member: MemberWithoutId): Promise<Member> => {
     return client.member.create({ data: member })
   },
-  update: (id: string, data: PartialMemberWithoutId): Promise<Member> => {
-    return client.member.update({ where: { id }, data })
+  update: (memberId: string, data: PartialMemberWithoutId): Promise<Member> => {
+    return client.member.update({ where: { memberId }, data })
   },
   upsert: (member: MemberWithoutId): Promise<Member> => {
     return client.member.upsert({
@@ -19,8 +19,8 @@ export const MemberRepository = {
       where: { memberId: member.memberId },
     })
   },
-  delete: (id: string): Promise<Member> => {
-    return client.member.delete({ where: { id } })
+  delete: (memberId: string): Promise<Member> => {
+    return client.member.delete({ where: { memberId } })
   },
   findMany: (): Promise<Member[]> => {
     return client.member.findMany()

@@ -37,7 +37,7 @@ export class WebhookService {
         args: 'basic',
       })
     } catch (error) {
-      this.logger.error('GQL Client Error', error)
+      this.logger.error(error)
       return getServiceUnavailableError(webhook)
     }
 
@@ -49,7 +49,7 @@ export class WebhookService {
         graphqlUrl,
       })
     } catch (error) {
-      this.logger.error('Database Error', error)
+      this.logger.error(error)
       return getServiceUnavailableError(webhook)
     }
 
@@ -65,7 +65,7 @@ export class WebhookService {
     try {
       await NetworkRepository.delete(webhook.networkId)
     } catch (error) {
-      this.logger.error('Database Error', error)
+      this.logger.error(error)
       return getServiceUnavailableError(webhook)
     }
 

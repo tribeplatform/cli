@@ -1,4 +1,4 @@
-import { HttpError } from '@errors'
+import { BadRequestError } from '@errors'
 import { plainToInstance } from 'class-transformer'
 import { validate, ValidationError } from 'class-validator'
 import { RequestHandler } from 'express'
@@ -23,7 +23,7 @@ export const validationMiddleware = (
       (errors: ValidationError[]) => {
         if (errors.length > 0) {
           const message = errors.map(getAllNestedErrors).join(', ')
-          return next(new HttpError(400, message))
+          return next(new BadRequestError(message, { validationErrors: errors }))
         } else {
           return next()
         }
