@@ -35,7 +35,7 @@
     "@oclif/plugin-update": "^3.0.6",
     "@oclif/plugin-warn-if-update-available": "^2.0.12",
     "@octokit/rest": "^19.0.5",
-    "@salesforce/sf-plugins-core": "^1.17.3",
+    "@salesforce/sf-plugins-core": "^1.18.1",
     "@tribeplatform/gql-client": "^2.2.6",
     "chalk": "^4.1.2",
     "execa": "^5.1.1",
