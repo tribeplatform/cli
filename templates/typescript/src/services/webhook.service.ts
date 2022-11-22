@@ -11,7 +11,11 @@ import {
   TestWebhook,
   TestWebhookResponse,
 } from '@interfaces'
-import { getChallengeResponse, getServiceUnavailableError } from '@logics'
+import {
+  getChallengeResponse,
+  getInteractionResponse,
+  getServiceUnavailableError,
+} from '@logics'
 import { NetworkRepository } from '@repositories'
 import { Network } from '@tribeplatform/gql-client/types'
 import { getNetworkClient, Logger } from '@utils'
@@ -101,7 +105,13 @@ export class WebhookService {
   async handleInteractionWebhook(
     webhook: InteractionWebhook,
   ): Promise<InteractionWebhookResponse> {
-    // Handle interaction webhook here
+    const {
+      data: { dynamicBlockKey },
+    } = webhook
+
+    if (dynamicBlockKey) {
+      return getInteractionResponse(webhook)
+    }
 
     return {
       type: webhook.type,
