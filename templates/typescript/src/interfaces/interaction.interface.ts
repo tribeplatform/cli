@@ -5,9 +5,11 @@ export interface InteractionInput<T = { [key: string]: unknown }> {
   actorId: string
   appId: string
   interactionId: string
-  dynamicBlockId?: string
-  callbackId?: string
+  preview?: boolean
+  dynamicBlockKey?: string
+  shortcutKey?: string
   shortcutState?: string
+  callbackId?: string
   inputs?: T
 }
 

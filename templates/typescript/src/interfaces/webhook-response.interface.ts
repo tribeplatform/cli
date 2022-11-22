@@ -24,22 +24,26 @@ export interface FailedWebhookResponse {
 
 export type GeneralWebhookResponse = SuccessWebhookResponse | FailedWebhookResponse
 
-export type BaseWebhookResponse = SuccessWebhookResponse | FailedWebhookResponse
+export type TestWebhookResponse =
+  | FailedWebhookResponse
+  | (SuccessWebhookResponse & {
+      type: WebhookType.Test
+      data: Challenge
+    })
 
-export type TestWebhookResponse = BaseWebhookResponse & {
-  type: WebhookType.Test
-  data: Challenge
-}
+export type FederatedSearchWebhookResponse =
+  | FailedWebhookResponse
+  | (SuccessWebhookResponse & {
+      type: WebhookType.FederatedSearch
+      data: FederatedSearchResult & BaseSuccessWebhookResponse
+    })
 
-export type FederatedSearchWebhookResponse = BaseWebhookResponse & {
-  type: WebhookType.FederatedSearch
-  data: FederatedSearchResult & BaseSuccessWebhookResponse
-}
-
-export type InteractionWebhookResponse = BaseWebhookResponse & {
-  type: WebhookType.Interaction
-  data: InteractionData & BaseSuccessWebhookResponse
-}
+export type InteractionWebhookResponse =
+  | FailedWebhookResponse
+  | (SuccessWebhookResponse & {
+      type: WebhookType.Interaction
+      data: InteractionData & BaseSuccessWebhookResponse
+    })
 
 export type WebhookResponse =
   | GeneralWebhookResponse
