@@ -14,6 +14,7 @@ import {
   LocalConfigs,
   ShortcutConfigs,
 } from '../types'
+import { getImageId } from './image.logics'
 
 export const appConfigsConverter = (
   app: App,
@@ -126,11 +127,11 @@ export const convertShortcutImages = (shortcut: ShortcutConfigs): CreateShortcut
 export const convertBlockImages = (
   block: DynamicBlockConfigs,
 ): CreateDynamicBlockInput => {
-  const { favicon: faviconId, image: imageId, ...rest } = block
+  const { favicon, image, ...rest } = block
   return {
     ...rest,
-    faviconId,
-    imageId,
+    faviconId: getImageId(favicon),
+    imageId: getImageId(image),
   }
 }
 

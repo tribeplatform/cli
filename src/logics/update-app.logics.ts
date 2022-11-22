@@ -3,13 +3,14 @@ import * as Listr from 'listr'
 import { AppInfo, LocalConfigs } from '../types'
 import { CliClient } from '../utils'
 import { convertBlockImages, convertShortcutImages } from './configs-converter.logics'
+import { getImageId } from './image.logics'
 
 export const convertAppImages = (shortcut: Omit<AppInfo, 'id'>): UpdateAppInput => {
-  const { favicon: faviconId, image: imageId, ...rest } = shortcut
+  const { favicon, image, ...rest } = shortcut
   return {
     ...rest,
-    faviconId,
-    imageId,
+    faviconId: getImageId(favicon),
+    imageId: getImageId(image),
   }
 }
 
