@@ -1,0 +1,56 @@
+{% assign title = 'Interactive Settings' %}
+{% assign alert = 'You need to setup your config before using the app.'%}
+{% assign setupDescription = 'You can change your configs by clicking on the below button.' %}
+
+<Card>
+  <Card.Header title="{{title}}"/>
+  <Card.Content>
+    <Container size="lg" spacing="sm">
+      {% if settings.toastMessage %}
+        <Container direction="grid" spacing="md">
+          <Container size="sm" alignment="center">
+            <Button callbackId="open-toast" variant="secondary" fullWidth="true" leadingIcon="PlusIcon">
+              Send toast
+            </Button>
+          </Container>
+          <Container size="md">
+            <Text value="By clicking on this button, we will show you a toast based on your configs."/>
+          </Container>
+        </Container>
+        {% if settings.redirectionUrl %}
+          <Divider padding="none"/>
+          <Container direction="grid" spacing="md">
+            <Container size="sm" alignment="center">
+              <Button callbackId="redirect" variant="danger" fullWidth="true" leadingIcon="ExternalLinkIcon">
+                Open URL
+              </Button>
+            </Container>
+            <Container size="md">
+              <Text value="By clicking on this button, we will redirect you to a URL based on your configs."/>
+            </Container>
+          </Container>
+        {% endif %}
+      {% else %}
+        <Alert status="warning" title="{{alert}}"/>
+        <Form callbackId="save" defaultValues='{{jsonSettings}}'>
+          <Container size="lg" spacing="sm">
+            <Input required name="toastMessage" label="Toast message" placeholder="i.e. My toast!" helperText="You can set any message you want."/>
+            <Select required name="toastStatus" label="Toast status" helperText="Select the status of your toast. [Learn more](https://bettermode.com)" items='{{toastStatuses}}'/>
+            <Input name="redirectionUrl" label="Redirect URL"/>
+            <Toggle name="externalRedirect" label="Redirect to the URL in a new tab" helperText="By enabling this option, the redirection will work in a new tab."/>
+            <Button type="submit" variant="primary">
+              Save
+            </Button>
+          </Container>
+        </Form>
+      {% endif %}
+    </Container>
+  </Card.Content>
+  {% if settings.toastMessage %}
+    <Divider padding="none"/>
+    <Card.Header title="Configs" description="You can change your configs by clicking on the below button."/>
+    <Card.Content>
+      <Button callbackId="open-modal" variant="outline" leadingIcon="AdjustmentsIcon">Edit config</Button>
+    </Card.Content>
+  {% endif %}
+</Card>

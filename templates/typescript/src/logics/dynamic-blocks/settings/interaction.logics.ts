@@ -1,0 +1,66 @@
+import { InteractionType, WebhookContext, WebhookStatus, WebhookType } from '@enums'
+import {
+  InteractionInput,
+  InteractionWebhook,
+  InteractionWebhookResponse,
+} from '@interfaces'
+import { NetworkSettings } from '@prisma/client'
+import { NetworkRepository } from '@repositories'
+import { Logger } from '@utils'
+
+import { getInteractionNotSupportedError } from '../../error.logics'
+
+import { getCallbackResponse } from './callback.logics'
+import { getNetworkSettingsSlate } from './slate.logics'
+
+const logger = new Logger(`DynamicBlock/Settings/InteractionLogics`)
+
+const getNetworkSettingsInteractionResponse = async (options: {
+  networkId: string
+  data: InteractionInput<NetworkSettings>
+}): Promise<InteractionWebhookResponse> => {
+  logger.verbose('getNetworkSettingsInteractionResponse called', { options })
+
+  const {
+    networkId,
+    data: { interactionId, callbackId },
+  } = options
+
+  const network = await NetworkRepository.findUniqueOrThrow(networkId)
+
+  if (callbackId) {
+    return getCallbackResponse({ network, data: options.data })
+  }
+
+  return {
+    type: WebhookType.Interaction,
+    status: WebhookStatus.Succeeded,
+    data: {
+      interactions: [
+        {
+          id: interactionId,
+          type: InteractionType.Show,
+          slate: await getNetworkSettingsSlate(network.settings),
+        },
+      ],
+    },
+  }
+}
+
+export const getSettingsInteractionResponse = async (
+  webhook: InteractionWebhook,
+): Promise<InteractionWebhookResponse> => {
+  logger.verbose('getSettingsInteractionResponse called', { webhook })
+
+  const { networkId, context, data } = webhook
+
+  switch (context) {
+    case WebhookContext.Network:
+      return getNetworkSettingsInteractionResponse({
+        networkId,
+        data: data as InteractionInput<NetworkSettings>,
+      })
+    default:
+      return getInteractionNotSupportedError('context', context)
+  }
+}

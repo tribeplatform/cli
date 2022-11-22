@@ -1,0 +1,9 @@
+<Form callbackId="modal-save" defaultValues='{{jsonSettings}}'>
+  <Container size="lg" spacing="sm">
+    <Input required name="toastMessage" label="Toast message" placeholder="i.e. My toast!" helperText="You can set any message you want."/>
+    <Select required name="toastStatus" label="Toast status" helperText="Select the status of your toast. [Learn more](https://bettermode.com)" items='{{toastStatuses}}'/>
+    <Input name="redirectionUrl" label="Redirect URL"/>
+    <Toggle name="externalRedirect" label="Redirect to the URL in a new tab" helperText="By enabling this option, the redirection will work in a new tab."/>
+    <Button type="submit" variant="primary">Save</Button>
+  </Container>
+</Form>
