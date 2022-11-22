@@ -17,6 +17,23 @@ model Network {
   domain String @unique
   name String
   graphqlUrl String
+
+  settings NetworkSettings?
+}
+
+type NetworkSettings {
+  toastMessage String?
+  toastStatus ToastStatus?
+  redirectionUrl String
+  externalRedirect Boolean @default(false)
+}
+
+enum ToastStatus {
+  ERROR
+  WARNING
+  SUCCESS
+  INFO
+  NEUTRAL
 }
 
 model Member {
