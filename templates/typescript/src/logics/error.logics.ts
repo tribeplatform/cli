@@ -15,5 +15,5 @@ export const getInteractionNotSupportedError = (
   type: WebhookType.Interaction,
   status: WebhookStatus.Failed,
   errorCode: ErrorCode.InvalidParameter,
-  errorMessage: `The interaction is not supported. ${parameterValue} is not a supported for ${parameterKey}.`,
+  errorMessage: `The interaction is not supported. '${parameterValue}' is not a supported value for '${parameterKey}'.`,
 })
