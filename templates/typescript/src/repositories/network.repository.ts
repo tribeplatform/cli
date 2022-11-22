@@ -1,22 +1,22 @@
-import { Network, PrismaClient } from '@prisma/client'
+import { Network, Prisma, PrismaClient } from '@prisma/client'
 
 const client = new PrismaClient()
 
-type NetworkWithoutId = Omit<Network, 'id'>
-type PartialNetworkWithoutId = Partial<NetworkWithoutId>
-
 export const NetworkRepository = {
-  create: (network: NetworkWithoutId): Promise<Network> => {
-    return client.network.create({ data: network })
+  create: (data: Prisma.NetworkCreateArgs['data']): Promise<Network> => {
+    return client.network.create({ data })
   },
-  update: (networkId: string, data: PartialNetworkWithoutId): Promise<Network> => {
+  update: (
+    networkId: string,
+    data: Prisma.NetworkUpdateArgs['data'],
+  ): Promise<Network> => {
     return client.network.update({ where: { networkId }, data })
   },
-  upsert: (network: NetworkWithoutId): Promise<Network> => {
+  upsert: (data: Prisma.NetworkCreateArgs['data']): Promise<Network> => {
     return client.network.upsert({
-      create: network,
-      update: network,
-      where: { networkId: network.networkId },
+      create: data,
+      update: data,
+      where: { networkId: data.networkId },
     })
   },
   delete: (networkId: string): Promise<Network> => {
@@ -24,5 +24,8 @@ export const NetworkRepository = {
   },
   findMany: (): Promise<Network[]> => {
     return client.network.findMany()
+  },
+  findUniqueOrThrow: (networkId: string): Promise<Network> => {
+    return client.network.findUniqueOrThrow({ where: { networkId } })
   },
 }
