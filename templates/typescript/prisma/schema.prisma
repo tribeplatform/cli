@@ -12,6 +12,8 @@ datasource db {
 
 model Network {
   id String @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt  DateTime   @default(now())
+  updatedAt DateTime @updatedAt
   
   networkId String @unique
   domain String @unique
@@ -38,10 +40,27 @@ enum ToastStatus {
 
 model Member {
   id String @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt  DateTime   @default(now())
+  updatedAt DateTime @updatedAt
   
   networkId String
   memberId String @unique
   email String
   name String
   refreshToken String
+}
+
+model MemberPostSettings {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt  DateTime   @default(now())
+  updatedAt DateTime @updatedAt
+  
+  networkId String
+  memberId String
+  postId String
+
+  markedAsFavorite Boolean @default(false)
+
+  @@unique([memberId, postId], name: "memberPost")
+  @@index([memberId, markedAsFavorite, createdAt(sort: Desc)])
 }
