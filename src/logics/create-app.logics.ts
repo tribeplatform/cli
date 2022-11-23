@@ -387,6 +387,7 @@ export const getCreateAppTasks = (options: {
                       search: 'signing-secret',
                       replacement: (devApp || app)?.webhookSignSecret as string,
                     },
+                    { search: 'app-slug', replacement: repoName },
                   ],
                   ['.env.development.local'],
                   { cwd },
@@ -402,6 +403,7 @@ export const getCreateAppTasks = (options: {
                       search: 'signing-secret',
                       replacement: app?.webhookSignSecret as string,
                     },
+                    { search: 'app-slug', replacement: repoName },
                     {
                       search: 'LOG_LEVEL = verbose',
                       replacement: 'LOG_LEVEL = info',
