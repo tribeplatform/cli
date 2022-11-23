@@ -7,6 +7,7 @@ import { Logger } from '@utils'
 
 import { getInteractionNotSupportedError } from '../../../error.logics'
 
+import { SettingsBlockCallback } from './constants'
 import { getNetworkSettingsModalSlate, getNetworkSettingsSlate } from './slate.logics'
 
 const logger = new Logger(`SettingsDynamicBlock`)
@@ -150,15 +151,15 @@ export const getCallbackResponse = async (options: {
   } = options
 
   switch (callbackId) {
-    case 'save':
+    case SettingsBlockCallback.Save:
       return getSaveCallbackResponse(options)
-    case 'modal-save':
+    case SettingsBlockCallback.ModalSave:
       return getModalSaveCallbackResponse(options)
-    case 'open-modal':
+    case SettingsBlockCallback.OpenModal:
       return getOpenModalCallbackResponse(options)
-    case 'open-toast':
+    case SettingsBlockCallback.OpenToast:
       return getOpenToastCallbackResponse(options)
-    case 'redirect':
+    case SettingsBlockCallback.Redirect:
       return getRedirectCallbackResponse(options)
     default:
       return getInteractionNotSupportedError('callbackId', callbackId)

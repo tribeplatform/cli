@@ -3,6 +3,7 @@ import { Logger } from '@utils'
 
 import { getInteractionNotSupportedError } from '../../error.logics'
 
+import { DynamicBlock } from './constants'
 import { getSettingsInteractionResponse } from './settings'
 
 const logger = new Logger(`DynamicBlock`)
@@ -17,7 +18,7 @@ export const getDynamicBlockInteractionResponse = async (
   } = webhook
 
   switch (dynamicBlockKey) {
-    case 'settings':
+    case DynamicBlock.Settings:
       return getSettingsInteractionResponse(webhook)
     default:
       return getInteractionNotSupportedError('dynamicBlockKey', dynamicBlockKey)
