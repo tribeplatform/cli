@@ -218,6 +218,7 @@ export const createApp = async (options: {
           termsOfServiceUrl: officialPartner
             ? `https://bettermode.io/terms-of-service`
             : null,
+          webhookSubscriptions: ['network.updated'],
         },
       },
       fields: {

@@ -1,5 +1,6 @@
 import { ErrorCode, WebhookStatus } from '@enums'
 import { GeneralWebhookResponse, SubscriptionWebhook } from '@interfaces'
+import { EventNoun } from '@tribeplatform/gql-client/global-types'
 import { Network } from '@tribeplatform/gql-client/types'
 import { Logger } from '@utils'
 
@@ -18,7 +19,7 @@ export const handleSubscriptionWebhook = async (
 
   try {
     switch (noun) {
-      case 'NETWORK':
+      case EventNoun.NETWORK:
         await handleNetworkSubscription(webhook as SubscriptionWebhook<Network>)
         break
       default:
