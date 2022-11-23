@@ -10,6 +10,7 @@ import {
 } from '@interfaces'
 import {
   getChallengeResponse,
+  getShortcutStatesResponse,
   handleFederatedSearchWebhook,
   handleInstalledWebhook,
   handleInteractionWebhook,
@@ -43,6 +44,8 @@ export class WebhookController {
         return handleUninstalledWebhook(webhook)
       case WebhookType.Subscription:
         return handleSubscriptionWebhook(webhook)
+      case WebhookType.ShortcutsStates:
+        return getShortcutStatesResponse(webhook)
       default:
         this.logger.verbose('Received unknown webhook', webhook)
         return {

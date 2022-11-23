@@ -6,6 +6,9 @@ import { Logger } from '@utils'
 
 import { getInteractionNotSupportedError } from '../../../error.logics'
 
+import { MarkAsFavoriteState } from './constants'
+import { getMarkAsFavoriteState } from './states.logics'
+
 const logger = new Logger(`MarkAsFavoriteShortcut`)
 
 export const getMarkAsFavoriteInteractionResponse = async (
@@ -15,7 +18,7 @@ export const getMarkAsFavoriteInteractionResponse = async (
 
   const {
     networkId,
-    data: { interactionId, shortcutState, actorId },
+    data: { interactionId, actorId },
     context,
     entityId,
   } = webhook
@@ -24,8 +27,13 @@ export const getMarkAsFavoriteInteractionResponse = async (
     return getInteractionNotSupportedError('context', context)
   }
 
-  switch (shortcutState) {
-    case 'unmarked':
+  const memberPostSettings = await MemberPostSettingsRepository.findUniqueOrThrow(
+    actorId,
+    entityId,
+  )
+
+  switch (getMarkAsFavoriteState({ memberPostSettings })) {
+    case MarkAsFavoriteState.Unmarked:
       await MemberPostSettingsRepository.upsert(actorId, entityId, {
         networkId,
         markedAsFavorite: true,
@@ -45,7 +53,7 @@ export const getMarkAsFavoriteInteractionResponse = async (
           ],
         },
       }
-    case 'marked':
+    case MarkAsFavoriteState.Marked:
       await MemberPostSettingsRepository.upsert(actorId, entityId, {
         networkId,
         markedAsFavorite: false,

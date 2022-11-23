@@ -5,6 +5,9 @@ import { Logger } from '@utils'
 import { getDynamicBlockInteractionResponse } from './dynamic-blocks'
 import { getShortcutInteractionResponse } from './shortcuts'
 
+export * from './dynamic-blocks'
+export * from './shortcuts'
+
 const logger = new Logger(`Interaction`)
 
 export const handleInteractionWebhook = async (
