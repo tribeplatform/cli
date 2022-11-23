@@ -31,4 +31,7 @@ export const NetworkRepository = {
   findUniqueOrThrow: (networkId: string): Promise<Network> => {
     return client.network.findUniqueOrThrow({ where: { networkId } })
   },
+  findUnique: (networkId: string): Promise<Network> => {
+    return client.network.findUnique({ where: { networkId } })
+  },
 }

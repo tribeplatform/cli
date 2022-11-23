@@ -28,4 +28,7 @@ export const MemberRepository = {
   findUniqueOrThrow: (memberId: string): Promise<Member> => {
     return client.member.findUniqueOrThrow({ where: { memberId } })
   },
+  findUnique: (memberId: string): Promise<Member> => {
+    return client.member.findUnique({ where: { memberId } })
+  },
 }

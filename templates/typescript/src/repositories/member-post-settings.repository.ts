@@ -44,4 +44,9 @@ export const MemberPostSettingsRepository = {
       where: { memberPost: { memberId, postId } },
     })
   },
+  findUnique: (memberId: string, postId: string): Promise<MemberPostSettings> => {
+    return client.memberPostSettings.findUnique({
+      where: { memberPost: { memberId, postId } },
+    })
+  },
 }
