@@ -7,7 +7,7 @@ import { getSettingsInteractionResponse } from './settings'
 
 const logger = new Logger(`DynamicBlock`)
 
-export const getDynamicBlockResponse = async (
+export const getDynamicBlockInteractionResponse = async (
   webhook: InteractionWebhook,
 ): Promise<InteractionWebhookResponse> => {
   logger.debug('getDynamicBlockResponse called', { webhook })

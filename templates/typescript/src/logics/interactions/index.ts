@@ -2,7 +2,8 @@ import { ErrorCode, WebhookStatus } from '@enums'
 import { InteractionWebhook, InteractionWebhookResponse } from '@interfaces'
 import { Logger } from '@utils'
 
-import { getDynamicBlockResponse } from './dynamic-blocks'
+import { getDynamicBlockInteractionResponse } from './dynamic-blocks'
+import { getShortcutInteractionResponse } from './shortcuts'
 
 const logger = new Logger(`Interaction`)
 
@@ -12,11 +13,13 @@ export const handleInteractionWebhook = async (
   logger.debug('handleInteractionWebhook called', { webhook })
 
   const {
-    data: { dynamicBlockKey },
+    data: { dynamicBlockKey, shortcutKey },
   } = webhook
 
   if (dynamicBlockKey) {
-    return getDynamicBlockResponse(webhook)
+    return getDynamicBlockInteractionResponse(webhook)
+  } else if (shortcutKey) {
+    return getShortcutInteractionResponse(webhook)
   }
 
   return {
