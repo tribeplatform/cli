@@ -6,6 +6,7 @@ import {
   DefaultDynamicBlockKeys,
   DynamicBlock,
   Network,
+  PermissionContext,
   Shortcut,
   StoreItemStanding,
 } from '@tribeplatform/gql-client/global-types'
@@ -219,6 +220,25 @@ export const createApp = async (options: {
             ? `https://bettermode.io/terms-of-service`
             : null,
           webhookSubscriptions: ['network.updated'],
+          dynamicBlocks: [{ key: DefaultDynamicBlockKeys.settings }],
+          shortcuts: [
+            {
+              key: 'mark-as-favorite',
+              name: 'Mark as favorite',
+              faviconId: 'bookmark',
+              context: PermissionContext.POST,
+              states: [
+                {
+                  state: 'unmarked',
+                },
+                {
+                  state: 'marked',
+                  name: 'Remove from favorites',
+                  faviconId: 'solid:bookmark',
+                },
+              ],
+            },
+          ],
         },
       },
       fields: {
@@ -228,18 +248,6 @@ export const createApp = async (options: {
       },
     },
   })
-  await client.mutation({
-    name: 'enableDefaultDynamicBlock',
-    args: {
-      variables: {
-        appId: app.id,
-        key: DefaultDynamicBlockKeys.settings,
-        input: {},
-      },
-      fields: 'basic',
-    },
-  })
-
   return app
 }
 
