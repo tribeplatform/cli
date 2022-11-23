@@ -22,8 +22,7 @@ export const handleInstalledWebhook = async (
     },
   } = webhook
   try {
-    await NetworkRepository.upsert({
-      networkId,
+    await NetworkRepository.upsert(networkId, {
       name,
       domain,
       graphqlUrl,

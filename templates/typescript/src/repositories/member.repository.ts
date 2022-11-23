@@ -9,18 +9,21 @@ export const MemberRepository = {
   update: (memberId: string, data: Prisma.MemberUpdateArgs['data']): Promise<Member> => {
     return client.member.update({ where: { memberId }, data })
   },
-  upsert: (data: Prisma.MemberCreateArgs['data']): Promise<Member> => {
+  upsert: (
+    memberId: string,
+    data: Omit<Prisma.MemberCreateArgs['data'], 'memberId'>,
+  ): Promise<Member> => {
     return client.member.upsert({
-      create: data,
+      create: { memberId, ...data },
       update: data,
-      where: { memberId: data.memberId },
+      where: { memberId },
     })
   },
   delete: (memberId: string): Promise<Member> => {
     return client.member.delete({ where: { memberId } })
   },
-  findMany: (): Promise<Member[]> => {
-    return client.member.findMany()
+  findMany: (args?: Prisma.MemberFindManyArgs): Promise<Member[]> => {
+    return client.member.findMany(args)
   },
   findUniqueOrThrow: (memberId: string): Promise<Member> => {
     return client.member.findUniqueOrThrow({ where: { memberId } })

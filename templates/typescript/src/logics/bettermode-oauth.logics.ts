@@ -60,8 +60,7 @@ export const getBettermodeOauthTokens = async (
   })
 
   const member = await client.query({ name: 'authMember', args: 'basic' })
-  await MemberRepository.upsert({
-    memberId: member.id,
+  await MemberRepository.upsert(member.id, {
     networkId: member.networkId,
     email: member.email,
     name: member.name,

@@ -12,18 +12,21 @@ export const NetworkRepository = {
   ): Promise<Network> => {
     return client.network.update({ where: { networkId }, data })
   },
-  upsert: (data: Prisma.NetworkCreateArgs['data']): Promise<Network> => {
+  upsert: (
+    networkId: string,
+    data: Omit<Prisma.NetworkCreateArgs['data'], 'networkId'>,
+  ): Promise<Network> => {
     return client.network.upsert({
-      create: data,
+      create: { networkId, ...data },
       update: data,
-      where: { networkId: data.networkId },
+      where: { networkId },
     })
   },
   delete: (networkId: string): Promise<Network> => {
     return client.network.delete({ where: { networkId } })
   },
-  findMany: (): Promise<Network[]> => {
-    return client.network.findMany()
+  findMany: (args?: Prisma.NetworkFindManyArgs): Promise<Network[]> => {
+    return client.network.findMany(args)
   },
   findUniqueOrThrow: (networkId: string): Promise<Network> => {
     return client.network.findUniqueOrThrow({ where: { networkId } })
