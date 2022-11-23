@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@prisma/client": "^4.6.1",
-    "@tribeplatform/gql-client": "^2.2.7",
+    "@tribeplatform/gql-client": "^2.2.8",
     "@tribeplatform/node-logger": "^1.0.12",
     "@tribeplatform/slate-kit": "^1.2.3",
     "axios": "^1.1.3",
