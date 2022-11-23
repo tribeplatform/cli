@@ -17,5 +17,5 @@
   "editor.formatOnSave": true,
   "editor.formatOnSaveMode": "file",
   "eslint.format.enable": true,
-  "cSpell.words": ["dtos", "middlewares", "openapi", "tribeplatform", "uninstallation"]
+  "cSpell.words": ["dtos", "middlewares", "openapi", "bettermode", "uninstallation"]
 }
