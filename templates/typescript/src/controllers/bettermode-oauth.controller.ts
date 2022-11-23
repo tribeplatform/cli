@@ -1,6 +1,6 @@
 import { OAuthDto, OAuthTokensDto, OAuthTokensInputDto } from '@dtos'
+import { getBettermodeOauthTokens, getBettermodeOAuthUrl } from '@logics'
 import { validationMiddleware } from '@middlewares'
-import { BettermodeOAuthService } from '@services'
 import { Logger } from '@utils'
 import { Response } from 'express'
 import {
@@ -17,7 +17,6 @@ import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi'
 
 @Controller('/bettermode/oauth')
 export class BettermodeOAuthController {
-  readonly oauthService = new BettermodeOAuthService()
   readonly logger = new Logger(BettermodeOAuthController.name)
 
   @Get()
@@ -31,7 +30,7 @@ export class BettermodeOAuthController {
   ): Promise<Response> {
     this.logger.verbose('Received oauth redirect request', input)
 
-    response.redirect(this.oauthService.getRedirectUrl(input))
+    response.redirect(getBettermodeOAuthUrl(input))
     return response
   }
 
@@ -43,6 +42,6 @@ export class BettermodeOAuthController {
   async tokens(@Body() input: OAuthTokensInputDto): Promise<OAuthTokensDto> {
     this.logger.verbose('Received oauth tokens request', input)
 
-    return this.oauthService.getTokens(input)
+    return getBettermodeOauthTokens(input)
   }
 }

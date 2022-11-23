@@ -8,8 +8,15 @@ import {
   Webhook,
   WebhookResponse,
 } from '@interfaces'
+import {
+  getChallengeResponse,
+  handleFederatedSearchWebhook,
+  handleInstalledWebhook,
+  handleInteractionWebhook,
+  handleSubscriptionWebhook,
+  handleUninstalledWebhook,
+} from '@logics'
 import { signatureMiddleware, validationMiddleware } from '@middlewares'
-import { WebhookService } from '@services'
 import { Logger } from '@utils'
 import { Body, Controller, HttpCode, Post, UseBefore } from 'routing-controllers'
 import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi'
@@ -17,7 +24,6 @@ import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi'
 @Controller('/webhook')
 @UseBefore(signatureMiddleware)
 export class WebhookController {
-  readonly webhookService = new WebhookService()
   readonly logger = new Logger(WebhookController.name)
 
   @Post()
@@ -30,13 +36,13 @@ export class WebhookController {
 
     switch (webhook.type) {
       case WebhookType.Test:
-        return this.webhookService.handleTestWebhook(webhook)
+        return getChallengeResponse(webhook)
       case WebhookType.AppInstalled:
-        return this.webhookService.handleInstalledWebhook(webhook)
+        return handleInstalledWebhook(webhook)
       case WebhookType.AppUninstalled:
-        return this.webhookService.handleUninstalledWebhook(webhook)
+        return handleUninstalledWebhook(webhook)
       case WebhookType.Subscription:
-        return this.webhookService.handleSubscriptionWebhook(webhook)
+        return handleSubscriptionWebhook(webhook)
       default:
         this.logger.verbose('Received unknown webhook', webhook)
         return {
@@ -56,7 +62,7 @@ export class WebhookController {
   ): Promise<FederatedSearchWebhookResponse> {
     this.logger.verbose('Received federated search request', webhook)
 
-    return this.webhookService.handleFederatedSearchWebhook(webhook)
+    return handleFederatedSearchWebhook(webhook)
   }
 
   @Post('/interaction')
@@ -69,6 +75,6 @@ export class WebhookController {
   ): Promise<InteractionWebhookResponse> {
     this.logger.verbose('Received interaction request', webhook)
 
-    return this.webhookService.handleInteractionWebhook(webhook)
+    return handleInteractionWebhook(webhook)
   }
 }
