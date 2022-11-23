@@ -1,4 +1,5 @@
-import { EventVerb, PinnedInto, SessionClient, SpaceType } from '@enums'
+import { PinnedInto, SessionClient, SpaceType } from '@enums'
+import { EventVerb } from '@tribeplatform/gql-client/global-types'
 
 export interface SessionInfo {
   ip: string

@@ -1,7 +1,6 @@
 export * from './app-installation-context.enum'
 export * from './app-installation-status.enum'
 export * from './error-code.enum'
-export * from './event-verb.enum'
 export * from './interaction-type.enum'
 export * from './pinned-into.enum'
 export * from './primary-scope.enum'

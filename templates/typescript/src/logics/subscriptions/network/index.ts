@@ -1,5 +1,5 @@
-import { EventVerb } from '@enums'
 import { SubscriptionWebhook } from '@interfaces'
+import { EventVerb } from '@tribeplatform/gql-client/global-types'
 import { Network } from '@tribeplatform/gql-client/types'
 import { Logger } from '@utils'
 
@@ -17,7 +17,7 @@ export const handleNetworkSubscription = async (
   } = webhook
 
   switch (verb) {
-    case EventVerb.Updated:
+    case EventVerb.UPDATED:
       await handleNetworkUpdatedSubscription(webhook)
       break
     default:
