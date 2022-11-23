@@ -5,6 +5,7 @@ import { AppInstallation, AppSettings } from './app.interface'
 import { BaseEventObject, Event } from './event.interface'
 import { FederatedSearch } from './federated-search.interface'
 import { InteractionInput } from './interaction.interface'
+import { ShortcutStatesInput } from './shortcut-states.interface'
 
 export interface Challenge {
   challenge: string
@@ -44,6 +45,11 @@ export interface InteractionWebhook extends BaseWebhook {
   data: InteractionInput
 }
 
+export interface ShortcutStatesWebhook extends BaseWebhook {
+  type: WebhookType.ShortcutsStates
+  data: ShortcutStatesInput
+}
+
 export interface SubscriptionWebhook<T extends BaseEventObject = BaseEventObject>
   extends BaseWebhook {
   type: WebhookType.Subscription
@@ -56,4 +62,5 @@ export type Webhook =
   | AppUninstalledWebhook
   | FederatedSearchWebhook
   | InteractionWebhook
+  | ShortcutStatesWebhook
   | SubscriptionWebhook

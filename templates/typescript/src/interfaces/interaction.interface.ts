@@ -33,7 +33,6 @@ export interface InteractionInput<T = { [key: string]: unknown }> {
   preview?: boolean
   dynamicBlockKey?: string
   shortcutKey?: string
-  shortcutState?: string
   callbackId?: string
   inputs?: T
 }

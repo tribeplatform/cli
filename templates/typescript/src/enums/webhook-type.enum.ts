@@ -5,4 +5,5 @@ export enum WebhookType {
   AppInstalled = 'APP_INSTALLED',
   AppUninstalled = 'APP_UNINSTALLED',
   Interaction = 'INTERACTION',
+  ShortcutsStates = 'SHORTCUTS_STATES',
 }
