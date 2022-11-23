@@ -28,7 +28,6 @@
       "@interfaces": ["interfaces"],
       "@middlewares": ["middlewares"],
       "@repositories": ["repositories"],
-      "@services": ["services"],
       "@logics": ["logics"],
       "@utils": ["utils"],
       "@/*": ["*"]
