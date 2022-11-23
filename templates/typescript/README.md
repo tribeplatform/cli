@@ -61,6 +61,7 @@ yarn db:generate
 ### Without Docker
 
 ```bash
+yarn docker:dev:up
 yarn dev
 ```
 
