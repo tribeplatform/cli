@@ -1,5 +1,5 @@
-import { WebhookContext } from '@enums'
 import { CustomSettings } from '@interfaces'
+import { PermissionContext } from '@tribeplatform/gql-client/types'
 import { IsEnum, IsString, MaxLength } from 'class-validator'
 
 export class AppSettingDto {
@@ -15,8 +15,8 @@ export class AppSettingDto {
   @MaxLength(50)
   networkId: string
 
-  @IsEnum(WebhookContext)
-  context: WebhookContext
+  @IsEnum(PermissionContext)
+  context: PermissionContext
 
   @IsString()
   @MaxLength(100)

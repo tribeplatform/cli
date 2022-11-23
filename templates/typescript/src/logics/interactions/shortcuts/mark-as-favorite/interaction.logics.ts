@@ -1,4 +1,4 @@
-import { InteractionType, WebhookContext, WebhookStatus, WebhookType } from '@enums'
+import { InteractionType, WebhookStatus, WebhookType } from '@enums'
 import { InteractionWebhook, InteractionWebhookResponse } from '@interfaces'
 import { MemberPostSettingsRepository } from '@repositories'
 import { PermissionContext } from '@tribeplatform/gql-client/types'
@@ -20,7 +20,7 @@ export const getMarkAsFavoriteInteractionResponse = async (
     entityId,
   } = webhook
 
-  if (context !== WebhookContext.Post) {
+  if (context !== PermissionContext.POST) {
     return getInteractionNotSupportedError('context', context)
   }
 

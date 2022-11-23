@@ -1,13 +1,9 @@
-import {
-  AppInstallationContext,
-  AppInstallationStatus,
-  PrimaryScope,
-  WebhookContext,
-} from '@enums'
+import { AppInstallationContext, AppInstallationStatus, PrimaryScope } from '@enums'
 import {
   NetworkMembership,
   NetworkStatus,
   NetworkVisibility,
+  PermissionContext,
   PlanName,
 } from '@tribeplatform/gql-client/types'
 
@@ -18,7 +14,7 @@ export class AppSettings {
   id: string
   appId: string
   networkId: string
-  context: WebhookContext
+  context: PermissionContext
   entityId: string
   settings: CustomSettings
 }

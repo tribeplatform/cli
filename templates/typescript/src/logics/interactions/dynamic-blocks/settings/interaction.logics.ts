@@ -1,4 +1,4 @@
-import { InteractionType, WebhookContext, WebhookStatus, WebhookType } from '@enums'
+import { InteractionType, WebhookStatus, WebhookType } from '@enums'
 import {
   InteractionInput,
   InteractionWebhook,
@@ -6,6 +6,7 @@ import {
 } from '@interfaces'
 import { NetworkSettings } from '@prisma/client'
 import { NetworkRepository } from '@repositories'
+import { PermissionContext } from '@tribeplatform/gql-client/types'
 import { Logger } from '@utils'
 
 import { getInteractionNotSupportedError } from '../../../error.logics'
@@ -55,7 +56,7 @@ export const getSettingsInteractionResponse = async (
   const { networkId, context, data } = webhook
 
   switch (context) {
-    case WebhookContext.Network:
+    case PermissionContext.NETWORK:
       return getNetworkSettingsInteractionResponse({
         networkId,
         data: data as InteractionInput<NetworkSettings>,
