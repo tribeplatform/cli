@@ -8,18 +8,18 @@ import { NetworkSettings } from '@prisma/client'
 import { NetworkRepository } from '@repositories'
 import { Logger } from '@utils'
 
-import { getInteractionNotSupportedError } from '../../error.logics'
+import { getInteractionNotSupportedError } from '../../../error.logics'
 
 import { getCallbackResponse } from './callback.logics'
 import { getNetworkSettingsSlate } from './slate.logics'
 
-const logger = new Logger(`DynamicBlock/Settings/InteractionLogics`)
+const logger = new Logger(`SettingsDynamicBlock`)
 
 const getNetworkSettingsInteractionResponse = async (options: {
   networkId: string
   data: InteractionInput<NetworkSettings>
 }): Promise<InteractionWebhookResponse> => {
-  logger.verbose('getNetworkSettingsInteractionResponse called', { options })
+  logger.debug('getNetworkSettingsInteractionResponse called', { options })
 
   const {
     networkId,
@@ -50,7 +50,7 @@ const getNetworkSettingsInteractionResponse = async (options: {
 export const getSettingsInteractionResponse = async (
   webhook: InteractionWebhook,
 ): Promise<InteractionWebhookResponse> => {
-  logger.verbose('getSettingsInteractionResponse called', { webhook })
+  logger.debug('getSettingsInteractionResponse called', { webhook })
 
   const { networkId, context, data } = webhook
 

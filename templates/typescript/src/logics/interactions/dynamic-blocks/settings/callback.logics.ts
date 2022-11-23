@@ -5,17 +5,17 @@ import { NetworkRepository } from '@repositories'
 import { PermissionContext } from '@tribeplatform/gql-client/types'
 import { Logger } from '@utils'
 
-import { getInteractionNotSupportedError } from '../../error.logics'
+import { getInteractionNotSupportedError } from '../../../error.logics'
 
 import { getNetworkSettingsModalSlate, getNetworkSettingsSlate } from './slate.logics'
 
-const logger = new Logger(`DynamicBlock/Settings/CallbackLogics`)
+const logger = new Logger(`SettingsDynamicBlock`)
 
 const getSaveCallbackResponse = async (options: {
   network: Network
   data: InteractionInput<NetworkSettings>
 }): Promise<InteractionWebhookResponse> => {
-  logger.verbose('getNetworkSettingsInteractionCallbackResponse called', { options })
+  logger.debug('getNetworkSettingsInteractionCallbackResponse called', { options })
 
   const {
     network,
@@ -44,7 +44,7 @@ const getModalSaveCallbackResponse = async (options: {
   network: Network
   data: InteractionInput<NetworkSettings>
 }): Promise<InteractionWebhookResponse> => {
-  logger.verbose('getNetworkSettingsInteractionCallbackResponse called', { options })
+  logger.debug('getNetworkSettingsInteractionCallbackResponse called', { options })
 
   const {
     network,
@@ -143,7 +143,7 @@ export const getCallbackResponse = async (options: {
   network: Network
   data: InteractionInput<NetworkSettings>
 }): Promise<InteractionWebhookResponse> => {
-  logger.verbose('getCallbackResponse called', { options })
+  logger.debug('getCallbackResponse called', { options })
 
   const {
     data: { callbackId },
@@ -157,7 +157,6 @@ export const getCallbackResponse = async (options: {
     case 'open-modal':
       return getOpenModalCallbackResponse(options)
     case 'open-toast':
-      logger.verbose('shit', { shit: await getOpenToastCallbackResponse(options) })
       return getOpenToastCallbackResponse(options)
     case 'redirect':
       return getRedirectCallbackResponse(options)

@@ -6,12 +6,12 @@ import { SlateDto } from '@tribeplatform/slate-kit/dtos'
 import { Logger } from '@utils'
 import { readFile } from 'fs-extra'
 
-const logger = new Logger(`DynamicBlock/Settings/SlateLogics`)
+const logger = new Logger(`SettingsDynamicBlock`)
 
 export const getNetworkSettingsSlate = async (
   settings: NetworkSettings,
 ): Promise<SlateDto> => {
-  logger.verbose('getNetworkSettingsSlate called', { settings })
+  logger.debug('getNetworkSettingsSlate called', { settings })
 
   const liquid = await readFile(
     join(__dirname, 'slates', 'network.settings.liquid'),
@@ -38,7 +38,7 @@ export const getNetworkSettingsSlate = async (
 export const getNetworkSettingsModalSlate = async (
   settings: NetworkSettings,
 ): Promise<SlateDto> => {
-  logger.verbose('getNetworkSettingsModalSlate called', { settings })
+  logger.debug('getNetworkSettingsModalSlate called', { settings })
 
   const liquid = await readFile(
     join(__dirname, 'slates', 'network-modal.settings.liquid'),
