@@ -31,7 +31,6 @@ export type CreateAppCLIInputs = {
   authorUrl: string
   license: string
   template: AppTemplate
-  withDynamicSettings: boolean
 }
 
 export const getCreateAppInputs = (options: {
@@ -126,12 +125,7 @@ export const getCreateAppInputs = (options: {
         name: APP_TEMPLATE_CHOICES[template as AppTemplate],
         value: template,
       })),
-    },
-    {
-      name: 'withDynamicSettings',
-      type: 'confirm',
-      message: `Do you want to add dynamic settings to your app`,
-      default: true,
+      when: Object.keys(APP_TEMPLATE_CHOICES).length > 1,
     },
     {
       name: 'repoOwner',
@@ -199,10 +193,9 @@ export const createApp = async (options: {
   client: CliClient
   domain: string
   officialPartner: boolean
-  withDynamicSettings: boolean
   input: CreateAppInput
 }): Promise<App> => {
-  const { client, domain, officialPartner, withDynamicSettings, input } = options
+  const { client, domain, officialPartner, input } = options
   const { name, networkId, slug, description, authorName, authorUrl, standing } = input
   const app = await client.mutation({
     name: 'createApp',
@@ -234,19 +227,17 @@ export const createApp = async (options: {
       },
     },
   })
-  if (withDynamicSettings) {
-    await client.mutation({
-      name: 'enableDefaultDynamicBlock',
-      args: {
-        variables: {
-          appId: app.id,
-          key: DefaultDynamicBlockKeys.settings,
-          input: {},
-        },
-        fields: 'basic',
+  await client.mutation({
+    name: 'enableDefaultDynamicBlock',
+    args: {
+      variables: {
+        appId: app.id,
+        key: DefaultDynamicBlockKeys.settings,
+        input: {},
       },
-    })
-  }
+      fields: 'basic',
+    },
+  })
 
   return app
 }
@@ -275,7 +266,6 @@ export const getCreateAppTasks = (options: {
     domain,
     name,
     template,
-    withDynamicSettings,
     repoOwner,
     repoName,
     authorName,
@@ -316,7 +306,6 @@ export const getCreateAppTasks = (options: {
           client,
           domain,
           officialPartner,
-          withDynamicSettings,
           input,
         })
       },
@@ -333,7 +322,6 @@ export const getCreateAppTasks = (options: {
                 client,
                 domain,
                 officialPartner,
-                withDynamicSettings,
                 input,
               })
             },
@@ -345,7 +333,6 @@ export const getCreateAppTasks = (options: {
                 client: devClient as CliClient,
                 domain: devDomain as string,
                 officialPartner,
-                withDynamicSettings,
                 input: {
                   ...input,
                   networkId: devNetworkId as string,
