@@ -4,6 +4,12 @@ import {
   PrimaryScope,
   WebhookContext,
 } from '@enums'
+import {
+  NetworkMembership,
+  NetworkStatus,
+  NetworkVisibility,
+  PlanName,
+} from '@tribeplatform/gql-client/types'
 
 import { CustomSettings } from './settings.interface'
 import { TemplateMapping } from './template-mapping.interface'
@@ -22,9 +28,30 @@ export interface AppInstallationTemplatesMappings {
   memberTypes?: TemplateMapping[]
 }
 
+export interface NetworkInfo {
+  id: string
+  createdAt: Date
+
+  graphqlUrl: string
+  domain: string
+  domainSubfolder?: string
+  aliases?: string[]
+
+  membership: NetworkMembership
+  plan: PlanName
+  status: NetworkStatus
+  visibility: NetworkVisibility
+
+  name: string
+  logoId?: string
+  faviconId?: string
+  description?: string
+}
+
 export interface AppInstallation {
   id: string
   networkId: string
+  networkInfo: NetworkInfo
 
   appId: string
   appVersion?: string
