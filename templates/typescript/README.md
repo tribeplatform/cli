@@ -1,13 +1,47 @@
-# app-name
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="app-repo">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="images/dark-logo.png">
+      <img src="images/light-logo.png" alt="Logo" width="80" height="80">
+    </picture>
+  </a>
 
-app-description
-Powered by [Bettermode CLI](https://github.com/tribeplatform/cli)
+  <h3 align="center">app-name</h3>
 
-- [Installation](#installation)
-- [Running](#running)
-- [Troubleshooting](#troubleshooting)
+  <p align="center">
+    app-description
+    <br />
+    Powered by <a href="app-repo">@Bettermode/CLI</a>
+    <br />
+    <br />
+    <a href="app-repo">View Demo</a>
+    ·
+    <a href="app-repo/issues">Report Bug</a>
+    ·
+    <a href="app-repo/issues">Request Feature</a>
+  </p>
+</div>
 
-# Installation
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#getting-started">Getting started</a>
+      <ul>
+        <li><a href="#installation">Installation</a></li>
+        <li><a href="#running">Running</a></li>
+      </ul>
+    </li>
+    <li><a href="#troubleshooting">Troubleshooting</a></li>
+  </ol>
+</details>
+
+# Getting started
+
+## Installation
 
 It is recommended to use [nvm](https://github.com/nvm-sh/nvm) to install the correct version of node.
 
@@ -22,15 +56,15 @@ yarn install
 yarn db:generate
 ```
 
-# Running
+## Running
 
-## Without Docker
+### Without Docker
 
 ```bash
 yarn dev
 ```
 
-## With Docker
+### With Docker
 
 ```bash
 yarn docker:up

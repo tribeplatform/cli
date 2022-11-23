@@ -8,8 +8,8 @@ import { NextFunction, Response } from 'express'
 export const signatureMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const logger = new Logger(signatureMiddleware.name)
 
-  const timestamp = parseInt(req.header('x-tribe-request-timestamp'), 10)
-  const signature = req.header('x-tribe-signature')
+  const timestamp = parseInt(req.header('x-bettermode-request-timestamp'), 10)
+  const signature = req.header('x-bettermode-signature')
 
   if (IGNORE_SIGNATURE) {
     return next()
@@ -31,5 +31,5 @@ export const signatureMiddleware = (req: Request, res: Response, next: NextFunct
     logger.error(err)
   }
 
-  return next(new HttpError(403, 'The x-tribe-signature is not valid.'))
+  return next(new HttpError(403, 'The x-bettermode-signature is not valid.'))
 }

@@ -73,7 +73,7 @@ export const getCreateAppInputs = (options: {
       name: 'description',
       type: 'input',
       message: `App's description`,
-      default: 'This is my new app',
+      default: 'An awesome app that works with Bettermode platform!',
     },
     {
       name: 'slug',
@@ -430,6 +430,10 @@ export const getCreateAppTasks = (options: {
                     { search: 'app-description', replacement: description },
                     { search: 'app-author', replacement: authorName },
                     { search: 'app-license', replacement: license },
+                    {
+                      search: 'app-repo',
+                      replacement: `https://github.com/${repoOwner}/${repoName}`,
+                    },
                     {
                       search: 'app-year',
                       replacement: new Date().getFullYear().toString(),
