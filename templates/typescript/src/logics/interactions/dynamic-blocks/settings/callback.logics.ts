@@ -49,7 +49,7 @@ const getModalSaveCallbackResponse = async (options: {
 
   const {
     network,
-    data: { interactionId, inputs },
+    data: { interactionId, inputs, dynamicBlockKey },
   } = options
 
   await NetworkRepository.update(network.networkId, {
@@ -69,6 +69,7 @@ const getModalSaveCallbackResponse = async (options: {
           type: InteractionType.Reload,
           props: {
             context: PermissionContext.NETWORK,
+            dynamicBlockKeys: [dynamicBlockKey],
           },
         },
       ],
