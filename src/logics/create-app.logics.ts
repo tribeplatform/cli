@@ -14,7 +14,7 @@ import * as Listr from 'listr'
 import { join } from 'path'
 import { APP_TEMPLATE_CHOICES, lICENSES, REPO_URL } from '../constants'
 import { AppTemplate, GithubUser } from '../types'
-import { CliClient, CliError, Shell } from '../utils'
+import { CliClient, CliError, pathExists, Shell } from '../utils'
 import { getSyncAppTasks } from './sync-app.logics'
 
 export type CreateAppCLIInputs = {
@@ -31,7 +31,7 @@ export type CreateAppCLIInputs = {
   authorName: string
   authorUrl: string
   license: string
-  template: AppTemplate
+  template?: AppTemplate
 }
 
 export const getCreateAppInputs = (options: {
@@ -274,18 +274,20 @@ export const getCreateAppTasks = (options: {
     devDomain,
     domain,
     name,
-    template,
+    template: givenTemplate,
     repoOwner,
     repoName,
     authorName,
     license,
   } = input
+  const template = givenTemplate || 'typescript'
 
   const { targetDir, tmpDir } = getCreateAppTargetDirs(repoName)
   const cwd = join(process.cwd(), targetDir)
 
-  const files = Shell.find([targetDir, tmpDir], { silent: true })
-  if (files.length > 0) {
+  const targetDirExists = pathExists(join(process.cwd(), targetDir))
+  const tmpDirExists = pathExists(join(process.cwd(), tmpDir))
+  if (targetDirExists || tmpDirExists) {
     throw new CliError(`The folder \`${targetDir}\` already exists.`)
   }
 

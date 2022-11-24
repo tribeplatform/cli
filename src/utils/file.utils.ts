@@ -2,6 +2,7 @@ import {
   access,
   constants,
   mkdir,
+  pathExistsSync as fsPathExists,
   readFile as fsReadFile,
   readJson,
   stat,
@@ -15,6 +16,15 @@ export const isFileExists = async (path: string): Promise<boolean> => {
   try {
     const result = await stat(path)
     return result.isFile()
+  } catch {
+    return false
+  }
+}
+
+export const pathExists = (path: string): boolean => {
+  try {
+    const result = fsPathExists(path)
+    return result
   } catch {
     return false
   }
