@@ -27,8 +27,8 @@ export const appConfigsConverter = (
     status: app.status,
     standing: app.standing,
     description: app.description || null,
-    image: (app.image as Image)?.url,
-    favicon: (app.favicon as Image)?.url,
+    image: (app.image as Image)?.url || app.imageId || null,
+    favicon: (app.favicon as Image)?.url || app.faviconId || null,
     authorName: app.authorName || null,
     authorUrl: app.authorUrl || null,
     privacyPolicyUrl: app.privacyPolicyUrl || null,
@@ -54,16 +54,15 @@ export const getShortcutConfigs = (shortcut: Shortcut): ShortcutConfigs => ({
   entityType: shortcut.entityType || null,
   name: shortcut.name,
   description: shortcut.description || null,
-  favicon: (shortcut.favicon as Image)?.url,
+  favicon: (shortcut.favicon as Image)?.url || shortcut.faviconId || null,
   key: shortcut.key,
   interactionUrl: shortcut.interactionUrl || null,
   states:
     shortcut.states?.map(shortcutState => ({
       state: shortcutState.state,
-      condition: shortcutState.condition,
       name: shortcutState.name || null,
       description: shortcutState.description || null,
-      favicon: (shortcutState.favicon as Image)?.url,
+      favicon: (shortcutState.favicon as Image)?.url || shortcutState.faviconId || null,
     })) || null,
 })
 
@@ -87,8 +86,8 @@ export const dynamicBlockConfigsConverter = (
   interactionUrl: block.interactionUrl || null,
   contexts: block.contexts || null,
   description: block.description || null,
-  favicon: (block.favicon as Image)?.url,
-  image: (block.image as Image)?.url,
+  favicon: (block.favicon as Image)?.url || block.faviconId || null,
+  image: (block.image as Image)?.url || block.imageId || null,
 })
 
 export const blocksConfigsConverter = (blocks: DynamicBlock[]): LocalConfigs => ({
@@ -110,15 +109,15 @@ export const blocksConfigsConverter = (blocks: DynamicBlock[]): LocalConfigs => 
 })
 
 export const convertShortcutImages = (shortcut: ShortcutConfigs): CreateShortcutInput => {
-  const { favicon: faviconId, states, ...rest } = shortcut
+  const { favicon, states, ...rest } = shortcut
   return {
     ...rest,
-    faviconId,
+    faviconId: getImageId(favicon),
     states: states?.map(state => {
-      const { favicon: faviconId, ...rest } = state
+      const { favicon, ...rest } = state
       return {
         ...rest,
-        faviconId,
+        faviconId: getImageId(favicon),
       }
     }),
   }

@@ -225,7 +225,7 @@ export const createApp = async (options: {
             {
               key: 'mark-as-favorite',
               name: 'Mark as favorite',
-              faviconId: 'bookmark',
+              faviconId: 'QdUL1yK8f6hWkUmyJIG3S',
               context: PermissionContext.POST,
               states: [
                 {
@@ -233,8 +233,8 @@ export const createApp = async (options: {
                 },
                 {
                   state: 'marked',
-                  name: 'Remove from favorites',
-                  faviconId: 'solid:bookmark',
+                  name: 'Unmark',
+                  faviconId: '4yeqKGTzI1fRUgt7xQp64',
                 },
               ],
             },

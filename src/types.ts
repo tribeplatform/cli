@@ -21,7 +21,6 @@ export type GlobalConfigs = {
 
 export type ShortcutStateConfigs = {
   state: string
-  condition: string
 
   name: string | null
   description: string | null
