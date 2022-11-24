@@ -68,7 +68,7 @@ const getModalSaveCallbackResponse = async (options: {
           id: 'reload',
           type: InteractionType.Reload,
           props: {
-            entity: PermissionContext.NETWORK,
+            context: PermissionContext.NETWORK,
           },
         },
       ],

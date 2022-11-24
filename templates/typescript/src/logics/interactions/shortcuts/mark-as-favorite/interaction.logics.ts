@@ -27,7 +27,7 @@ export const getMarkAsFavoriteInteractionResponse = async (
     return getInteractionNotSupportedError('context', context)
   }
 
-  const memberPostSettings = await MemberPostSettingsRepository.findUniqueOrThrow(
+  const memberPostSettings = await MemberPostSettingsRepository.findUnique(
     actorId,
     entityId,
   )
@@ -47,7 +47,8 @@ export const getMarkAsFavoriteInteractionResponse = async (
               id: interactionId,
               type: InteractionType.Reload,
               props: {
-                entity: PermissionContext.POST,
+                context: PermissionContext.POST,
+                entityId,
               },
             },
           ],
@@ -67,7 +68,8 @@ export const getMarkAsFavoriteInteractionResponse = async (
               id: interactionId,
               type: InteractionType.Reload,
               props: {
-                entity: PermissionContext.POST,
+                context: PermissionContext.POST,
+                entityId,
               },
             },
           ],

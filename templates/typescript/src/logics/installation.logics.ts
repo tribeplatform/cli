@@ -21,8 +21,15 @@ export const handleInstalledWebhook = async (
       networkInfo: { id: networkId, name, domain, graphqlUrl },
     },
   } = webhook
+
   try {
-    await NetworkRepository.upsert(networkId, {
+    await NetworkRepository.delete(networkId)
+    // eslint-disable-next-line no-empty
+  } catch {}
+
+  try {
+    await NetworkRepository.create({
+      networkId,
       name,
       domain,
       graphqlUrl,

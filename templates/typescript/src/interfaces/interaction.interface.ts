@@ -18,7 +18,8 @@ export interface ModalInteractionProps {
 }
 
 export interface ReloadInteractionProps {
-  entity: PermissionContext
+  context: PermissionContext
+  entityId?: string
 }
 
 export interface RedirectInteractionProps {
