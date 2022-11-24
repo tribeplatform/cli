@@ -18,7 +18,7 @@ export interface ModalInteractionProps {
 }
 
 export interface ReloadInteractionProps {
-  context: PermissionContext
+  context?: PermissionContext
   entityId?: string
   dynamicBlockKeys?: string[]
 }

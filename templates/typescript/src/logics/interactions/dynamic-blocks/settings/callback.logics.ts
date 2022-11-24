@@ -2,7 +2,6 @@ import { InteractionType, WebhookStatus, WebhookType } from '@enums'
 import { InteractionInput, InteractionWebhookResponse } from '@interfaces'
 import { Network, NetworkSettings, ToastStatus } from '@prisma/client'
 import { NetworkRepository } from '@repositories'
-import { PermissionContext } from '@tribeplatform/gql-client/types'
 import { Logger } from '@utils'
 
 import { getInteractionNotSupportedError } from '../../../error.logics'
@@ -68,7 +67,6 @@ const getModalSaveCallbackResponse = async (options: {
           id: 'reload',
           type: InteractionType.Reload,
           props: {
-            context: PermissionContext.NETWORK,
             dynamicBlockKeys: [dynamicBlockKey],
           },
         },
