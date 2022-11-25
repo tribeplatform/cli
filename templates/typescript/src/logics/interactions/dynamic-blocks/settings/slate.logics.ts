@@ -14,7 +14,7 @@ export const getNetworkSettingsSlate = async (
   logger.debug('getNetworkSettingsSlate called', { settings })
 
   const liquid = await readFile(
-    join(__dirname, 'slates', 'network.settings.liquid'),
+    join(__dirname, 'slates', 'network-settings.slate.liquid'),
     'utf8',
   )
   const convertor = new LiquidConvertor(liquid)
@@ -41,7 +41,7 @@ export const getNetworkSettingsModalSlate = async (
   logger.debug('getNetworkSettingsModalSlate called', { settings })
 
   const liquid = await readFile(
-    join(__dirname, 'slates', 'network-modal.settings.liquid'),
+    join(__dirname, 'slates', 'network-settings-modal.slate.liquid'),
     'utf8',
   )
   const convertor = new LiquidConvertor(liquid)

@@ -5,6 +5,7 @@ import { PermissionContext } from '@tribeplatform/gql-client/types'
 import { Logger } from '@utils'
 
 import { getInteractionNotSupportedError } from '../../../error.logics'
+import { DynamicBlock } from '../../dynamic-blocks/constants'
 
 import { MarkAsFavoriteState } from './constants'
 import { getMarkAsFavoriteState } from './states.logics'
@@ -38,44 +39,32 @@ export const getMarkAsFavoriteInteractionResponse = async (
         networkId,
         markedAsFavorite: true,
       })
-      return {
-        type: WebhookType.Interaction,
-        status: WebhookStatus.Succeeded,
-        data: {
-          interactions: [
-            {
-              id: interactionId,
-              type: InteractionType.Reload,
-              props: {
-                context: PermissionContext.POST,
-                entityId,
-              },
-            },
-          ],
-        },
-      }
+      break
     case MarkAsFavoriteState.Marked:
       await MemberPostSettingsRepository.upsert(actorId, entityId, {
         networkId,
         markedAsFavorite: false,
       })
-      return {
-        type: WebhookType.Interaction,
-        status: WebhookStatus.Succeeded,
-        data: {
-          interactions: [
-            {
-              id: interactionId,
-              type: InteractionType.Reload,
-              props: {
-                context: PermissionContext.POST,
-                entityId,
-              },
-            },
-          ],
-        },
-      }
+      break
     default:
       return getInteractionNotSupportedError('context', context)
+  }
+
+  return {
+    type: WebhookType.Interaction,
+    status: WebhookStatus.Succeeded,
+    data: {
+      interactions: [
+        {
+          id: interactionId,
+          type: InteractionType.Reload,
+          props: {
+            context: PermissionContext.POST,
+            entityId,
+            dynamicBlockKeys: [DynamicBlock.FavoritePosts],
+          },
+        },
+      ],
+    },
   }
 }
