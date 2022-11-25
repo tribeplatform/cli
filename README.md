@@ -23,7 +23,7 @@ $ npm install -g @tribeplatform/cli
 $ bettermode COMMAND
 running command...
 $ bettermode (--version)
-@tribeplatform/cli/0.0.10 darwin-arm64 node-v16.13.0
+@tribeplatform/cli/0.0.11 darwin-arm64 node-v16.13.0
 $ bettermode --help [COMMAND]
 USAGE
   $ bettermode COMMAND
@@ -453,7 +453,7 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/login.ts](https://github.com/tribeplatform/cli/blob/v0.0.10/dist/commands/login.ts)_
+_See code: [dist/commands/login.ts](https://github.com/tribeplatform/cli/blob/v0.0.11/dist/commands/login.ts)_
 
 ## `bettermode logout`
 
@@ -486,7 +486,7 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/logout.ts](https://github.com/tribeplatform/cli/blob/v0.0.10/dist/commands/logout.ts)_
+_See code: [dist/commands/logout.ts](https://github.com/tribeplatform/cli/blob/v0.0.11/dist/commands/logout.ts)_
 
 ## `bettermode networks`
 
@@ -529,7 +529,7 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/networks.ts](https://github.com/tribeplatform/cli/blob/v0.0.10/dist/commands/networks.ts)_
+_See code: [dist/commands/networks.ts](https://github.com/tribeplatform/cli/blob/v0.0.11/dist/commands/networks.ts)_
 
 ## `bettermode ngrok`
 
@@ -569,7 +569,7 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/ngrok.ts](https://github.com/tribeplatform/cli/blob/v0.0.10/dist/commands/ngrok.ts)_
+_See code: [dist/commands/ngrok.ts](https://github.com/tribeplatform/cli/blob/v0.0.11/dist/commands/ngrok.ts)_
 
 ## `bettermode update [CHANNEL]`
 
@@ -639,5 +639,5 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/whoami.ts](https://github.com/tribeplatform/cli/blob/v0.0.10/dist/commands/whoami.ts)_
+_See code: [dist/commands/whoami.ts](https://github.com/tribeplatform/cli/blob/v0.0.11/dist/commands/whoami.ts)_
 <!-- commandsstop -->
