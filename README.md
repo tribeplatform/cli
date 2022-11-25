@@ -1,7 +1,7 @@
 # Bettermode CLI
 
 Bettermode CLI is a command line tool for managing your bettermode partner account. It is
-written in TypeScript and uses the [Betterment API](https://partners.tribe.so/docs/guide/index).
+written in TypeScript and uses the [Bettermode API](https://partners.tribe.so/docs/guide/index).
 
 [![bettermode](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://tribe.so)
 [![Version](https://img.shields.io/npm/v/oclif-hello-world.svg)](https://www.npmjs.com/package/@tribeplatform/cli)
@@ -10,14 +10,16 @@ written in TypeScript and uses the [Betterment API](https://partners.tribe.so/do
 [![License](https://img.shields.io/npm/l/oclif-hello-world.svg)](https://github.com/tribeplatform/cli/blob/main/LICENSE)
 
 <!-- toc -->
-* [Bettermode CLI](#bettermode-cli)
-* [Usage](#usage)
-* [Commands](#commands)
+
+- [Bettermode CLI](#bettermode-cli)
+- [Usage](#usage)
+- [Commands](#commands)
 <!-- tocstop -->
 
 # Usage
 
 <!-- usage -->
+
 ```sh-session
 $ npm install -g @tribeplatform/cli
 $ bettermode COMMAND
@@ -29,28 +31,30 @@ USAGE
   $ bettermode COMMAND
 ...
 ```
+
 <!-- usagestop -->
 
 # Commands
 
 <!-- commands -->
-* [`bettermode app create`](#bettermode-app-create)
-* [`bettermode app init`](#bettermode-app-init)
-* [`bettermode app list`](#bettermode-app-list)
-* [`bettermode app publish`](#bettermode-app-publish)
-* [`bettermode app start`](#bettermode-app-start)
-* [`bettermode app sync`](#bettermode-app-sync)
-* [`bettermode app unpublish`](#bettermode-app-unpublish)
-* [`bettermode app update`](#bettermode-app-update)
-* [`bettermode autocomplete [SHELL]`](#bettermode-autocomplete-shell)
-* [`bettermode commands`](#bettermode-commands)
-* [`bettermode help [COMMAND]`](#bettermode-help-command)
-* [`bettermode login`](#bettermode-login)
-* [`bettermode logout`](#bettermode-logout)
-* [`bettermode networks`](#bettermode-networks)
-* [`bettermode ngrok`](#bettermode-ngrok)
-* [`bettermode update [CHANNEL]`](#bettermode-update-channel)
-* [`bettermode whoami`](#bettermode-whoami)
+
+- [`bettermode app create`](#bettermode-app-create)
+- [`bettermode app init`](#bettermode-app-init)
+- [`bettermode app list`](#bettermode-app-list)
+- [`bettermode app publish`](#bettermode-app-publish)
+- [`bettermode app start`](#bettermode-app-start)
+- [`bettermode app sync`](#bettermode-app-sync)
+- [`bettermode app unpublish`](#bettermode-app-unpublish)
+- [`bettermode app update`](#bettermode-app-update)
+- [`bettermode autocomplete [SHELL]`](#bettermode-autocomplete-shell)
+- [`bettermode commands`](#bettermode-commands)
+- [`bettermode help [COMMAND]`](#bettermode-help-command)
+- [`bettermode login`](#bettermode-login)
+- [`bettermode logout`](#bettermode-logout)
+- [`bettermode networks`](#bettermode-networks)
+- [`bettermode ngrok`](#bettermode-ngrok)
+- [`bettermode update [CHANNEL]`](#bettermode-update-channel)
+- [`bettermode whoami`](#bettermode-whoami)
 
 ## `bettermode app create`
 
@@ -640,4 +644,5 @@ FLAG DESCRIPTIONS
 ```
 
 _See code: [dist/commands/whoami.ts](https://github.com/tribeplatform/cli/blob/v0.0.11/dist/commands/whoami.ts)_
+
 <!-- commandsstop -->
