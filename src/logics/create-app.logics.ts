@@ -45,7 +45,7 @@ export const getCreateAppInputs = (options: {
     {
       name: 'devNetworkId',
       type: 'list',
-      default: devNetworks[0].id,
+      default: devNetworks[0]?.id,
       message: `App's network in dev environment`,
       choices: devNetworks.map(network => ({
         name: network.domain,
@@ -56,7 +56,7 @@ export const getCreateAppInputs = (options: {
     {
       name: 'networkId',
       type: 'list',
-      default: networks[0].id,
+      default: networks[0]?.id,
       message: `App's network`,
       choices: networks.map(network => ({
         name: network.domain,

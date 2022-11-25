@@ -13,7 +13,7 @@
   <p align="center">
     app-description
     <br />
-    Powered by <a href="app-repo">@Bettermode/CLI</a>
+    Powered by <a href="https://github.com/tribeplatform/cli">@Bettermode/CLI</a>
     <br />
     <br />
     <a href="app-repo">View Demo</a>

@@ -68,7 +68,14 @@ export const getSyncAppTasks = (options: {
                 const result = await client.query({
                   name: 'shortcuts',
                   args: {
-                    fields: { nodes: { favicon: 'all', states: 'all' } },
+                    fields: {
+                      nodes: {
+                        favicon: 'all',
+                        states: {
+                          favicon: 'all',
+                        },
+                      },
+                    },
                     variables: { appId: app.id, limit: 100 },
                   },
                 })
