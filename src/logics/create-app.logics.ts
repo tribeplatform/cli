@@ -220,7 +220,14 @@ export const createApp = async (options: {
             ? `https://bettermode.io/terms-of-service`
             : null,
           webhookSubscriptions: ['network.updated'],
-          dynamicBlocks: [{ key: DefaultDynamicBlockKeys.settings }],
+          dynamicBlocks: [
+            { key: DefaultDynamicBlockKeys.settings },
+            {
+              key: 'favorite-posts',
+              name: 'Favorite posts',
+              imageId: '4yeqKGTzI1fRUgt7xQp64',
+            },
+          ],
           shortcuts: [
             {
               key: 'mark-as-favorite',
