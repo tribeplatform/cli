@@ -19,12 +19,12 @@ import { getSyncAppTasks } from './sync-app.logics'
 
 export type CreateAppCLIInputs = {
   devNetworkId?: string
-  networkId: string
+  networkId?: string
   name: string
   slug?: string
   standing?: StoreItemStanding
   description: string
-  domain: string
+  domain?: string
   devDomain?: string
   repoOwner: string
   repoName: string
@@ -62,6 +62,7 @@ export const getCreateAppInputs = (options: {
         name: network.domain,
         value: network.id,
       })),
+      when: networks.length > 0,
     },
     {
       name: 'name',
@@ -102,6 +103,7 @@ export const getCreateAppInputs = (options: {
       default: ({ slug }: { slug: string }) => `${slug}-dev.tribeplatform.app`,
       validate: (domain: string) =>
         /^(?:[\dA-Za-z]+(?:-[\dA-Za-z]+)*\.){2}[\dA-Za-z]+$/.test(domain),
+      when: devNetworks?.length > 0,
     },
     {
       name: 'domain',
@@ -116,6 +118,7 @@ export const getCreateAppInputs = (options: {
       },
       validate: (domain: string) =>
         /^(?:[\dA-Za-z]+(?:-[\dA-Za-z]+)*\.){2}[\dA-Za-z]+$/.test(domain),
+      when: networks?.length > 0,
     },
     {
       name: 'template',
@@ -259,8 +262,7 @@ export const createApp = async (options: {
 }
 
 export const getCreateAppTasks = (options: {
-  dev: boolean
-  client: CliClient
+  client: CliClient | null
   devClient: CliClient | null
   officialPartner?: boolean
   input: CreateAppCLIInputs
@@ -274,7 +276,7 @@ export const getCreateAppTasks = (options: {
   blocks: DynamicBlock[]
   devBlocks?: DynamicBlock[]
 }> => {
-  const { dev, client, devClient, officialPartner = false, input } = options
+  const { client, devClient, officialPartner = false, input } = options
   const {
     devNetworkId,
     description,
@@ -298,6 +300,9 @@ export const getCreateAppTasks = (options: {
     throw new CliError(`The folder \`${targetDir}\` already exists.`)
   }
 
+  const createOnProd = client !== null
+  const createOnDev = devClient !== null
+
   return new Listr([
     {
       title: `Download \`${APP_TEMPLATE_CHOICES[template]}\` template`,
@@ -318,29 +323,35 @@ export const getCreateAppTasks = (options: {
     },
     {
       title: 'Create the app in the portal',
-      enabled: () => !dev,
+      enabled: () => !createOnProd || !createOnDev,
       task: async ctx => {
         ctx.app = await createApp({
-          client,
-          domain,
+          client: (client || devClient) as CliClient,
+          domain: (client ? domain : devDomain) as string,
           officialPartner,
-          input,
+          input: (client
+            ? input
+            : {
+                ...input,
+                networkId: devNetworkId as string,
+              }) as CreateAppInput,
         })
+        ctx.devApp = ctx.app
       },
     },
     {
       title: 'Create the app in the portal',
-      enabled: () => dev,
+      enabled: () => createOnProd && createOnDev,
       task: () =>
         new Listr([
           {
             title: 'on production environment',
             task: async ctx => {
               ctx.app = await createApp({
-                client,
-                domain,
+                client: client as CliClient,
+                domain: domain as string,
                 officialPartner,
-                input,
+                input: input as CreateAppInput,
               })
             },
           },
@@ -469,11 +480,13 @@ export const getCreateAppTasks = (options: {
     },
     {
       title: `Initialize app's config`,
-      task: ctx => getSyncAppTasks({ client, app: ctx.app, dev: false, cwd }),
+      enabled: () => createOnProd,
+      task: ctx =>
+        getSyncAppTasks({ client: client as CliClient, app: ctx.app, dev: false, cwd }),
     },
     {
       title: `Initialize app's config for development`,
-      enabled: () => dev,
+      enabled: () => createOnDev,
       task: ctx =>
         getSyncAppTasks({
           client: devClient as CliClient,
