@@ -10,51 +10,47 @@ written in TypeScript and uses the [Bettermode API](https://partners.tribe.so/do
 [![License](https://img.shields.io/npm/l/oclif-hello-world.svg)](https://github.com/tribeplatform/cli/blob/main/LICENSE)
 
 <!-- toc -->
-
-- [Bettermode CLI](#bettermode-cli)
-- [Usage](#usage)
-- [Commands](#commands)
+* [Bettermode CLI](#bettermode-cli)
+* [Usage](#usage)
+* [Commands](#commands)
 <!-- tocstop -->
 
 # Usage
 
 <!-- usage -->
-
 ```sh-session
 $ npm install -g @tribeplatform/cli
 $ bettermode COMMAND
 running command...
 $ bettermode (--version)
-@tribeplatform/cli/0.0.11 darwin-arm64 node-v16.13.0
+@tribeplatform/cli/0.1.0-beta darwin-arm64 node-v16.13.0
 $ bettermode --help [COMMAND]
 USAGE
   $ bettermode COMMAND
 ...
 ```
-
 <!-- usagestop -->
 
 # Commands
 
 <!-- commands -->
-
-- [`bettermode app create`](#bettermode-app-create)
-- [`bettermode app init`](#bettermode-app-init)
-- [`bettermode app list`](#bettermode-app-list)
-- [`bettermode app publish`](#bettermode-app-publish)
-- [`bettermode app start`](#bettermode-app-start)
-- [`bettermode app sync`](#bettermode-app-sync)
-- [`bettermode app unpublish`](#bettermode-app-unpublish)
-- [`bettermode app update`](#bettermode-app-update)
-- [`bettermode autocomplete [SHELL]`](#bettermode-autocomplete-shell)
-- [`bettermode commands`](#bettermode-commands)
-- [`bettermode help [COMMAND]`](#bettermode-help-command)
-- [`bettermode login`](#bettermode-login)
-- [`bettermode logout`](#bettermode-logout)
-- [`bettermode networks`](#bettermode-networks)
-- [`bettermode ngrok`](#bettermode-ngrok)
-- [`bettermode update [CHANNEL]`](#bettermode-update-channel)
-- [`bettermode whoami`](#bettermode-whoami)
+* [`bettermode app create`](#bettermode-app-create)
+* [`bettermode app init`](#bettermode-app-init)
+* [`bettermode app list`](#bettermode-app-list)
+* [`bettermode app publish`](#bettermode-app-publish)
+* [`bettermode app start`](#bettermode-app-start)
+* [`bettermode app sync`](#bettermode-app-sync)
+* [`bettermode app unpublish`](#bettermode-app-unpublish)
+* [`bettermode app update`](#bettermode-app-update)
+* [`bettermode autocomplete [SHELL]`](#bettermode-autocomplete-shell)
+* [`bettermode commands`](#bettermode-commands)
+* [`bettermode help [COMMAND]`](#bettermode-help-command)
+* [`bettermode login`](#bettermode-login)
+* [`bettermode logout`](#bettermode-logout)
+* [`bettermode networks`](#bettermode-networks)
+* [`bettermode ngrok`](#bettermode-ngrok)
+* [`bettermode update [CHANNEL]`](#bettermode-update-channel)
+* [`bettermode whoami`](#bettermode-whoami)
 
 ## `bettermode app create`
 
@@ -62,9 +58,10 @@ create a new app
 
 ```
 USAGE
-  $ bettermode app create [--json] [-t <value>] [-d]
+  $ bettermode app create [--json] [-t <value>] [-d] [-b]
 
 FLAGS
+  -b, --both-envs             create on both environments
   -d, --dev                   development mode
   -t, --access-token=<value>  your access token
 
@@ -78,6 +75,10 @@ EXAMPLES
   $ bettermode app create
 
 FLAG DESCRIPTIONS
+  -b, --both-envs  create on both environments
+
+    create the app in both dev and prod environments
+
   -d, --dev  development mode
 
     actions will happen in development mode
@@ -457,7 +458,7 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/login.ts](https://github.com/tribeplatform/cli/blob/v0.0.11/dist/commands/login.ts)_
+_See code: [dist/commands/login.ts](https://github.com/tribeplatform/cli/blob/v0.1.0-beta/dist/commands/login.ts)_
 
 ## `bettermode logout`
 
@@ -490,7 +491,7 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/logout.ts](https://github.com/tribeplatform/cli/blob/v0.0.11/dist/commands/logout.ts)_
+_See code: [dist/commands/logout.ts](https://github.com/tribeplatform/cli/blob/v0.1.0-beta/dist/commands/logout.ts)_
 
 ## `bettermode networks`
 
@@ -533,7 +534,7 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/networks.ts](https://github.com/tribeplatform/cli/blob/v0.0.11/dist/commands/networks.ts)_
+_See code: [dist/commands/networks.ts](https://github.com/tribeplatform/cli/blob/v0.1.0-beta/dist/commands/networks.ts)_
 
 ## `bettermode ngrok`
 
@@ -573,7 +574,7 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/ngrok.ts](https://github.com/tribeplatform/cli/blob/v0.0.11/dist/commands/ngrok.ts)_
+_See code: [dist/commands/ngrok.ts](https://github.com/tribeplatform/cli/blob/v0.1.0-beta/dist/commands/ngrok.ts)_
 
 ## `bettermode update [CHANNEL]`
 
@@ -643,6 +644,5 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/whoami.ts](https://github.com/tribeplatform/cli/blob/v0.0.11/dist/commands/whoami.ts)_
-
+_See code: [dist/commands/whoami.ts](https://github.com/tribeplatform/cli/blob/v0.1.0-beta/dist/commands/whoami.ts)_
 <!-- commandsstop -->
