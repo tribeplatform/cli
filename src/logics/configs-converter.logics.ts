@@ -62,7 +62,7 @@ export const getShortcutConfigs = (shortcut: Shortcut): ShortcutConfigs => ({
       state: shortcutState.state,
       name: shortcutState.name || null,
       description: shortcutState.description || null,
-      favicon: (shortcutState.favicon as Image)?.url || shortcutState.faviconId || null,
+      favicon: shortcutState.faviconId || null,
     })) || null,
 })
 
