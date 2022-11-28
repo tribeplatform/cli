@@ -74,7 +74,14 @@ export default class CreateApp extends BetterCommand<CreateAppResponse> {
     this.log(`Let's create your next amazing app!\n\n`)
 
     const input = await this.prompt(
-      getCreateAppInputs({ networks, devNetworks, officialPartner, githubUser }),
+      getCreateAppInputs({
+        client,
+        devClient,
+        networks,
+        devNetworks,
+        officialPartner,
+        githubUser,
+      }),
     )
 
     const tasks = getCreateAppTasks({

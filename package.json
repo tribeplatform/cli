@@ -1,6 +1,6 @@
 {
   "name": "@tribeplatform/cli",
-  "version": "0.0.11",
+  "version": "0.1.0-beta",
   "description": "The CLI to manage apps in Bettermode platform",
   "author": "Bettermode Engineering",
   "bin": {
@@ -38,7 +38,7 @@
     "@oclif/plugin-warn-if-update-available": "^2.0.12",
     "@octokit/rest": "^19.0.5",
     "@salesforce/sf-plugins-core": "^1.17.3",
-    "@tribeplatform/gql-client": "^2.2.8",
+    "@tribeplatform/gql-client": "^2.2.9",
     "chalk": "^4.1.2",
     "execa": "^5.1.1",
     "fs-extra": "^10.1.0",

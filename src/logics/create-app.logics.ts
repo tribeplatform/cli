@@ -35,12 +35,21 @@ export type CreateAppCLIInputs = {
 }
 
 export const getCreateAppInputs = (options: {
+  client: CliClient | null
+  devClient: CliClient | null
   devNetworks: Network[]
   networks: Network[]
   githubUser: GithubUser | null
   officialPartner?: boolean
 }): Prompter.Questions<CreateAppCLIInputs> => {
-  const { devNetworks, networks, githubUser, officialPartner = false } = options
+  const {
+    client,
+    devClient,
+    devNetworks,
+    networks,
+    githubUser,
+    officialPartner = false,
+  } = options
   return [
     {
       name: 'devNetworkId',
@@ -82,7 +91,34 @@ export const getCreateAppInputs = (options: {
       message: `App's slug`,
       default: ({ name }: { name: string }) =>
         `${name.toLowerCase().replace(/[^\dA-Za-z]/g, '-')}`,
-      validate: (slug: string) => /^[\dA-Za-z]+(?:-[\dA-Za-z]+)*$/.test(slug),
+      validate: async (slug: string) => {
+        const validRegex = /^[\dA-Za-z]+(?:-[\dA-Za-z]+)*$/.test(slug)
+        if (!validRegex) {
+          return 'Enter a valid slug: `^[\\dA-Za-z]+(?:-[\\dA-Za-z]+)*$`'
+        }
+
+        if (client) {
+          const { available } = await client.query({
+            name: 'checkAppSlugAvailability',
+            args: { variables: { slug }, fields: 'all' },
+          })
+          if (!available) {
+            return `Slug ${slug} is not available`
+          }
+        }
+
+        if (devClient) {
+          const { available } = await devClient.query({
+            name: 'checkAppSlugAvailability',
+            args: { variables: { slug }, fields: 'all' },
+          })
+          if (!available) {
+            return `Slug ${slug} is not available in dev environment`
+          }
+        }
+
+        return true
+      },
       when: officialPartner,
     },
     {
