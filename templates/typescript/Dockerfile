@@ -20,9 +20,9 @@ FROM node:16.13.0 as production-build-stage
 
 ENV NODE_ENV production
 
-COPY --from=common-build-stage /app/node_modules /app/node_modules
-COPY --from=common-build-stage /app/dist /app/dist
-COPY --from=common-build-stage /app/package.json /app
+COPY --from=development-build-stage /app/node_modules /app/node_modules
+COPY --from=development-build-stage /app/dist /app/dist
+COPY --from=development-build-stage /app/package.json /app
 
 WORKDIR /app
 
