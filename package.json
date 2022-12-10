@@ -29,7 +29,7 @@
     "tarballs:upload": ". ./scripts/export-envs.sh ; oclif upload tarballs"
   },
   "dependencies": {
-    "@oclif/core": "^1.19.1",
+    "@oclif/core": "^1.21.0",
     "@oclif/plugin-autocomplete": "^1.3.5",
     "@oclif/plugin-commands": "^2.2.1",
     "@oclif/plugin-help": "^5",
