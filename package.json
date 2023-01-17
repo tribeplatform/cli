@@ -30,7 +30,7 @@
     "promote": ". ./scripts/export-envs.sh ; oclif promote"
   },
   "dependencies": {
-    "@oclif/core": "^1.19.1",
+    "@oclif/core": "^1.24.0",
     "@oclif/plugin-autocomplete": "^1.3.5",
     "@oclif/plugin-commands": "^2.2.1",
     "@oclif/plugin-help": "^5",
