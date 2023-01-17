@@ -128,11 +128,17 @@ export const getStartAppTasks = (options: {
                   ),
                   dynamicBlocks: convertBlocksToCreateInput(blocks).map(block => ({
                     ...block,
-                    url: replaceDomain(block.interactionUrl || undefined, domain),
+                    interactionUrl: replaceDomain(
+                      block.interactionUrl || undefined,
+                      domain,
+                    ),
                   })),
                   shortcuts: convertShortcutsToCreateInput(shortcuts).map(shortcut => ({
                     ...shortcut,
-                    url: replaceDomain(shortcut.interactionUrl || undefined, domain),
+                    interactionUrl: replaceDomain(
+                      shortcut.interactionUrl || undefined,
+                      domain,
+                    ),
                   })),
                 },
               },

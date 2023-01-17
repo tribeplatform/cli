@@ -1,13 +1,13 @@
 # Bettermode CLI
 
 Bettermode CLI is a command line tool for managing your bettermode partner account. It is
-written in TypeScript and uses the [Bettermode API](https://partners.tribe.so/docs/guide/index).
+written in TypeScript and uses the [Bettermode API](https://developers.bettermode.com/docs).
 
-[![bettermode](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://tribe.so)
-[![Version](https://img.shields.io/npm/v/oclif-hello-world.svg)](https://www.npmjs.com/package/@tribeplatform/cli)
+[![bettermode](https://img.shields.io/badge/cli-bettermode-brightgreen.svg)](https://bettermode.com)
+[![Version](https://img.shields.io/npm/v/@bettermode%2Fcli.svg)](https://www.npmjs.com/package/@bettermode/cli)
 [![CircleCI](https://circleci.com/gh/oclif/hello-world/tree/main.svg?style=shield)](https://circleci.com/gh/oclif/hello-world/tree/main)
-[![Downloads/week](https://img.shields.io/npm/dw/oclif-hello-world.svg)](https://www.npmjs.com/package/@tribeplatform/cli)
-[![License](https://img.shields.io/npm/l/oclif-hello-world.svg)](https://github.com/tribeplatform/cli/blob/main/LICENSE)
+[![Downloads/week](https://img.shields.io/npm/dw/@bettermode%2Fcli.svg)](https://www.npmjs.com/package/@bettermode/cli)
+[![License](https://img.shields.io/npm/l/@bettermode%2Fcli.svg)](https://github.com/bettermode/cli/blob/main/LICENSE.md)
 
 <!-- toc -->
 * [Bettermode CLI](#bettermode-cli)
@@ -23,7 +23,7 @@ $ npm install -g @tribeplatform/cli
 $ bettermode COMMAND
 running command...
 $ bettermode (--version)
-@tribeplatform/cli/0.1.0-beta darwin-arm64 node-v16.13.0
+@tribeplatform/cli/0.1.0-alpha darwin-arm64 node-v16.13.0
 $ bettermode --help [COMMAND]
 USAGE
   $ bettermode COMMAND
@@ -458,7 +458,7 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/login.ts](https://github.com/tribeplatform/cli/blob/v0.1.0-beta/dist/commands/login.ts)_
+_See code: [dist/commands/login.ts](https://github.com/tribeplatform/cli/blob/v0.1.0-alpha/dist/commands/login.ts)_
 
 ## `bettermode logout`
 
@@ -491,7 +491,7 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/logout.ts](https://github.com/tribeplatform/cli/blob/v0.1.0-beta/dist/commands/logout.ts)_
+_See code: [dist/commands/logout.ts](https://github.com/tribeplatform/cli/blob/v0.1.0-alpha/dist/commands/logout.ts)_
 
 ## `bettermode networks`
 
@@ -534,7 +534,7 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/networks.ts](https://github.com/tribeplatform/cli/blob/v0.1.0-beta/dist/commands/networks.ts)_
+_See code: [dist/commands/networks.ts](https://github.com/tribeplatform/cli/blob/v0.1.0-alpha/dist/commands/networks.ts)_
 
 ## `bettermode ngrok`
 
@@ -574,7 +574,7 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/ngrok.ts](https://github.com/tribeplatform/cli/blob/v0.1.0-beta/dist/commands/ngrok.ts)_
+_See code: [dist/commands/ngrok.ts](https://github.com/tribeplatform/cli/blob/v0.1.0-alpha/dist/commands/ngrok.ts)_
 
 ## `bettermode update [CHANNEL]`
 
@@ -644,5 +644,5 @@ FLAG DESCRIPTIONS
     a custom access token that you want to use to login in the portal
 ```
 
-_See code: [dist/commands/whoami.ts](https://github.com/tribeplatform/cli/blob/v0.1.0-beta/dist/commands/whoami.ts)_
+_See code: [dist/commands/whoami.ts](https://github.com/tribeplatform/cli/blob/v0.1.0-alpha/dist/commands/whoami.ts)_
 <!-- commandsstop -->

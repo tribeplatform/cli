@@ -5,12 +5,14 @@
 ##   . ./export-env.sh ; echo ${MINIENTREGA_FECHALIMITE}
 
 unamestr=$(uname)
-if [ "$unamestr" = 'Linux' ]; then
+if [[ -z "${AWS_ACCESS_KEY_ID}" ]]; then
+  if [ "$unamestr" = 'Linux' ]; then
 
-  export $(grep -v '^#' .env | xargs -d '\n')
+    export $(grep -v '^#' .env | xargs -d '\n')
 
-elif [ "$unamestr" = 'FreeBSD' ] || [ "$unamestr" = 'Darwin' ]; then
+  elif [ "$unamestr" = 'FreeBSD' ] || [ "$unamestr" = 'Darwin' ]; then
 
-  export $(grep -v '^#' .env | xargs -0)
+    export $(grep -v '^#' .env | xargs -0)
 
+  fi
 fi

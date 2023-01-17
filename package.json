@@ -1,6 +1,6 @@
 {
   "name": "@tribeplatform/cli",
-  "version": "0.1.0-beta",
+  "version": "0.1.0-alpha",
   "description": "The CLI to manage apps in Bettermode platform",
   "author": "Bettermode Engineering",
   "bin": {
@@ -26,7 +26,8 @@
     "test": "mocha --forbid-only \"test/**/*.test.ts\"",
     "version": "oclif readme && git add README.md",
     "tarballs:pack": "oclif pack tarballs",
-    "tarballs:upload": ". ./scripts/export-envs.sh ; oclif upload tarballs"
+    "tarballs:upload": ". ./scripts/export-envs.sh ; oclif upload tarballs",
+    "promote": ". ./scripts/export-envs.sh ; oclif promote"
   },
   "dependencies": {
     "@oclif/core": "^1.19.1",
@@ -90,6 +91,7 @@
     ],
     "update": {
       "s3": {
+        "host": "cli.t-cdn.net",
         "bucket": "cli.t-cdn.net"
       }
     },
