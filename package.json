@@ -59,7 +59,7 @@
     "@types/shelljs": "^0.8.11",
     "@types/supports-color": "^8.1.1",
     "@typescript-eslint/eslint-plugin": "^5.41.0",
-    "@typescript-eslint/parser": "^5.41.0",
+    "@typescript-eslint/parser": "^5.53.0",
     "chai": "^4",
     "eslint": "^7.32.0",
     "eslint-config-oclif": "^4",
