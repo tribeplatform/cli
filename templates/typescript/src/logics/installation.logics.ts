@@ -5,11 +5,11 @@ import {
   GeneralWebhookResponse,
 } from '@interfaces'
 import { NetworkRepository } from '@repositories'
-import { Logger } from '@utils'
 
+import { globalLogger } from '@utils'
 import { getServiceUnavailableError } from './error.logics'
 
-const logger = new Logger(`InstallationWebhook`)
+const logger = globalLogger.setContext(`InstallationWebhook`)
 
 export const handleInstalledWebhook = async (
   webhook: AppInstalledWebhook,

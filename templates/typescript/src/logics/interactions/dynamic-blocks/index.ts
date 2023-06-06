@@ -1,13 +1,13 @@
 import { InteractionWebhook, InteractionWebhookResponse } from '@interfaces'
-import { Logger } from '@utils'
 
 import { getInteractionNotSupportedError } from '../../error.logics'
 
+import { globalLogger } from '@utils'
 import { DynamicBlock } from './constants'
 import { getFavoritePostsInteractionResponse } from './favorite-posts'
 import { getSettingsInteractionResponse } from './settings'
 
-const logger = new Logger(`DynamicBlock`)
+const logger = globalLogger.setContext(`DynamicBlock`)
 
 export const getDynamicBlockInteractionResponse = async (
   webhook: InteractionWebhook,

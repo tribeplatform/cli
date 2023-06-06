@@ -1,8 +1,8 @@
 import { ErrorCode, WebhookStatus } from '@enums'
 import { FederatedSearchWebhook, FederatedSearchWebhookResponse } from '@interfaces'
-import { Logger } from '@utils'
+import { globalLogger } from '@utils'
 
-const logger = new Logger(`FederatedSearch`)
+const logger = globalLogger.setContext(`FederatedSearch`)
 
 export const handleFederatedSearchWebhook = async (
   webhook: FederatedSearchWebhook,

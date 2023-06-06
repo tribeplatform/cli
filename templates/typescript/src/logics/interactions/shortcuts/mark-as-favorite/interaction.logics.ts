@@ -2,15 +2,15 @@ import { InteractionType, WebhookStatus, WebhookType } from '@enums'
 import { InteractionWebhook, InteractionWebhookResponse } from '@interfaces'
 import { MemberPostSettingsRepository } from '@repositories'
 import { PermissionContext } from '@tribeplatform/gql-client/types'
-import { Logger } from '@utils'
 
 import { getInteractionNotSupportedError } from '../../../error.logics'
 import { DynamicBlock } from '../../dynamic-blocks/constants'
 
+import { globalLogger } from '@utils'
 import { MarkAsFavoriteState } from './constants'
 import { getMarkAsFavoriteState } from './states.logics'
 
-const logger = new Logger(`MarkAsFavoriteShortcut`)
+const logger = globalLogger.setContext(`MarkAsFavoriteShortcut`)
 
 export const getMarkAsFavoriteInteractionResponse = async (
   webhook: InteractionWebhook,

@@ -5,4 +5,5 @@ export enum InteractionType {
   OpenModal = 'OPEN_MODAL',
   OpenToast = 'OPEN_TOAST',
   Redirect = 'REDIRECT',
+  Data = 'DATA',
 }

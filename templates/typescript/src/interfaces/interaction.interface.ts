@@ -1,5 +1,4 @@
-import { InteractionType } from '@enums'
-import { ToastStatus } from '@prisma/client'
+import { InteractionType, ToastStatus } from '@enums'
 import { PermissionContext } from '@tribeplatform/gql-client/types'
 import { SlateDto } from '@tribeplatform/slate-kit/dtos'
 
@@ -9,6 +8,11 @@ export interface ToastInteractionProps {
   status: ToastStatus
   title: string
   description?: string
+  link?: {
+    href: string
+    text: string
+    enableCopy?: boolean
+  }
 }
 
 export interface ModalInteractionProps {
@@ -37,6 +41,7 @@ export interface InteractionInput<T = { [key: string]: unknown }> {
   shortcutKey?: string
   callbackId?: string
   inputs?: T
+  props?: unknown
 }
 
 export interface BaseInteraction {
@@ -74,6 +79,11 @@ export interface ShowInteraction extends BaseInteraction {
   slate: SlateDto
 }
 
+export interface DataInteraction<T = any> extends BaseInteraction {
+  type: InteractionType.Data
+  props: T
+}
+
 export type Interaction =
   | CloseInteraction
   | OpenModalInteraction
@@ -81,6 +91,7 @@ export type Interaction =
   | RedirectInteraction
   | ReloadInteraction
   | ShowInteraction
+  | DataInteraction
 
 export interface InteractionData {
   interactions: Interaction[]

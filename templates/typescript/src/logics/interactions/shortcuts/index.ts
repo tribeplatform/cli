@@ -8,17 +8,17 @@ import {
   ShortcutStatesWebhook,
   ShortcutStatesWebhookResponse,
 } from '@interfaces'
-import { Logger } from '@utils'
 
 import { getInteractionNotSupportedError } from '../../error.logics'
 
+import { globalLogger } from '@utils'
 import { Shortcut } from './constants'
 import {
   getMarkAsFavoriteInteractionResponse,
   getMarkAsFavoriteShortcutStates,
 } from './mark-as-favorite'
 
-const logger = new Logger(`Shortcut`)
+const logger = globalLogger.setContext(`Shortcut`)
 
 export const getShortcutInteractionResponse = async (
   webhook: InteractionWebhook,

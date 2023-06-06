@@ -1,5 +1,5 @@
 import { WebhookType } from '@enums'
-import { PermissionContext } from '@tribeplatform/gql-client/types'
+import { Member, Network, PermissionContext } from '@tribeplatform/gql-client/types'
 
 import { AppInstallation, AppSettings } from './app.interface'
 import { BaseEventObject, Event } from './event.interface'
@@ -11,6 +11,14 @@ export interface Challenge {
   challenge: string
 }
 
+// Use Lite types
+export interface WebhookEntities {
+  network?: Network
+  actor?: Member
+  owner?: Member
+  targetMember?: Member
+}
+
 export interface BaseWebhook {
   type: WebhookType
   networkId: string
@@ -18,6 +26,7 @@ export interface BaseWebhook {
   entityId?: string
   currentSettings: AppSettings[]
   data?: unknown
+  entities?: WebhookEntities
 }
 
 export interface TestWebhook extends BaseWebhook {

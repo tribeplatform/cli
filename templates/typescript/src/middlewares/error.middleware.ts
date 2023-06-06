@@ -1,7 +1,9 @@
 import { HttpError } from '@errors'
 import { Request } from '@interfaces'
-import { Logger } from '@utils'
+import { globalLogger } from '@utils'
 import { NextFunction, Response } from 'express'
+
+const logger = globalLogger.setContext('errorMiddleware')
 
 export const errorMiddleware = (
   error: HttpError,
@@ -9,8 +11,6 @@ export const errorMiddleware = (
   res: Response,
   next: NextFunction,
 ) => {
-  const logger = new Logger(errorMiddleware.name)
-
   const status: number = error?.status || 500
   const message: string = error?.message || 'Something went wrong'
 

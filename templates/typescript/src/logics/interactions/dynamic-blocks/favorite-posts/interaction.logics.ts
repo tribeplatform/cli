@@ -2,12 +2,12 @@ import { InteractionType, WebhookStatus, WebhookType } from '@enums'
 import { InteractionWebhook, InteractionWebhookResponse } from '@interfaces'
 import { MemberPostSettingsRepository } from '@repositories'
 import { SlateDto } from '@tribeplatform/slate-kit/dtos'
-import { Logger } from '@utils'
 
+import { globalLogger } from '@utils'
 import { NUMBER_OF_POSTS_TO_SHOW } from './constants'
 import { getEmptyFavoritePostsSlate, getFavoritePostsSlate } from './slate.logics'
 
-const logger = new Logger(`FavoritePostsDynamicBlock`)
+const logger = globalLogger.setContext(`FavoritePostsDynamicBlock`)
 
 export const getFavoritePostsInteractionResponse = async (
   webhook: InteractionWebhook,

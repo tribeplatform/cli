@@ -2,11 +2,11 @@ import { ErrorCode, WebhookStatus } from '@enums'
 import { GeneralWebhookResponse, SubscriptionWebhook } from '@interfaces'
 import { EventNoun } from '@tribeplatform/gql-client/global-types'
 import { Network } from '@tribeplatform/gql-client/types'
-import { Logger } from '@utils'
 
+import { globalLogger } from '@utils'
 import { handleNetworkSubscription } from './network'
 
-const logger = new Logger(`Subscription`)
+const logger = globalLogger.setContext(`Subscription`)
 
 export const handleSubscriptionWebhook = async (
   webhook: SubscriptionWebhook,

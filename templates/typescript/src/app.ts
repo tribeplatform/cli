@@ -1,4 +1,12 @@
-import { CREDENTIALS, NODE_ENV, ORIGIN, PORT } from '@config'
+import {
+  CREDENTIALS,
+  DATABASE_URL,
+  LOG_ACCESS,
+  NODE_ENV,
+  ORIGIN,
+  PORT,
+  SESSION_SECRET,
+} from '@config'
 import { Request } from '@interfaces'
 import { errorMiddleware } from '@middlewares'
 import { globalLogger, stream } from '@utils'
@@ -6,8 +14,10 @@ import bodyParser from 'body-parser'
 import { defaultMetadataStorage } from 'class-transformer'
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema'
 import compression from 'compression'
+import MongoStore from 'connect-mongo'
 import cookieParser from 'cookie-parser'
 import express from 'express'
+import session from 'express-session'
 import helmet from 'helmet'
 import hpp from 'hpp'
 import morgan from 'morgan'
@@ -56,13 +66,25 @@ class App {
         },
       }),
     )
-    this.app.use(morgan('dev', { stream }))
+    if (LOG_ACCESS) this.app.use(morgan('dev', { stream }))
     this.app.use(hpp())
     this.app.use(helmet())
     this.app.use(compression())
     this.app.use(express.json())
     this.app.use(express.urlencoded({ extended: true }))
     this.app.use(cookieParser())
+    this.app.use(
+      session({
+        secret: SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        store: MongoStore.create({
+          mongoUrl: DATABASE_URL,
+          touchAfter: 1 * 3600,
+          ttl: 2 * 60 * 60,
+        }),
+      }),
+    )
   }
 
   private initializeRoutes(controllers: Function[]) {

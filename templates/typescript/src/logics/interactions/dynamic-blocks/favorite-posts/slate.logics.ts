@@ -1,11 +1,11 @@
 import { SlateDto } from '@tribeplatform/slate-kit/dtos'
 import { rawSlateToDto } from '@tribeplatform/slate-kit/utils'
-import { Logger } from '@utils'
 
+import { globalLogger } from '@utils'
 import { EMPTY_FAVORITE_POSTS_SLATE } from './slates/empty-favorite-posts.slate'
 import { FAVORITE_POSTS_SLATE } from './slates/favorite-posts.slate'
 
-const logger = new Logger(`FavoritePostsDynamicBlock`)
+const logger = globalLogger.setContext(`FavoritePostsDynamicBlock`)
 
 export const getFavoritePostsSlate = async (options: {
   postIds: string[]

@@ -1,7 +1,7 @@
 import { OAuthDto, OAuthTokensDto, OAuthTokensInputDto } from '@dtos'
-import { getBettermodeOauthTokens, getBettermodeOAuthUrl } from '@logics'
+import { getBettermodeOAuthUrl, getBettermodeOauthTokens } from '@logics'
 import { validationMiddleware } from '@middlewares'
-import { Logger } from '@utils'
+import { globalLogger } from '@utils'
 import { Response } from 'express'
 import {
   Body,
@@ -17,7 +17,7 @@ import { OpenAPI, ResponseSchema } from 'routing-controllers-openapi'
 
 @Controller('/bettermode/oauth')
 export class BettermodeOAuthController {
-  readonly logger = new Logger(BettermodeOAuthController.name)
+  readonly logger = globalLogger.setContext(BettermodeOAuthController.name)
 
   @Get()
   @UseBefore(validationMiddleware(OAuthDto, 'params'))

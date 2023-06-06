@@ -2,13 +2,13 @@ import { EntitiesByContext, ShortcutStatesInput, ShortcutStatesResult } from '@i
 import { MemberPostSettings } from '@prisma/client'
 import { MemberPostSettingsRepository } from '@repositories'
 import { PermissionContext, RoleType } from '@tribeplatform/gql-client/types'
-import { Logger } from '@utils'
 
 import { Shortcut } from '../constants'
 
+import { globalLogger } from '@utils'
 import { MarkAsFavoriteState } from './constants'
 
-const logger = new Logger(`MarkAsFavoriteShortcut`)
+const logger = globalLogger.setContext(`MarkAsFavoriteShortcut`)
 
 export const getMarkAsFavoriteState = (options: {
   memberPostSettings: MemberPostSettings

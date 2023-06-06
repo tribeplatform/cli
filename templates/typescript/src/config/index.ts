@@ -10,6 +10,7 @@ export const LOG_FORMAT = (ENVS.LOG_FORMAT as LogFormat) || 'pretty'
 export const LOG_LEVEL = (ENVS.LOG_LEVEL as LogLevel) || 'verbose'
 export const CREDENTIALS = ENVS.CREDENTIALS === 'true'
 export const IGNORE_SIGNATURE = ENVS.IGNORE_SIGNATURE === 'true'
+export const LOG_ACCESS = ENVS.LOG_ACCESS === 'true'
 export const {
   NODE_ENV,
   PORT,
@@ -17,7 +18,9 @@ export const {
   LOG_DIR,
   ORIGIN,
   DATABASE_URL,
+  GRAPHQL_URL,
   CLIENT_ID,
   CLIENT_SECRET,
   SIGNING_SECRET,
+  SESSION_SECRET,
 } = ENVS

@@ -1,14 +1,14 @@
 import { ErrorCode, WebhookStatus } from '@enums'
 import { InteractionWebhook, InteractionWebhookResponse } from '@interfaces'
-import { Logger } from '@utils'
 
+import { globalLogger } from '@utils'
 import { getDynamicBlockInteractionResponse } from './dynamic-blocks'
 import { getShortcutInteractionResponse } from './shortcuts'
 
 export * from './dynamic-blocks'
 export * from './shortcuts'
 
-const logger = new Logger(`Interaction`)
+const logger = globalLogger.setContext(`Interaction`)
 
 export const handleInteractionWebhook = async (
   webhook: InteractionWebhook,

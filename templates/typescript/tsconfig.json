@@ -21,6 +21,7 @@
     "importHelpers": true,
     "baseUrl": "src",
     "paths": {
+      "@clients": ["clients"],
       "@config": ["config"],
       "@controllers": ["controllers"],
       "@dtos": ["dtos"],

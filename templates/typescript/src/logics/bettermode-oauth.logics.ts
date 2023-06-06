@@ -1,14 +1,15 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
+import { getBettermodeClient } from '@clients'
 import { CLIENT_ID, CLIENT_SECRET } from '@config'
 import { OAuthDto, OAuthTokensDto, OAuthTokensInputDto } from '@dtos'
 import { HttpError, InternalServerError } from '@errors'
 import { OAuthToken } from '@interfaces'
 import { MemberRepository } from '@repositories'
-import { getClient, Logger } from '@utils'
+import { globalLogger } from '@utils'
 import axios from 'axios'
 
-const logger = new Logger(`BettermodeOAuth`)
+const logger = globalLogger.setContext(`BettermodeOAuth`)
 
 export const getBettermodeOAuthUrl = (input: OAuthDto): string => {
   logger.debug('getRedirectUrl called', { input })
@@ -54,7 +55,7 @@ export const getBettermodeOauthTokens = async (
     }
   }
 
-  const client = getClient({
+  const client = getBettermodeClient({
     accessToken: data.access_token,
     graphqlUrl: data.graphql_url,
   })

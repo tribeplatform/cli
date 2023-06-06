@@ -2,14 +2,14 @@ import { InteractionType, WebhookStatus, WebhookType } from '@enums'
 import { InteractionInput, InteractionWebhookResponse } from '@interfaces'
 import { Network, NetworkSettings, ToastStatus } from '@prisma/client'
 import { NetworkRepository } from '@repositories'
-import { Logger } from '@utils'
 
 import { getInteractionNotSupportedError } from '../../../error.logics'
 
+import { globalLogger } from '@utils'
 import { SettingsBlockCallback } from './constants'
 import { getNetworkSettingsModalSlate, getNetworkSettingsSlate } from './slate.logics'
 
-const logger = new Logger(`SettingsDynamicBlock`)
+const logger = globalLogger.setContext(`SettingsDynamicBlock`)
 
 const getSaveCallbackResponse = async (options: {
   network: Network

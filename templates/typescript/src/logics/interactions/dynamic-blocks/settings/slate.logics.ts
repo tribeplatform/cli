@@ -3,10 +3,10 @@ import { join } from 'path'
 import { NetworkSettings, ToastStatus } from '@prisma/client'
 import { LiquidConvertor } from '@tribeplatform/slate-kit/convertors'
 import { SlateDto } from '@tribeplatform/slate-kit/dtos'
-import { Logger } from '@utils'
+import { globalLogger } from '@utils'
 import { readFile } from 'fs-extra'
 
-const logger = new Logger(`SettingsDynamicBlock`)
+const logger = globalLogger.setContext(`SettingsDynamicBlock`)
 
 export const getNetworkSettingsSlate = async (
   settings: NetworkSettings,

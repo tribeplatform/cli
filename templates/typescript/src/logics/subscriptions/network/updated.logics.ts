@@ -1,9 +1,9 @@
 import { SubscriptionWebhook } from '@interfaces'
 import { NetworkRepository } from '@repositories'
 import { Network } from '@tribeplatform/gql-client/types'
-import { Logger } from '@utils'
+import { globalLogger } from '@utils'
 
-const logger = new Logger(`NetworkSubscription`)
+const logger = globalLogger.setContext(`NetworkSubscription`)
 
 export const handleNetworkUpdatedSubscription = async (
   webhook: SubscriptionWebhook<Network>,

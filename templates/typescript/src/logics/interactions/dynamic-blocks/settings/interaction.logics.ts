@@ -7,14 +7,14 @@ import {
 import { NetworkSettings } from '@prisma/client'
 import { NetworkRepository } from '@repositories'
 import { PermissionContext } from '@tribeplatform/gql-client/types'
-import { Logger } from '@utils'
 
 import { getInteractionNotSupportedError } from '../../../error.logics'
 
+import { globalLogger } from '@utils'
 import { getCallbackResponse } from './callback.logics'
 import { getNetworkSettingsSlate } from './slate.logics'
 
-const logger = new Logger(`SettingsDynamicBlock`)
+const logger = globalLogger.setContext(`SettingsDynamicBlock`)
 
 const getNetworkSettingsInteractionResponse = async (options: {
   networkId: string
