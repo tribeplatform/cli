@@ -3,7 +3,7 @@ import { resolve } from 'path'
 import { AppTemplate } from './types'
 
 export const GQL_URL = 'https://app.tribe.so/api/global/gateway'
-export const DEV_GQL_URL = 'https://app.dev.tribe.so/api/global/gateway'
+export const DEV_GQL_URL = 'https://api.bettermode.dev/global'
 
 export const OFFICIAL_PARTNER_EMAILS = ['@tribe.so', '@bettermode.com']
 export const REPO_URL = 'git@github.com:tribeplatform/cli.git'
