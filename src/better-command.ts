@@ -4,14 +4,14 @@ import { App, Network } from '@tribeplatform/gql-client/global-types'
 import { GithubUser, GlobalConfigs, LocalConfigs } from './types'
 import {
   CliClient,
+  Shell,
+  UnAuthorizedError,
   getClient,
   getGithubUsername,
   getGlobalConfigs,
   getLocalConfigs,
   setGlobalConfigs,
   setLocalConfigs,
-  Shell,
-  UnAuthorizedError,
 } from './utils'
 
 export abstract class BetterCommand<T> extends SfCommand<T> {
@@ -50,7 +50,10 @@ export abstract class BetterCommand<T> extends SfCommand<T> {
     return getGlobalConfigs(customDev === undefined ? dev : customDev)
   }
 
-  setGlobalConfigs = async (configs: GlobalConfigs, customDev?: boolean): Promise<void> => {
+  setGlobalConfigs = async (
+    configs: GlobalConfigs,
+    customDev?: boolean,
+  ): Promise<void> => {
     const { dev } = await this.getGlobalFlags()
 
     return setGlobalConfigs(configs, { dev: customDev === undefined ? dev : customDev })

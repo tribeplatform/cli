@@ -12,9 +12,9 @@ import {
 } from '@tribeplatform/gql-client/global-types'
 import * as Listr from 'listr'
 import { join } from 'path'
-import { APP_TEMPLATE_CHOICES, lICENSES, REPO_URL } from '../constants'
+import { APP_TEMPLATE_CHOICES, REPO_URL, lICENSES } from '../constants'
 import { AppTemplate, GithubUser } from '../types'
-import { CliClient, CliError, pathExists, Shell } from '../utils'
+import { CliClient, CliError, Shell, pathExists } from '../utils'
 import { getSyncAppTasks } from './sync-app.logics'
 
 export type CreateAppCLIInputs = {
@@ -41,6 +41,7 @@ export const getCreateAppInputs = (options: {
   networks: Network[]
   githubUser: GithubUser | null
   officialPartner?: boolean
+  skipGit?: boolean
 }): Prompter.Questions<CreateAppCLIInputs> => {
   const {
     client,
@@ -49,6 +50,7 @@ export const getCreateAppInputs = (options: {
     networks,
     githubUser,
     officialPartner = false,
+    skipGit = false,
   } = options
   return [
     {
@@ -173,6 +175,7 @@ export const getCreateAppInputs = (options: {
       message: `Who is the GitHub owner of repository (https://github.com/OWNER/repo)`,
       default: () => `${githubUser?.username || githubUser?.email?.split('@')?.[0]}`,
       validate: (repoOwner: string) => /^[\dA-Za-z]+(?:-[\dA-Za-z]+)*$/.test(repoOwner),
+      when: !skipGit,
     },
     {
       name: 'repoName',
@@ -180,7 +183,9 @@ export const getCreateAppInputs = (options: {
       default: ({ name, slug }: { name: string; slug?: string }) =>
         `${(slug || name).toLowerCase().replace(/[^\dA-Za-z]/g, '-')}`,
       validate: (repoName: string) => /^[\dA-Za-z]+(?:-[\dA-Za-z]+)*$/.test(repoName),
-      message: `What is the GitHub name of repository (https://github.com/owner/REPO)`,
+      message: skipGit
+        ? `The folder name of your app repository`
+        : `What is the GitHub name of repository (https://github.com/owner/REPO)`,
     },
     {
       name: 'authorName',
@@ -302,6 +307,7 @@ export const getCreateAppTasks = (options: {
   devClient: CliClient | null
   officialPartner?: boolean
   input: CreateAppCLIInputs
+  skipGit?: boolean
 }): Listr<{
   app: App
   devApp?: App
@@ -312,7 +318,7 @@ export const getCreateAppTasks = (options: {
   blocks: DynamicBlock[]
   devBlocks?: DynamicBlock[]
 }> => {
-  const { client, devClient, officialPartner = false, input } = options
+  const { client, devClient, officialPartner = false, input, skipGit = false } = options
   const {
     devNetworkId,
     description,
@@ -486,7 +492,9 @@ export const getCreateAppTasks = (options: {
                     { search: 'app-license', replacement: license },
                     {
                       search: 'app-repo',
-                      replacement: `https://github.com/${repoOwner}/${repoName}`,
+                      replacement: skipGit
+                        ? `https://your-git/${repoName}`
+                        : `https://github.com/${repoOwner}/${repoName}`,
                     },
                     {
                       search: 'app-year',
@@ -533,6 +541,7 @@ export const getCreateAppTasks = (options: {
     },
     {
       title: 'Setup git repository',
+      enabled: () => !skipGit,
       task: async (ctx, task) => {
         try {
           await Shell.exec('git init', { cwd })

@@ -25,11 +25,18 @@ export default class CreateApp extends BetterCommand<CreateAppResponse> {
       env: 'BETTERMODE_BOTH_ENVS',
       required: false,
     }),
+    'skip-git': Flags.boolean({
+      char: 'g',
+      summary: 'skip git',
+      description: 'skip git initialization',
+      env: 'BETTERMODE_SKIP_GIT',
+      required: false,
+    }),
   }
 
   async run(): Promise<CreateAppResponse> {
     const {
-      flags: { 'both-envs': bothEnvs, dev },
+      flags: { 'both-envs': bothEnvs, 'skip-git': skipGit, dev },
     } = await this.parse(CreateApp)
     const { officialPartner } = await this.getGlobalConfigs()
 
@@ -81,6 +88,7 @@ export default class CreateApp extends BetterCommand<CreateAppResponse> {
         devNetworks,
         officialPartner,
         githubUser,
+        skipGit,
       }),
     )
 
@@ -89,6 +97,7 @@ export default class CreateApp extends BetterCommand<CreateAppResponse> {
       devClient,
       officialPartner,
       input,
+      skipGit,
     })
 
     let app: App
