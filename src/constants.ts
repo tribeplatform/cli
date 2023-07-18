@@ -6,7 +6,9 @@ export const GQL_URL = 'https://app.tribe.so/api/global/gateway'
 export const DEV_GQL_URL = 'https://api.bettermode.dev/global'
 
 export const OFFICIAL_PARTNER_EMAILS = ['@tribe.so', '@bettermode.com']
-export const REPO_URL = 'git@github.com:tribeplatform/cli.git'
+export const REPO_URL_SSH = 'git@github.com:tribeplatform/cli.git'
+export const REPO_URL_HTTPS = 'https://github.com/tribeplatform/cli.git'
+export const REPO_NAME_CLI = 'tribeplatform/cli'
 
 export const LOCAL_RC_FOLDER_NAME = '.bettermode'
 export const LOCAL_RC_DEV_FOLDER_NAME = LOCAL_RC_FOLDER_NAME + '.dev'

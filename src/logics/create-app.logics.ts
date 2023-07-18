@@ -12,7 +12,13 @@ import {
 } from '@tribeplatform/gql-client/global-types'
 import * as Listr from 'listr'
 import { join } from 'path'
-import { APP_TEMPLATE_CHOICES, REPO_URL, lICENSES } from '../constants'
+import {
+  APP_TEMPLATE_CHOICES,
+  REPO_NAME_CLI,
+  REPO_URL_HTTPS,
+  REPO_URL_SSH,
+  lICENSES,
+} from '../constants'
 import { AppTemplate, GithubUser } from '../types'
 import { CliClient, CliError, Shell, pathExists } from '../utils'
 import { getSyncAppTasks } from './sync-app.logics'
@@ -32,6 +38,15 @@ export type CreateAppCLIInputs = {
   authorUrl: string
   license: string
   template?: AppTemplate
+}
+
+export enum GitCloneChoice {
+  SSH,
+  HTTPS,
+  CLI,
+}
+export type GitCloneInput = {
+  choice: GitCloneChoice
 }
 
 export const getCreateAppInputs = (options: {
@@ -221,6 +236,31 @@ export const getCreateAppInputs = (options: {
   ]
 }
 
+export const getGithubCloneInputs = (): Prompter.Questions<GitCloneInput> => {
+  return [
+    {
+      name: 'clone',
+      type: 'list',
+      default: GitCloneChoice.SSH,
+      message: `How to clone the template repository?`,
+      choices: [
+        {
+          name: 'HTTPS',
+          value: GitCloneChoice.HTTPS,
+        },
+        {
+          name: 'SSH (Make sure you have setup SSH key)',
+          value: GitCloneChoice.SSH,
+        },
+        {
+          name: 'GitHub CLI (Make sure you have installed GitHub CLI)',
+          value: GitCloneChoice.CLI,
+        },
+      ],
+    },
+  ]
+}
+
 export const getCreateAppTargetDirs = (
   repoName: string,
 ): { targetDir: string; tmpDir: string } => ({
@@ -307,6 +347,7 @@ export const getCreateAppTasks = (options: {
   devClient: CliClient | null
   officialPartner?: boolean
   input: CreateAppCLIInputs
+  gitCloneInput: GitCloneInput
   skipGit?: boolean
 }): Listr<{
   app: App
@@ -331,6 +372,9 @@ export const getCreateAppTasks = (options: {
     authorName,
     license,
   } = input
+  const {
+    gitCloneInput: { choice },
+  } = options
   const template = givenTemplate || 'typescript'
 
   const { targetDir, tmpDir } = getCreateAppTargetDirs(repoName)
@@ -351,8 +395,14 @@ export const getCreateAppTasks = (options: {
       task: async () => {
         Shell.which('git')
         Shell.which('yarn')
-
-        await Shell.exec(`git clone ${REPO_URL} ${tmpDir}`)
+        if (choice === GitCloneChoice.CLI) {
+          Shell.which('gh')
+          await Shell.exec(`gh repo clone ${REPO_NAME_CLI} ${tmpDir}`)
+        } else if (choice === GitCloneChoice.HTTPS) {
+          await Shell.exec(`git clone ${REPO_URL_HTTPS} ${tmpDir}`)
+        } else {
+          await Shell.exec(`git clone ${REPO_URL_SSH} ${tmpDir}`)
+        }
 
         Shell.cp(join(tmpDir, 'templates', template), targetDir, {
           cwd: process.cwd(),

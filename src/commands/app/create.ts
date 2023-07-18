@@ -6,6 +6,7 @@ import { TYPEFACE } from '../../constants'
 import {
   getCreateAppInputs,
   getCreateAppTasks,
+  getGithubCloneInputs,
   removeCreateAppTargetDirs,
 } from '../../logics'
 import { CliClient, UnAuthorizedError } from '../../utils'
@@ -92,11 +93,14 @@ export default class CreateApp extends BetterCommand<CreateAppResponse> {
       }),
     )
 
+    const gitCloneInput = await this.prompt(getGithubCloneInputs())
+
     const tasks = getCreateAppTasks({
       client,
       devClient,
       officialPartner,
       input,
+      gitCloneInput,
       skipGit,
     })
 
